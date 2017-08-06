@@ -13,12 +13,13 @@
   </head>
 
   <body>
-    <header class="header">
-      <nav role="navigation">
-      </nav>
-      <span class="logo"></span>
-    </header>
     <div class="container">
+
+      <header class="header">
+        <nav role="navigation">
+        </nav>
+        <span class="logo"></span>
+      </header>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
