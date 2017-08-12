@@ -4,20 +4,19 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Muse Hackers, the free music hosting service">
+    <meta name="author" content="Peter Rudenko">
 
-    <title>Hello Musehackers!</title>
+    <title>Muse Hackers</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link rel="icon" type="image/png" href="<%= static_path(@conn, "/images/favicon.png") %>" />
   </head>
 
   <body>
     <div class="container">
+
       <header class="header">
         <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
-          </ul>
         </nav>
         <span class="logo"></span>
       </header>

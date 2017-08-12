@@ -1,0 +1,38 @@
+# .deliver/config
+
+USING_DISTILLERY=true
+
+APP="musehackers"
+
+BUILD_HOST="musehackers.com"
+BUILD_USER="deploy"
+BUILD_AT="/tmp/musehackers/builds"
+RELEASE_DIR="/tmp/musehackers/builds/rel/musehackers"
+
+STAGING_HOSTS="musehackers.com"
+STAGING_USER="git"
+TEST_AT="/test/musehackers"
+
+PRODUCTION_HOSTS="musehackers.com"
+PRODUCTION_USER="deploy"
+DELIVER_TO="/opt/musehackers"
+
+# For Phoenix project, symlink prod.secret.exs to our tmp source
+pre_erlang_get_and_update_deps() {
+  local _prod_secret_path="/home/deploy/prod.secret.exs"
+  if [ "$TARGET_MIX_ENV" = "prod" ]; then
+    __sync_remote "
+      ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
+    "
+  fi
+}
+
+# phoenix.digest
+pre_erlang_clean_compile() {
+  status "Running phoenix.digest"
+  __sync_remote "
+    set -e # fail if any command fails (recommended)
+    cd '$BUILD_AT'
+    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phx.digest $SILENCE
+  "
+}
