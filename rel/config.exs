@@ -29,6 +29,7 @@ end
 environment :prod do
   set include_erts: true
   set include_src: false
+  set output_dir: "rel/musehackers"
 end
 
 # You may define one or more releases in this file.
