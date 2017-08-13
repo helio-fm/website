@@ -1,21 +1,23 @@
 # .deliver/config
 
 USING_DISTILLERY=true
+AUTO_VERSION='git-revision'
+GIT_CLEAN_PATHS=${GIT_CLEAN_PATHS:="rel"}
 
 APP="musehackers"
 
 BUILD_HOST="musehackers.com"
 BUILD_USER="deploy"
-BUILD_AT="/tmp/musehackers/builds"
-RELEASE_DIR="/tmp/musehackers/builds/rel/musehackers"
+BUILD_AT="/home/$BUILD_USER/edeliver/$APP/builds"
+RELEASE_DIR="$BUILD_AT/rel/$APP"
 
 STAGING_HOSTS="musehackers.com"
 STAGING_USER="git"
-TEST_AT="/test/musehackers"
+TEST_AT="/test/$APP"
 
 PRODUCTION_HOSTS="musehackers.com"
 PRODUCTION_USER="deploy"
-DELIVER_TO="/opt/musehackers"
+DELIVER_TO="/opt/$APP"
 
 # For Phoenix project, symlink prod.secret.exs to our tmp source
 pre_erlang_get_and_update_deps() {
