@@ -12,7 +12,7 @@ config :musehackers,
 # Configures the endpoint
 config :musehackers, MusehackersWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "+X220uKwjzcnMIqPFKvdVEiPKR2Wd0OEu2mpg3FXB1iDI75Ifp2IijzjnYYVM37z",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: MusehackersWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Musehackers.PubSub,
            adapter: Phoenix.PubSub.PG2]
