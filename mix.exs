@@ -20,7 +20,11 @@ defmodule Musehackers.Mixfile do
   def application do
     [
       mod: {Musehackers.Application, []},
-      extra_applications: [:logger, :runtime_tools, :edeliver]
+      extra_applications: [:logger,
+                           :runtime_tools,
+                           :edeliver,
+                           :oauth,
+                           :ueberauth_facebook]
     ]
   end
 
@@ -41,8 +45,17 @@ defmodule Musehackers.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
+
+      {:oauth2, "~> 0.8", override: true},
+      {:oauth, github: "tim/erlang-oauth"},
+      {:ueberauth_facebook, "~> 0.5"},
+      {:ueberauth_identity, "~> 0.2"},
+      {:poison, "~> 3.0", override: true},
+
       {:distillery, "~> 1.0"},
-      {:edeliver, "~> 1.4.4"}
+      {:edeliver, "~> 1.4.4"},
+
+      {:dogma, ">= 0.0.0", only: [:dev, :test]}
     ]
   end
 

@@ -1,0 +1,25 @@
+dist: trusty
+language: elixir
+addons:
+  postgresql: '9.4'
+elixir:
+  - 1.4.0
+services:
+  - postgresql
+cache:
+  directories:
+    - _build
+    - deps
+env:
+  global:
+    - ELIXIR_ASSERT_TIMEOUT=2000
+    - SECRET_KEY_BASE=travistravistravistravistravistravistravistravistravistravistrav  
+install:
+  - mix local.rebar --force
+  - mix local.hex --force
+  - mix deps.get
+before_script:
+  - cp config/travis.exs config/test.exs
+  - mix do ecto.create, ecto.migrate
+script:
+  - mix test
