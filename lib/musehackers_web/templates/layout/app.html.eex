@@ -18,7 +18,17 @@
       <header class="header">
         <nav role="navigation">
         </nav>
-        <span class="logo"></span>
+        <span class="logo">
+            <span class="menu">
+              <%= if @current_user do %>
+                <img src="<%= @current_user.avatar %>" class="img-circle"/>
+              <% else %>
+                <a href="/auth/facebook">
+                  <img src="<%= static_path(@conn, "/images/incognito.png") %>" class="img-circle"/>
+                </a>
+              <% end %>
+            </span>
+        </span>
       </header>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>

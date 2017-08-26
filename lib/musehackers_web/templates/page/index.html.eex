@@ -1,25 +1,30 @@
-<div class="jumbotron">
-  <h2><%= gettext "Welcome to %{name}", name: "Muse Hackers" %></h2>
-  <p class="lead">Yet another procrastinator's side project<br />in <s>heavy</s> development.</p>
 
-  <%= if @current_user do %>
+  <div class="jumbotron">
+    <h2><%= gettext "Welcome to %{name}", name: "Muse Hackers" %></h2>
+    <p class="lead">Yet another procrastinator's side project<br />in <s>heavy</s> development.</p>
 
-    <h2>Welcome, <%= @current_user.name %>!</h2>
-    <img src="<%= @current_user.avatar %>" class="img-circle"/>
-    <%= button "Logout", to: auth_path(@conn, :delete), method: :delete, class: "btn btn-danger" %>
-    <br>
+    <%= if @current_user do %>
 
-  <% else %>
+      <h2>Welcome, <%= @current_user.name %>!</h2>
+      <%= button "Logout", to: auth_path(@conn, :delete), method: :delete, class: "btn btn-danger" %>
+      <br>
 
-    <a class="btn btn-primary btn-lg" href="/auth/facebook">
-      <i class="fa fa-facebook"></i>
-      Sign in with Facebook
-    </a>
+    <% else %>
 
-    <a class="btn btn-primary btn-lg" href="/auth/identity">
-      <i class="fa fa-user"></i>
-      Sign in with Username/Password
-    </a>    
+      <a class="btn btn-primary btn-lg" href="/auth/facebook">
+        <i class="fa fa-facebook"></i>
+        Sign in with Facebook
+      </a>
 
-  <% end %>
-</div>
+      <br>
+
+      <a class="btn btn-primary btn-lg" href="/auth/identity">
+        <i class="fa fa-user"></i>
+        Sign in with Username/Password
+      </a>    
+
+    <% end %>
+  </div>
+
+  <br>
+  <br>
