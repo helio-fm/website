@@ -28,12 +28,7 @@ import_config "#{Mix.env}.exs"
 
 config :ueberauth, Ueberauth,
   providers: [
-    facebook: { Ueberauth.Strategy.Facebook, [] },
-    identity: { Ueberauth.Strategy.Identity, [
-        callback_methods: ["POST"],
-        uid_field: :username,
-        nickname_field: :username,
-      ] }
+    facebook: { Ueberauth.Strategy.Facebook, [] }
   ]
 
 config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,

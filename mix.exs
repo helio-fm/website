@@ -49,7 +49,6 @@ defmodule Musehackers.Mixfile do
       {:oauth2, "~> 0.8", override: true},
       {:oauth, github: "tim/erlang-oauth"},
       {:ueberauth_facebook, "~> 0.5"},
-      {:ueberauth_identity, "~> 0.2"},
       {:poison, "~> 3.0", override: true},
 
       {:distillery, "~> 1.0"},

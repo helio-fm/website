@@ -5,6 +5,5 @@ defmodule MusehackersWeb.PageControllerTest do
     conn = get conn, "/"
     assert html_response(conn, 200) =~ "Welcome to Muse Hackers"
     assert html_response(conn, 200) =~ "Sign in with Facebook"
-    assert html_response(conn, 200) =~ "Sign in with Username/Password"
   end
 end
