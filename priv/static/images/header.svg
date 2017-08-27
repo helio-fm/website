@@ -17,11 +17,11 @@
             </g>
         </g>
         <g id="Lines" transform="translate(0.0, 5.0)" stroke-opacity="0.2" stroke="#100F16" stroke-width="1">
-            <path d="M0.0,0.5 L700.0,0.5" id="l1"></path>
-            <path d="M0.0,10.5 L700.0,10.5" id="l2"></path>
-            <path d="M0.0,20.5 L700.0,20.5" id="l3"></path>
-            <path d="M0.0,40.5 L700.0,40.5" id="l4"></path>
-            <path d="M0.0,30.5 L700.0,30.5" id="l5"></path>
+            <path d="M0.0,0.5 L1000.0,0.5" id="l1"></path>
+            <path d="M0.0,10.5 L1000.0,10.5" id="l2"></path>
+            <path d="M0.0,20.5 L1000.0,20.5" id="l3"></path>
+            <path d="M0.0,40.5 L1000.0,40.5" id="l4"></path>
+            <path d="M0.0,30.5 L1000.0,30.5" id="l5"></path>
         </g>
         <g id="Start" transform="translate(0.0, 5.0)">
             <g id="Lines" stroke-opacity="0.75" stroke="#100F16" stroke-width="1">
@@ -29,14 +29,6 @@
             </g>
             <g id="Lines" stroke-opacity="0.75" stroke="#100F16" stroke-width="2">
                 <path d="M1.0,0.0 L1.0,40.5" id="v1"></path>
-            </g>
-        </g>
-        <g id="End" transform="translate(694.0, 5.0)">
-            <g id="Lines" stroke-opacity="0.75" stroke="#100F16" stroke-width="1">
-                <path d="M1.0,0.0 L1.0,40.5" id="v2"></path>
-            </g>
-            <g id="Lines" stroke-opacity="0.75" stroke="#100F16" stroke-width="2">
-                <path d="M5.0,0.0 L5.0,40.5" id="v1"></path>
             </g>
         </g>
     </g>
