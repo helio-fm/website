@@ -19,18 +19,35 @@ PRODUCTION_HOSTS="musehackers.com"
 PRODUCTION_USER="deploy"
 DELIVER_TO="/opt/$APP"
 
-# For Phoenix project, symlink prod.secret.exs to our tmp source
-pre_erlang_get_and_update_deps() {
-  local _prod_secret_path="/home/deploy/prod.secret.exs"
-  if [ "$TARGET_MIX_ENV" = "prod" ]; then
-    __sync_remote "
-      ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
-    "
-  fi
-}
+# Symlinking prod.secret.exs is commented out,
+# since I use environment variables for all secrets
+#pre_erlang_get_and_update_deps() {
+#  local _prod_secret_path="/home/deploy/prod.secret.exs"
+#  if [ "$TARGET_MIX_ENV" = "prod" ]; then
+#    __sync_remote "
+#      ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
+#    "
+#  fi
+#}
 
-# phoenix.digest
 pre_erlang_clean_compile() {
+# Someday I may consider using node and brunch
+#  status "Running npm install"
+#  __sync_remote "
+#    [ -f ~/.profile ] && source ~/.profile
+#    set -e
+#    cd \"$BUILD_AT/apps/$APP\"
+#    npm install $SILENCE
+#  "
+# 
+#  status "Running brunch build"
+#  __sync_remote "
+#    [ -f ~/.profile ] && source ~/.profile
+#    set -e
+#    cd \"$BUILD_AT/apps/$APP\"
+#    node_modules/brunch/bin/brunch build --production $SILENCE
+#  "
+#
   status "Running phoenix.digest"
   __sync_remote "
     set -e # fail if any command fails (recommended)

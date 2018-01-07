@@ -61,4 +61,16 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
-import_config "prod.secret.exs"
+
+# Commented out, since I import secrets from env vars at compile time
+# import_config "prod.secret.exs"
+
+# Configure the database
+config :musehackers, Musehackers.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("DATABASE_USERNAME"),
+  password: System.get_env("DATABASE_PASSWORD"),
+  hostname: System.get_env("DATABASE_HOSTNAME"),
+  database: "musehackers",
+  pool_size: 15 
+ 
