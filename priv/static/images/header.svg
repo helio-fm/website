@@ -10,7 +10,7 @@
                     <animate
                         attributeType="XML"
                         attributeName="fill"
-                        values="#000;#fff;#fff;#fff;#000;#000;#000"
+                        values="#000;#ebebeb;#ebebeb;#ebebeb;#000;#000;#000"
                         dur="2s"
                         repeatCount="indefinite"/>
                 </path>
