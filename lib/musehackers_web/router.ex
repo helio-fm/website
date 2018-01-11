@@ -11,6 +11,7 @@ defmodule MusehackersWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    # plug :accepts, ["json", "application/octet-stream"]
   end
 
   scope "/auth", MusehackersWeb do
@@ -22,8 +23,14 @@ defmodule MusehackersWeb.Router do
     delete "/logout", AuthController, :delete
   end
 
+  scope "/api/v1", MusehackersWeb do
+    pipe_through :api
+
+    resources "/users", UserController, except: [:new, :edit]
+  end
+
   scope "/", MusehackersWeb do
-    pipe_through :browser # Use the default browser stack
+    pipe_through :browser
 
     get "/", PageController, :index
   end

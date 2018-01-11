@@ -13,7 +13,7 @@ config :logger, level: :warn
 config :musehackers, Musehackers.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "postgres",
+  password: "123",
   database: "musehackers_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
