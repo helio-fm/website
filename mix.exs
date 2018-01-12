@@ -10,7 +10,9 @@ defmodule Musehackers.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test]
     ]
   end
 
@@ -59,7 +61,8 @@ defmodule Musehackers.Mixfile do
       {:distillery, "~> 1.0"},
       {:edeliver, "~> 1.4.4"},
 
-      {:dogma, ">= 0.0.0", only: [:dev, :test]}
+      {:dogma, ">= 0.0.0", only: [:dev, :test]},
+      {:excoveralls, "~> 0.8", only: :test}
     ]
   end
 
