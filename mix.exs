@@ -23,6 +23,7 @@ defmodule Musehackers.Mixfile do
       extra_applications: [:logger,
                            :runtime_tools,
                            :edeliver,
+                           :comeonin,
                            :oauth,
                            :ueberauth_facebook]
     ]
@@ -37,7 +38,7 @@ defmodule Musehackers.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.0-rc"},
+      {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
@@ -45,6 +46,10 @@ defmodule Musehackers.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
+
+      {:guardian, "~> 1.0.0"},
+      {:comeonin, "~> 4.0.3"},
+      {:pbkdf2_elixir, "~> 0.12.3"},
 
       {:oauth2, "~> 0.8", override: true},
       {:oauth, github: "tim/erlang-oauth"},

@@ -4,14 +4,9 @@ defmodule MusehackersWeb.UserControllerTest do
   alias Musehackers.Accounts
   alias Musehackers.Accounts.User
 
-  @create_attrs %{email: "some email", name: "some name", password_hash: "some password_hash"}
-  @update_attrs %{email: "some updated email", name: "some updated name", password_hash: "some updated password_hash"}
-  @invalid_attrs %{email: nil, name: nil, password_hash: nil}
-
-  def fixture(:user) do
-    {:ok, user} = Accounts.create_user(@create_attrs)
-    user
-  end
+  @create_attrs %{email: "email@helio.fm", name: "some name", password: "some password"}
+  @update_attrs %{email: "updated-email@helio.fm", name: "some updated name", password: "some updated password"}
+  @invalid_attrs %{email: nil, name: nil, password: nil}
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -19,46 +14,52 @@ defmodule MusehackersWeb.UserControllerTest do
 
   describe "index" do
     test "lists all users", %{conn: conn} do
-      conn = get conn, user_path(conn, :index)
+      conn = get authenticated(conn), user_path(conn, :index)
       assert json_response(conn, 200)["data"] == []
     end
   end
 
   describe "create user" do
-    test "renders user when data is valid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @create_attrs
+    test "creates and renders user when data is valid", %{conn: conn} do
+      conn = post authenticated(conn), user_path(conn, :create), user: @create_attrs
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get conn, user_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "email" => "some email",
-        "password_hash" => "some password_hash"}
+      conn = get authenticated(conn), user_path(conn, :show, id)
+      assert json_response(conn, 200)["data"]["id"] == id
+      assert json_response(conn, 200)["data"]["email"] == "email@helio.fm"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @invalid_attrs
+      conn = post authenticated(conn), user_path(conn, :create), user: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
+    end
+
+    test "renders errors when not authenticated", %{conn: conn} do
+      conn = post conn, user_path(conn, :create), user: @create_attrs
+      assert response(conn, 401) =~ "unauthenticated"
     end
   end
 
   describe "update user" do
     setup [:create_user]
 
-    test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put conn, user_path(conn, :update, user), user: @update_attrs
+    test "updates and renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
+      conn = put authenticated(conn, user), user_path(conn, :update, user), user: @update_attrs
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get conn, user_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "email" => "some updated email",
-        "password_hash" => "some updated password_hash"}
+      conn = get authenticated(conn, user), user_path(conn, :show, id)
+      assert json_response(conn, 200)["data"]["id"] == id
+      assert json_response(conn, 200)["data"]["email"] == "updated-email@helio.fm"
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put conn, user_path(conn, :update, user), user: @invalid_attrs
+      conn = put authenticated(conn, user), user_path(conn, :update, user), user: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
+    end
+
+    test "renders errors when not authenticated", %{conn: conn, user: user} do
+      conn = put conn, user_path(conn, :update, user), user: @update_attrs
+      assert response(conn, 401) =~ "unauthenticated"
     end
   end
 
@@ -66,16 +67,37 @@ defmodule MusehackersWeb.UserControllerTest do
     setup [:create_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete conn, user_path(conn, :delete, user)
+      conn = delete authenticated(conn, user), user_path(conn, :delete, user)
       assert response(conn, 204)
       assert_error_sent 404, fn ->
-        get conn, user_path(conn, :show, user)
+        get authenticated(conn), user_path(conn, :show, user)
       end
     end
+
+    test "renders errors when not authenticated", %{conn: conn, user: user} do
+      conn = delete conn, user_path(conn, :delete, user)
+      assert response(conn, 401) =~ "unauthenticated"
+    end
+  end
+
+  defp fixture(:user) do
+    {:ok, user} = Accounts.create_user(@create_attrs)
+    user
   end
 
   defp create_user(_) do
     user = fixture(:user)
     {:ok, user: user}
+  end
+
+  defp authenticated(conn) do
+    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin"}
+    {:ok, jwt, _claims} = Musehackers.Guardian.encode_and_sign(user, %{}, token_ttl: {1, :minute})
+    conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
+  end
+
+  defp authenticated(conn, user) do
+    {:ok, jwt, _claims} = Musehackers.Guardian.encode_and_sign(user, %{}, token_ttl: {1, :minute})
+    conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 end

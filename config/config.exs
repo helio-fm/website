@@ -17,6 +17,16 @@ config :musehackers, MusehackersWeb.Endpoint,
   pubsub: [name: Musehackers.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+# Configure Guardian for JWT authentication
+config :musehackers, Musehackers.Guardian,
+  issuer: "musehackers",
+  secret_key: System.get_env("SECRET_KEY_GUARDIAN"),
+  token_verify_module: Guardian.Token.Jwt.Verify,
+  allowed_algos: ["HS512"],
+  ttl: { 1, :days },
+  allowed_drift: 2000,
+  verify_issuer: true
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

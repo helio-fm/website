@@ -14,6 +14,10 @@ defmodule MusehackersWeb.Router do
     # plug :accepts, ["json", "application/octet-stream"]
   end
 
+  pipeline :authenticated do
+    plug Musehackers.Guardian.AuthPipeline
+  end
+
   scope "/auth", MusehackersWeb do
     pipe_through [:browser]
 
@@ -26,6 +30,8 @@ defmodule MusehackersWeb.Router do
   scope "/api/v1", MusehackersWeb do
     pipe_through :api
 
+    # restrict unauthenticated access for routes below
+    pipe_through :authenticated
     resources "/users", UserController, except: [:new, :edit]
   end
 
@@ -34,5 +40,4 @@ defmodule MusehackersWeb.Router do
 
     get "/", PageController, :index
   end
-
 end
