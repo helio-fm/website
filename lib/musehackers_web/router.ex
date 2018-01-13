@@ -1,6 +1,11 @@
 defmodule MusehackersWeb.Router do
   use MusehackersWeb, :router
 
+  alias MusehackersWeb.AuthController
+  alias MusehackersWeb.RegistrationController
+  alias MusehackersWeb.UserController
+  alias MusehackersWeb.PageController
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -18,7 +23,7 @@ defmodule MusehackersWeb.Router do
     plug Musehackers.Guardian.AuthPipeline
   end
 
-  scope "/auth", MusehackersWeb do
+  scope "/auth" do
     pipe_through [:browser]
 
     get "/:provider", AuthController, :request
@@ -27,15 +32,17 @@ defmodule MusehackersWeb.Router do
     delete "/logout", AuthController, :delete
   end
 
-  scope "/api/v1", MusehackersWeb do
+  scope "/api/v1" do
     pipe_through :api
+
+    post "/sign_up", RegistrationController, :sign_up
 
     # restrict unauthenticated access for routes below
     pipe_through :authenticated
     resources "/users", UserController, except: [:new, :edit]
   end
 
-  scope "/", MusehackersWeb do
+  scope "/" do
     pipe_through :browser
 
     get "/", PageController, :index

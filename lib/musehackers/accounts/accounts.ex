@@ -101,4 +101,15 @@ defmodule Musehackers.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  @doc """
+  Creates a user using registration attributes.
+  """
+  def register_user(attrs \\ %{}) do
+    %User{}
+    |> User.registration_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  
 end
