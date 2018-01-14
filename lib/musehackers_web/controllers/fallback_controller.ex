@@ -17,4 +17,13 @@ defmodule MusehackersWeb.FallbackController do
     |> put_status(:not_found)
     |> render(MusehackersWeb.ErrorView, :"404")
   end
+
+  def call(conn, {:error, :login_failed}), do: login_failed(conn)
+  def call(conn, {:error, :login_not_found}), do: login_failed(conn)
+
+  defp login_failed(conn) do
+    conn
+    |> put_status(401)
+    |> render(MusehackersWeb.ErrorView, "error.json", status: :unauthorized, message: "Authentication failed!")
+  end
 end

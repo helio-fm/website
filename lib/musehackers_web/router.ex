@@ -4,6 +4,7 @@ defmodule MusehackersWeb.Router do
 
   alias MusehackersWeb.AuthController
   alias MusehackersWeb.RegistrationController
+  alias MusehackersWeb.SessionController
   alias MusehackersWeb.UserController
   alias MusehackersWeb.PageController
 
@@ -36,7 +37,8 @@ defmodule MusehackersWeb.Router do
   scope "/api/v1" do
     pipe_through :api
 
-    post "/sign_up", RegistrationController, :sign_up
+    post "/join", RegistrationController, :sign_up
+    post "/login", SessionController, :sign_in
 
     # restrict unauthenticated access for routes below
     pipe_through :authenticated
