@@ -25,7 +25,7 @@ before_script:
 - cp config/travis.exs config/test.exs
 - mix do ecto.create, ecto.migrate
 script:
-- mix coveralls.travis
+- mix do dogma, coveralls.travis
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_473de6575b5f_key -iv $encrypted_473de6575b5f_iv -in .deliver/deploy_rsa.enc -out /tmp/deploy_rsa -d
 - eval "$(ssh-agent -s)"

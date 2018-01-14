@@ -1,5 +1,6 @@
 defmodule MusehackersWeb.ChangesetView do
   use MusehackersWeb, :view
+  @moduledoc false
 
   @doc """
   Traverses and translates changeset errors.

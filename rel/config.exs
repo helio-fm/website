@@ -2,9 +2,10 @@
 # They can then be used by adding `plugin MyPlugin` to
 # either an environment, or release definition, where
 # `MyPlugin` is the name of the plugin module.
-Path.join(["rel", "plugins", "*.exs"])
-|> Path.wildcard()
-|> Enum.map(&Code.eval_file(&1))
+["rel", "plugins", "*.exs"]
+  |> Path.join()
+  |> Path.wildcard()
+  |> Enum.map(&Code.eval_file(&1))
 
 use Mix.Releases.Config,
     # This sets the default release built by `mix release`
@@ -43,4 +44,3 @@ release :musehackers do
     musehackers: :permanent
   ]
 end
-

@@ -1,5 +1,6 @@
 defmodule MusehackersWeb.RegistrationView do
   use MusehackersWeb, :view
+  @moduledoc false
 
   def render("success.json", %{user: _user}) do
     %{

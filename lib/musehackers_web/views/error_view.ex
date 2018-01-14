@@ -1,5 +1,6 @@
 defmodule MusehackersWeb.ErrorView do
   use MusehackersWeb, :view
+  @moduledoc false
 
   def render("404.html", _assigns) do
     "Page not found"

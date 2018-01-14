@@ -1,5 +1,6 @@
 defmodule Musehackers.Guardian do
   use Guardian, otp_app: :musehackers
+  @moduledoc false
 
   alias Musehackers.Repo
   alias Musehackers.Accounts.User

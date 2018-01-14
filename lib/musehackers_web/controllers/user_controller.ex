@@ -1,5 +1,6 @@
 defmodule MusehackersWeb.UserController do
   use MusehackersWeb, :controller
+  @moduledoc false
 
   alias Musehackers.Accounts
   alias Musehackers.Accounts.User

@@ -1,7 +1,13 @@
 defmodule MusehackersWeb.RegistrationControllerTest do
   use MusehackersWeb.ConnCase
 
-  @data %{email: "email@helio.fm", name: "some name", phone: "some phone", password: "some password", password_confirmation: "some password"}
+  @data %{
+    email: "email@helio.fm",
+    name: "some name",
+    phone: "some phone",
+    password: "some password",
+    password_confirmation: "some password"
+  }
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -34,7 +40,7 @@ defmodule MusehackersWeb.RegistrationControllerTest do
     end
 
     test "renders errors when invalid email provided", %{conn: conn} do
-      conn = post conn, registration_path(conn, :sign_up), user: %{@data | email: "no_at_character"}
+      conn = post conn, registration_path(conn, :sign_up),user: %{@data | email: "no_at_character"}
       assert json_response(conn, 422)["errors"]["email"] != ""
     end
 

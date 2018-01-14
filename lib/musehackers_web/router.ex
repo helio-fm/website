@@ -1,5 +1,6 @@
 defmodule MusehackersWeb.Router do
   use MusehackersWeb, :router
+  @moduledoc false
 
   alias MusehackersWeb.AuthController
   alias MusehackersWeb.RegistrationController

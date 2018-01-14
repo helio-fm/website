@@ -3,6 +3,9 @@ defmodule Musehackers.Accounts.User do
   import Ecto.Changeset
   alias Musehackers.Repo
   alias Musehackers.Accounts.User
+  @moduledoc """
+  The User model.
+  """
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
@@ -26,6 +29,7 @@ defmodule Musehackers.Accounts.User do
     |> validate_changeset
   end
 
+  @doc false
   def registration_changeset(%User{} = user, attrs) do
     user
     |> cast(attrs, [:email, :name, :phone, :password, :password_confirmation])

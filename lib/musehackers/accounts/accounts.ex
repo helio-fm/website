@@ -111,5 +111,4 @@ defmodule Musehackers.Accounts do
     |> Repo.insert()
   end
 
-  
 end

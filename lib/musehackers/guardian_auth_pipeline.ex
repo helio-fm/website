@@ -1,4 +1,5 @@
 defmodule Musehackers.Guardian.AuthPipeline do
+  @moduledoc false
   @claims %{typ: "access"}
 
   use Guardian.Plug.Pipeline, otp_app: :musehackers,

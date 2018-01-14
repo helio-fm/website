@@ -72,5 +72,4 @@ config :musehackers, Musehackers.Repo,
   password: System.get_env("DATABASE_PASSWORD"),
   hostname: System.get_env("DATABASE_HOSTNAME"),
   database: "musehackers",
-  pool_size: 15 
- 
+  pool_size: 15
