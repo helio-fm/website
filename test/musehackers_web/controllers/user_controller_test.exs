@@ -4,8 +4,20 @@ defmodule MusehackersWeb.UserControllerTest do
   alias Musehackers.Accounts
   alias Musehackers.Accounts.User
 
-  @create_attrs %{email: "email@helio.fm", name: "some name", password: "some password"}
-  @update_attrs %{email: "updated-email@helio.fm", name: "some updated name", password: "some updated password"}
+  @create_attrs %{
+    login: "test",
+    email: "email@helio.fm",
+    first_name: "first name",
+    password: "some password"
+  }
+
+  @update_attrs %{
+    login: "test",
+    email: "updated-email@helio.fm",
+    first_name: "some updated name",
+    password: "some updated password"
+  }
+
   @invalid_attrs %{email: nil, name: nil, password: nil}
 
   setup %{conn: conn} do

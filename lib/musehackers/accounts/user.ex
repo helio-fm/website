@@ -10,9 +10,10 @@ defmodule Musehackers.Accounts.User do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "users" do
+    field :login, :string
     field :email, :string
-    field :name, :string
-    field :phone, :string
+    field :first_name, :string
+    field :last_name, :string
     field :password, :string, virtual: true # virtual - i.e. not stored in db
     field :password_confirmation, :string, virtual: true
     field :password_hash, :string
@@ -24,16 +25,16 @@ defmodule Musehackers.Accounts.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :name, :phone, :password, :is_admin])
-    |> validate_required([:email, :name, :password])
+    |> cast(attrs, [:login, :email, :first_name, :last_name, :password, :is_admin])
+    |> validate_required([:login, :email, :password])
     |> validate_changeset
   end
 
   @doc false
   def registration_changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :name, :phone, :password, :password_confirmation])
-    |> validate_required([:email, :name, :phone, :password, :password_confirmation])
+    |> cast(attrs, [:login, :email, :first_name, :last_name, :password, :password_confirmation])
+    |> validate_required([:login, :email, :password, :password_confirmation])
     |> validate_confirmation(:password)
     |> validate_changeset
   end
@@ -42,9 +43,14 @@ defmodule Musehackers.Accounts.User do
     user
     |> validate_length(:email, min: 5, max: 255)
     |> validate_format(:email, ~r/@/)
+    |> unique_constraint(:login)
     |> unique_constraint(:email)
+    |> validate_length(:login, min: 3, max: 16)
+    |> validate_format(:login, ~r/^[a-zA-Z][a-zA-Z0-9]*[.-]?[a-zA-Z0-9]+$/,
+      [message: "Only letters and numbers allowed, should start with a letter, only one char of (.-) allowed"])
     |> validate_length(:password, min: 8)
-    |> validate_format(:password, ~r/^(?=.*[a-z]).*/, [message: "Must include at least one lowercase letter"])
+    |> validate_format(:password, ~r/^(?=.*[a-z]).*/,
+      [message: "Must include at least one lowercase letter"])
     |> generate_password_hash
   end
 

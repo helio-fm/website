@@ -6,8 +6,20 @@ defmodule Musehackers.AccountsTest do
   describe "users" do
     alias Musehackers.Accounts.User
 
-    @valid_attrs %{email: "email@helio.fm", name: "some name", password: "some password"}
-    @update_attrs %{email: "updated-email@helio.fm", name: "some updated name", password: "some updated password"}
+    @valid_attrs %{
+      login: "helio.fm",
+      email: "email@helio.fm",
+      first_name: "john",
+      password: "some password"
+    }
+
+    @update_attrs %{
+      login: "helio.fm",
+      email: "updated-email@helio.fm",
+      last_name: "doe",
+      password: "some updated password"
+    }
+
     @invalid_attrs %{email: nil, name: nil, password: nil}
 
     def user_fixture(attrs \\ %{}) do
@@ -27,8 +39,10 @@ defmodule Musehackers.AccountsTest do
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
       stored_user = Accounts.get_user!(user.id)
-      assert user.name == stored_user.name
+      assert user.login == stored_user.login
       assert user.email == stored_user.email
+      assert user.first_name == stored_user.first_name
+      assert user.last_name == stored_user.last_name
       assert user.is_admin == stored_user.is_admin
       assert user.inserted_at == stored_user.inserted_at
       assert user.password_hash == stored_user.password_hash
@@ -58,8 +72,10 @@ defmodule Musehackers.AccountsTest do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
       stored_user = Accounts.get_user!(user.id)
-      assert user.name == stored_user.name
+      assert user.login == stored_user.login
       assert user.email == stored_user.email
+      assert user.first_name == stored_user.first_name
+      assert user.last_name == stored_user.last_name
       assert user.is_admin == stored_user.is_admin
       assert user.inserted_at == stored_user.inserted_at
       assert user.password_hash == stored_user.password_hash

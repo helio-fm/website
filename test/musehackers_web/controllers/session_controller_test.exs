@@ -2,9 +2,10 @@ defmodule MusehackersWeb.SessionControllerTest do
   use MusehackersWeb.ConnCase
 
   @sign_up_payload %{
+    login: "helio.fm",
     email: "email@helio.fm",
-    name: "some name",
-    phone: "some phone",
+    first_name: "john",
+    last_name: "doe",
     password: "some password",
     password_confirmation: "some password"
   }

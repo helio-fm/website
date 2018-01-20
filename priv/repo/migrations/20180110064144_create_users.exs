@@ -4,9 +4,10 @@ defmodule Musehackers.Repo.Migrations.CreateUsers do
   def change do
     create table(:users, primary_key: false) do
       add :id, :binary_id, primary_key: true
+      add :login, :string, size: 32, null: true
       add :email, :string, null: false
-      add :name, :string, null: false
-      add :phone, :string, null: true
+      add :first_name, :string, null: true
+      add :last_name, :string, null: true
       add :password_hash, :string, null: false
       add :is_admin, :boolean, null: false, default: false
 
@@ -14,5 +15,6 @@ defmodule Musehackers.Repo.Migrations.CreateUsers do
     end
 
     create unique_index(:users, [:email])
+    create unique_index(:users, [:login])
   end
 end
