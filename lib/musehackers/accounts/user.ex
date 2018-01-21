@@ -18,6 +18,7 @@ defmodule Musehackers.Accounts.User do
     field :password_confirmation, :string, virtual: true
     field :password_hash, :string
     field :is_admin, :boolean, default: false
+    # has_many :active_sessions, Musehackers.Accounts.Session
 
     timestamps()
   end
