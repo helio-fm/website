@@ -30,9 +30,7 @@ defmodule Musehackers.Mixfile do
       extra_applications: [:logger,
                            :runtime_tools,
                            :edeliver,
-                           :comeonin,
-                           :oauth,
-                           :ueberauth_facebook]
+                           :comeonin]
     ]
   end
 
@@ -57,11 +55,6 @@ defmodule Musehackers.Mixfile do
       {:guardian, "~> 1.0.0"},
       {:comeonin, "~> 4.0.3"},
       {:pbkdf2_elixir, "~> 0.12.3"},
-
-      {:oauth2, "~> 0.8", override: true},
-      {:oauth, github: "tim/erlang-oauth"},
-      {:ueberauth_facebook, "~> 0.5"},
-      {:poison, "~> 3.0", override: true},
 
       {:distillery, "~> 1.0"},
       {:edeliver, "~> 1.4.4"},

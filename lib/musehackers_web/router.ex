@@ -2,7 +2,6 @@ defmodule MusehackersWeb.Router do
   use MusehackersWeb, :router
   @moduledoc false
 
-  alias MusehackersWeb.AuthController
   alias MusehackersWeb.RegistrationController
   alias MusehackersWeb.SessionController
   alias MusehackersWeb.UserController
@@ -23,15 +22,6 @@ defmodule MusehackersWeb.Router do
 
   pipeline :authenticated do
     plug Musehackers.Guardian.AuthPipeline
-  end
-
-  scope "/auth" do
-    pipe_through [:browser]
-
-    get "/:provider", AuthController, :request
-    get "/:provider/callback", AuthController, :callback
-    post "/:provider/callback", AuthController, :callback
-    delete "/logout", AuthController, :delete
   end
 
   scope "/api/v1" do

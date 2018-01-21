@@ -54,7 +54,7 @@ config :musehackers, Musehackers.Guardian,
   secret_key: "DEV_SECRET_KEY_GUARDIAN"
 
 config :musehackers, MusehackersWeb.Endpoint,
-  secret_key_base: "DEV_SECRET_KEY_BASE"
+  secret_key_base: "DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET"
 
 # Configure your database
 config :musehackers, Musehackers.Repo,
