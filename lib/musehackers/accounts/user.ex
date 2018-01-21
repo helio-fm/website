@@ -44,6 +44,7 @@ defmodule Musehackers.Accounts.User do
     user
     |> validate_length(:email, min: 5, max: 255)
     |> validate_format(:email, ~r/@/)
+    |> update_change(:email, &String.downcase/1)
     |> unique_constraint(:login)
     |> unique_constraint(:email)
     |> validate_length(:login, min: 3, max: 16)
@@ -65,7 +66,7 @@ defmodule Musehackers.Accounts.User do
   end
 
   def find_and_confirm_password(email, password) do
-    case Repo.get_by(User, email: email) do
+    case Repo.get_by(User, email: String.downcase(email)) do
       nil ->
         {:error, :login_not_found}
       user ->

@@ -29,6 +29,15 @@ defmodule MusehackersWeb.SessionControllerTest do
       assert json_response(conn, 200)["data"]["token"] != ""
     end
 
+    test "registers and logs user in when data is valid but email case differs", %{conn: conn} do
+      conn = post conn, registration_path(conn, :sign_up), user: @sign_up_payload
+      assert %{"status" => "ok"} = json_response(conn, 201)
+
+      conn = post conn, session_path(conn, :sign_in), session: %{@sign_up_payload | email: "email@helio.FM"}
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      assert json_response(conn, 200)["data"]["token"] != ""
+    end
+
     test "returns valid JWT token that successfully authorizes a protected resource request", %{conn: conn} do
       conn = post conn, registration_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)

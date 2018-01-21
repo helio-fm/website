@@ -18,7 +18,7 @@ defmodule MusehackersWeb.UserControllerTest do
     password: "some updated password"
   }
 
-  @invalid_attrs %{email: nil, name: nil, password: nil}
+  @invalid_attrs %{name: nil, password: nil}
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}

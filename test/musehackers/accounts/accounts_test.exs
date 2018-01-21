@@ -20,7 +20,7 @@ defmodule Musehackers.AccountsTest do
       password: "some updated password"
     }
 
-    @invalid_attrs %{email: nil, name: nil, password: nil}
+    @invalid_attrs %{login: nil, name: nil, password: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -98,8 +98,18 @@ defmodule Musehackers.AccountsTest do
   describe "sessions" do
     alias Musehackers.Accounts.Session
 
-    @valid_attrs %{device_id: "some device_id", token: "some token"}
-    @update_attrs %{device_id: "some updated device_id", token: "some updated token"}
+    @valid_attrs %{
+      device_id: "some device_id",
+      platform_id: "some platform_id",
+      token: "some token"
+    }
+
+    @update_attrs %{
+      device_id: "some updated device_id",
+      platform_id: "some updated platform_id",
+      token: "some updated token"
+    }
+
     @invalid_attrs %{device_id: nil, token: nil}
 
     def session_fixture(attrs \\ %{}) do
@@ -124,6 +134,7 @@ defmodule Musehackers.AccountsTest do
     test "create_session/1 with valid data creates a session" do
       assert {:ok, %Session{} = session} = Accounts.create_session(@valid_attrs)
       assert session.device_id == "some device_id"
+      assert session.platform_id == "some platform_id"
       assert session.token == "some token"
     end
 
@@ -136,6 +147,7 @@ defmodule Musehackers.AccountsTest do
       assert {:ok, session} = Accounts.update_session(session, @update_attrs)
       assert %Session{} = session
       assert session.device_id == "some updated device_id"
+      assert session.platform_id == "some updated platform_id"
       assert session.token == "some updated token"
     end
 
