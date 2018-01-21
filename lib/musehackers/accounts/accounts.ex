@@ -54,6 +54,28 @@ defmodule Musehackers.Accounts do
   def get_user_by_login!(login), do: Repo.get_by!(User, login: login)
 
   @doc """
+  Gets a single user.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user_by_login!("123")
+      %User{}
+
+      iex> get_user!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user_with_session(device_id, token) do
+    # TODO
+    case Repo.get_by!(Session, device_id: device_id) do
+      {:ok, _} -> {}
+      {:error, _} -> {:error, :session_not_found}
+    end
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples
@@ -160,7 +182,7 @@ defmodule Musehackers.Accounts do
   def get_session!(id), do: Repo.get!(Session, id)
 
   @doc """
-  Creates a session.
+  Creates or updates a session.
 
   ## Examples
 
@@ -171,28 +193,16 @@ defmodule Musehackers.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_session(attrs \\ %{}) do
+  def create_or_update_session(attrs \\ %{}) do
+    on_conflict = [set: [platform_id: attrs.platform_id, token: attrs.token]]
+    # This equals `ON CONFLICT ON CONSTRAINT one_session_per_device_index`:
+    # conflict_target = {:constraint, :sessions_one_session_per_device}
+    # But unfortunately there'll be no such constraint with that name, only unique index,
+    # so we have to specify the fields (in the same way as in the index):
+    conflict_target = [:user_id, :device_id]
     %Session{}
     |> Session.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a session.
-
-  ## Examples
-
-      iex> update_session(session, %{field: new_value})
-      {:ok, %Session{}}
-
-      iex> update_session(session, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_session(%Session{} = session, attrs) do
-    session
-    |> Session.changeset(attrs)
-    |> Repo.update()
+    |> Repo.insert(on_conflict: on_conflict, conflict_target: conflict_target)
   end
 
   @doc """
@@ -209,18 +219,5 @@ defmodule Musehackers.Accounts do
   """
   def delete_session(%Session{} = session) do
     Repo.delete(session)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking session changes.
-
-  ## Examples
-
-      iex> change_session(session)
-      %Ecto.Changeset{source: %Session{}}
-
-  """
-  def change_session(%Session{} = session) do
-    Session.changeset(session, %{})
   end
 end

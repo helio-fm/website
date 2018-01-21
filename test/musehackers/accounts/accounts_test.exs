@@ -99,24 +99,24 @@ defmodule Musehackers.AccountsTest do
     alias Musehackers.Accounts.Session
 
     @valid_attrs %{
-      device_id: "some device_id",
+      device_id: "device_id",
       platform_id: "some platform_id",
       token: "some token"
     }
 
     @update_attrs %{
-      device_id: "some updated device_id",
+      device_id: "device_id",
       platform_id: "some updated platform_id",
       token: "some updated token"
     }
 
-    @invalid_attrs %{device_id: nil, token: nil}
+    @invalid_attrs %{platform_id: nil, device_id: nil, token: nil}
 
     def session_fixture(attrs \\ %{}) do
       {:ok, session} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Accounts.create_session()
+        |> Accounts.create_or_update_session()
 
       session
     end
@@ -131,29 +131,29 @@ defmodule Musehackers.AccountsTest do
       assert Accounts.get_session!(session.id) == session
     end
 
-    test "create_session/1 with valid data creates a session" do
-      assert {:ok, %Session{} = session} = Accounts.create_session(@valid_attrs)
-      assert session.device_id == "some device_id"
+    test "create_or_update_session/1 with valid data creates a session" do
+      assert {:ok, %Session{} = session} = Accounts.create_or_update_session(@valid_attrs)
+      assert session.device_id == "device_id"
       assert session.platform_id == "some platform_id"
       assert session.token == "some token"
     end
 
-    test "create_session/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_session(@invalid_attrs)
+    test "create_or_update_session/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_or_update_session(@invalid_attrs)
     end
 
-    test "update_session/2 with valid data updates the session" do
+    test "create_or_update_session/2 with valid data updates the session" do
       session = session_fixture()
-      assert {:ok, session} = Accounts.update_session(session, @update_attrs)
+      assert {:ok, session} = Accounts.create_or_update_session(@update_attrs)
       assert %Session{} = session
-      assert session.device_id == "some updated device_id"
+      assert session.device_id == "device_id"
       assert session.platform_id == "some updated platform_id"
       assert session.token == "some updated token"
     end
 
-    test "update_session/2 with invalid data returns error changeset" do
+    test "create_or_update_session/2 with invalid data returns error changeset" do
       session = session_fixture()
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_session(session, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_or_update_session(@invalid_attrs)
       assert session == Accounts.get_session!(session.id)
     end
 
@@ -161,11 +161,6 @@ defmodule Musehackers.AccountsTest do
       session = session_fixture()
       assert {:ok, %Session{}} = Accounts.delete_session(session)
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_session!(session.id) end
-    end
-
-    test "change_session/1 returns a session changeset" do
-      session = session_fixture()
-      assert %Ecto.Changeset{} = Accounts.change_session(session)
     end
   end
 end

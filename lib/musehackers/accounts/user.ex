@@ -3,6 +3,7 @@ defmodule Musehackers.Accounts.User do
   import Ecto.Changeset
   alias Musehackers.Repo
   alias Musehackers.Accounts.User
+  alias Musehackers.Accounts.Session
   @moduledoc """
   The User model.
   """
@@ -18,7 +19,7 @@ defmodule Musehackers.Accounts.User do
     field :password_confirmation, :string, virtual: true
     field :password_hash, :string
     field :is_admin, :boolean, default: false
-    # has_many :active_sessions, Musehackers.Accounts.Session
+    has_many :active_sessions, Session
 
     timestamps()
   end

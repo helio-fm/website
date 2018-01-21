@@ -20,6 +20,8 @@ defmodule MusehackersWeb.FallbackController do
 
   def call(conn, {:error, :login_failed}), do: login_failed(conn)
   def call(conn, {:error, :login_not_found}), do: login_failed(conn)
+  def call(conn, {:error, :session_update_failed}), do: login_failed(conn)
+  def call(conn, {:error, :session_not_found}), do: login_failed(conn)
 
   defp login_failed(conn) do
     conn

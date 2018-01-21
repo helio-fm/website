@@ -12,7 +12,9 @@ defmodule MusehackersWeb.SessionControllerTest do
 
   @sign_in_payload %{
     email: "email@helio.fm",
-    password: "some password"
+    password: "some password",
+    device_id: "some device",
+    platform_id: "ios"
   }
 
   setup %{conn: conn} do
@@ -33,7 +35,7 @@ defmodule MusehackersWeb.SessionControllerTest do
       conn = post conn, registration_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, session_path(conn, :sign_in), session: %{@sign_up_payload | email: "email@helio.FM"}
+      conn = post conn, session_path(conn, :sign_in), session: %{@sign_in_payload | email: "email@helio.FM"}
       assert %{"status" => "ok"} = json_response(conn, 200)
       assert json_response(conn, 200)["data"]["token"] != ""
     end

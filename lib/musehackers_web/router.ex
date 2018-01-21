@@ -33,7 +33,7 @@ defmodule MusehackersWeb.Router do
     # restrict unauthenticated access for routes below
     pipe_through :authenticated
     # should have a token that is 1) valid, 2) present in active_sessions for given device id
-    # post "/refresh_token", SessionController, :refresh_token
+    post "/relogin", SessionController, :refresh_token
 
     resources "/users", UserController, except: [:new, :edit]
   end
