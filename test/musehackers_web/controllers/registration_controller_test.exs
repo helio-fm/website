@@ -87,7 +87,9 @@ defmodule MusehackersWeb.RegistrationControllerTest do
 
     test "renders error when already provided same email in different case", %{conn: conn} do
       conn = post conn, registration_path(conn, :sign_up), user: @data
-      conn = post conn, registration_path(conn, :sign_up), user: %{@data | login: "other-login", email: "eMail@hElio.FM",}
+      conn = post conn, registration_path(conn, :sign_up),
+        user: %{@data | login: "other-login", email: "eMail@hElio.FM",}
+
       assert "has already been taken" in json_response(conn, 422)["errors"]["email"]
     end
 

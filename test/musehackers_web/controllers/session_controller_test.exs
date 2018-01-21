@@ -17,6 +17,12 @@ defmodule MusehackersWeb.SessionControllerTest do
     platform_id: "ios"
   }
 
+  @refresh_token_payload %{
+    bearer: "none",
+    device_id: "some device",
+    platform_id: "ios"
+  }
+
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
@@ -67,6 +73,91 @@ defmodule MusehackersWeb.SessionControllerTest do
 
       conn = post conn, session_path(conn, :sign_in), session: %{@sign_in_payload | password: "invalid"}
       assert %{"status" => "unauthorized"} = json_response(conn, 401)
+    end
+  end
+
+  describe "register, login and update token" do
+    test "refreshes token given a valid token and a new token becomes valid to refresh again", %{conn: conn} do
+      conn = post conn, registration_path(conn, :sign_up), user: @sign_up_payload
+      assert %{"status" => "ok"} = json_response(conn, 201)
+
+      conn = post conn, session_path(conn, :sign_in), session: @sign_in_payload
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      token = json_response(conn, 200)["data"]["token"]
+
+      conn = post authenticated(conn, token), session_path(conn, :refresh_token),
+        session: %{@refresh_token_payload | bearer: token}
+
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      new_token_1 = json_response(conn, 200)["data"]["token"]
+      assert token != new_token_1
+
+      conn = post authenticated(conn, new_token_1), session_path(conn, :refresh_token),
+        session: %{@refresh_token_payload | bearer: new_token_1}
+
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      new_token_2 = json_response(conn, 200)["data"]["token"]
+      assert new_token_1 != new_token_2
+    end
+
+    test "fails to re-generate token twice based on the same token", %{conn: conn} do
+      conn = post conn, registration_path(conn, :sign_up), user: @sign_up_payload
+      assert %{"status" => "ok"} = json_response(conn, 201)
+
+      conn = post conn, session_path(conn, :sign_in), session: @sign_in_payload
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      token = json_response(conn, 200)["data"]["token"]
+
+      conn = post authenticated(conn, token), session_path(conn, :refresh_token),
+        session: %{@refresh_token_payload | bearer: token}
+
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      new_token = json_response(conn, 200)["data"]["token"]
+
+      assert new_token != token
+
+      conn = post authenticated(conn, token), session_path(conn, :refresh_token),
+        session: %{@refresh_token_payload | bearer: token}
+
+      assert response(conn, 401)
+    end
+
+    test "authorizes a protected resource request with a refreshed token", %{conn: conn} do
+      conn = post conn, registration_path(conn, :sign_up), user: @sign_up_payload
+      assert %{"status" => "ok"} = json_response(conn, 201)
+
+      conn = post conn, session_path(conn, :sign_in), session: @sign_in_payload
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      token = json_response(conn, 200)["data"]["token"]
+
+      conn = post authenticated(conn, token), session_path(conn, :refresh_token),
+        session: %{@refresh_token_payload | bearer: token}
+
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      new_token = json_response(conn, 200)["data"]["token"]
+
+      assert new_token != token
+      conn = get authenticated(conn, new_token), user_path(conn, :index)
+      assert json_response(conn, 200)["data"] != []
+    end
+
+    test "fails to re-generate token given valid token but different device id", %{conn: conn} do
+      conn = post conn, registration_path(conn, :sign_up), user: @sign_up_payload
+      assert %{"status" => "ok"} = json_response(conn, 201)
+
+      conn = post conn, session_path(conn, :sign_in), session: @sign_in_payload
+      assert %{"status" => "ok"} = json_response(conn, 200)
+      token = json_response(conn, 200)["data"]["token"]
+
+      conn = post authenticated(conn, token), session_path(conn, :refresh_token),
+        session: %{@refresh_token_payload | bearer: token, device_id: "other"}
+
+      assert response(conn, 401)
+    end
+
+    test "fails to re-generate token given an unauthenticated request", %{conn: conn} do
+      conn = post conn, session_path(conn, :refresh_token), session: @refresh_token_payload
+      assert response(conn, 401)
     end
   end
 

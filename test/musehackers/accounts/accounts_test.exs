@@ -143,7 +143,6 @@ defmodule Musehackers.AccountsTest do
     end
 
     test "create_or_update_session/2 with valid data updates the session" do
-      session = session_fixture()
       assert {:ok, session} = Accounts.create_or_update_session(@update_attrs)
       assert %Session{} = session
       assert session.device_id == "device_id"
