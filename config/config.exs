@@ -23,7 +23,7 @@ config :musehackers, Musehackers.Guardian,
   secret_key: System.get_env("SECRET_KEY_GUARDIAN"),
   token_verify_module: Guardian.Token.Jwt.Verify,
   allowed_algos: ["HS512"],
-  ttl: { 1, :days },
+  ttl: { 8, :days },
   allowed_drift: 2000,
   verify_issuer: true
 

@@ -54,28 +54,6 @@ defmodule Musehackers.Accounts do
   def get_user_by_login!(login), do: Repo.get_by!(User, login: login)
 
   @doc """
-  Gets a single user.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user_by_login!("123")
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_user_with_session(device_id, token) do
-    # TODO
-    case Repo.get_by!(Session, device_id: device_id) do
-      {:ok, _} -> {}
-      {:error, _} -> {:error, :session_not_found}
-    end
-  end
-
-  @doc """
   Creates a user.
 
   ## Examples

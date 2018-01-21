@@ -15,4 +15,17 @@ defmodule MusehackersWeb.SessionView do
       """
     }
   end
+
+  def render("refresh_token.json", %{user: user, jwt: jwt}) do
+    %{
+      status: :ok,
+      data: %{
+        token: jwt,
+        email: user.email
+      },
+      message: """
+        Token was successfully re-generated!
+      """
+    }
+  end
 end

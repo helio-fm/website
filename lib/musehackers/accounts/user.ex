@@ -1,6 +1,7 @@
 defmodule Musehackers.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
   alias Musehackers.Repo
   alias Musehackers.Accounts.User
   alias Musehackers.Accounts.Session
@@ -76,6 +77,17 @@ defmodule Musehackers.Accounts.User do
         else
           {:error, :login_failed}
         end
+    end
+  end
+
+  def find_user_for_session(device_id, token) do
+    query = from u in User,
+          join: s in Session, where: s.user_id == u.id,
+          where: s.device_id == ^device_id and s.token == ^token,
+          select: struct(u, [:id, :login, :email])
+    case Repo.one(query) do
+      nil -> {:error, :session_not_found}
+      user -> {:ok, user}
     end
   end
 end

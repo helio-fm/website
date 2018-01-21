@@ -20,7 +20,7 @@ defmodule Musehackers.Accounts.Session do
   @doc false
   def changeset(%Session{} = session, attrs) do
     session
-    |> cast(attrs, [:token, :device_id, :platform_id])
+    |> cast(attrs, [:user_id, :token, :device_id, :platform_id])
     |> validate_required([:token, :device_id, :platform_id])
     |> unique_constraint(:device_id, name: :sessions_one_session_per_device)
   end
