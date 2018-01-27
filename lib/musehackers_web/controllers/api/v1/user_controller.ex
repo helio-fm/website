@@ -1,11 +1,11 @@
-defmodule MusehackersWeb.UserController do
+defmodule MusehackersWeb.Api.V1.UserController do
   use MusehackersWeb, :controller
   @moduledoc false
 
   alias Musehackers.Accounts
   alias Musehackers.Accounts.User
 
-  action_fallback MusehackersWeb.FallbackController
+  action_fallback MusehackersWeb.Api.V1.FallbackController
 
   def index(conn, _params) do
     users = Accounts.list_users()
@@ -16,7 +16,7 @@ defmodule MusehackersWeb.UserController do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", user_path(conn, :show, user))
+      |> put_resp_header("location", api_v1_user_path(conn, :show, user))
       |> render("show.json", user: user)
     end
   end

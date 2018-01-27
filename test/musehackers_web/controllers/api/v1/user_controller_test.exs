@@ -1,4 +1,4 @@
-defmodule MusehackersWeb.UserControllerTest do
+defmodule MusehackersWeb.Api.V1.UserControllerTest do
   use MusehackersWeb.ConnCase
 
   alias Musehackers.Accounts
@@ -26,28 +26,28 @@ defmodule MusehackersWeb.UserControllerTest do
 
   describe "index" do
     test "lists all users", %{conn: conn} do
-      conn = get authenticated(conn), user_path(conn, :index)
+      conn = get authenticated(conn), api_v1_user_path(conn, :index)
       assert json_response(conn, 200)["data"] == []
     end
   end
 
   describe "create user" do
     test "creates and renders user when data is valid", %{conn: conn} do
-      conn = post authenticated(conn), user_path(conn, :create), user: @create_attrs
+      conn = post authenticated(conn), api_v1_user_path(conn, :create), user: @create_attrs
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get authenticated(conn), user_path(conn, :show, id)
+      conn = get authenticated(conn), api_v1_user_path(conn, :show, id)
       assert json_response(conn, 200)["data"]["id"] == id
       assert json_response(conn, 200)["data"]["email"] == "email@helio.fm"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post authenticated(conn), user_path(conn, :create), user: @invalid_attrs
+      conn = post authenticated(conn), api_v1_user_path(conn, :create), user: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
 
     test "renders errors when not authenticated", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @create_attrs
+      conn = post conn, api_v1_user_path(conn, :create), user: @create_attrs
       assert response(conn, 401) =~ "unauthenticated"
     end
   end
@@ -56,21 +56,21 @@ defmodule MusehackersWeb.UserControllerTest do
     setup [:create_user]
 
     test "updates and renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put authenticated(conn, user), user_path(conn, :update, user), user: @update_attrs
+      conn = put authenticated(conn, user), api_v1_user_path(conn, :update, user), user: @update_attrs
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get authenticated(conn, user), user_path(conn, :show, id)
+      conn = get authenticated(conn, user), api_v1_user_path(conn, :show, id)
       assert json_response(conn, 200)["data"]["id"] == id
       assert json_response(conn, 200)["data"]["email"] == "updated-email@helio.fm"
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put authenticated(conn, user), user_path(conn, :update, user), user: @invalid_attrs
+      conn = put authenticated(conn, user), api_v1_user_path(conn, :update, user), user: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
 
     test "renders errors when not authenticated", %{conn: conn, user: user} do
-      conn = put conn, user_path(conn, :update, user), user: @update_attrs
+      conn = put conn, api_v1_user_path(conn, :update, user), user: @update_attrs
       assert response(conn, 401) =~ "unauthenticated"
     end
   end
@@ -79,15 +79,15 @@ defmodule MusehackersWeb.UserControllerTest do
     setup [:create_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete authenticated(conn, user), user_path(conn, :delete, user)
+      conn = delete authenticated(conn, user), api_v1_user_path(conn, :delete, user)
       assert response(conn, 204)
       assert_error_sent 404, fn ->
-        get authenticated(conn), user_path(conn, :show, user)
+        get authenticated(conn), api_v1_user_path(conn, :show, user)
       end
     end
 
     test "renders errors when not authenticated", %{conn: conn, user: user} do
-      conn = delete conn, user_path(conn, :delete, user)
+      conn = delete conn, api_v1_user_path(conn, :delete, user)
       assert response(conn, 401) =~ "unauthenticated"
     end
   end

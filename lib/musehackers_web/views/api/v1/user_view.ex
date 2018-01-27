@@ -1,6 +1,6 @@
-defmodule MusehackersWeb.UserView do
+defmodule MusehackersWeb.Api.V1.UserView do
   use MusehackersWeb, :view
-  alias MusehackersWeb.UserView
+  alias MusehackersWeb.Api.V1.UserView
   @moduledoc false
 
   def render("index.json", %{users: users}) do

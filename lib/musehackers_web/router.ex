@@ -2,11 +2,6 @@ defmodule MusehackersWeb.Router do
   use MusehackersWeb, :router
   @moduledoc false
 
-  alias MusehackersWeb.RegistrationController
-  alias MusehackersWeb.SessionController
-  alias MusehackersWeb.UserController
-  alias MusehackersWeb.PageController
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -24,7 +19,7 @@ defmodule MusehackersWeb.Router do
     plug Musehackers.Guardian.AuthPipeline
   end
 
-  scope "/api/v1" do
+  scope "/api/v1", MusehackersWeb.Api.V1, as: :api_v1 do
     pipe_through :api
 
     post "/join", RegistrationController, :sign_up
@@ -32,13 +27,23 @@ defmodule MusehackersWeb.Router do
 
     # restrict unauthenticated access for routes below
     pipe_through :authenticated
-    # should have a token that is 1) valid, 2) present in active_sessions for given device id
+
+    # this endpoint provides a kind of a sliding session:
+    # first, it checks for a token, that is
+    #   1) valid and unexpired,
+    #   2) present in active_sessions for a given device id;
+    # if passed, it issues a new token and saves it a related active session
+    # (there can be only one session per user and device id),
+    # so that if user runs the app, say, at least once a week, his session won't expire
+    # (and if the token is compromised/stolen, the user's session won't be prolonged,
+    # eventually forcing him to re-login, and thus invalidating attacker's session);
+    # and, although re-issuing a token is stateful, authentication is still stateless and fast
     post "/relogin", SessionController, :refresh_token
 
     resources "/users", UserController, except: [:new, :edit]
   end
 
-  scope "/" do
+  scope "/", MusehackersWeb do
     pipe_through :browser
 
     get "/", PageController, :index

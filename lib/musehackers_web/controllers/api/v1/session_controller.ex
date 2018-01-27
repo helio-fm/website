@@ -1,4 +1,4 @@
-defmodule MusehackersWeb.SessionController do
+defmodule MusehackersWeb.Api.V1.SessionController do
   use MusehackersWeb, :controller
   @moduledoc false
 
@@ -6,7 +6,7 @@ defmodule MusehackersWeb.SessionController do
   alias Musehackers.Accounts.User
   alias Musehackers.Accounts.Session
 
-  action_fallback MusehackersWeb.FallbackController
+  action_fallback MusehackersWeb.Api.V1.FallbackController
 
   def sign_in(conn, %{"session" => %{"email" => email, "password" => pass,
     "device_id" => device_id, "platform_id" => platform_id}}) do
