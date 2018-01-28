@@ -80,4 +80,82 @@ defmodule Musehackers.ClientsTest do
       assert %Ecto.Changeset{} = Clients.change_resource(resource)
     end
   end
+
+  describe "apps" do
+    alias Musehackers.Clients.App
+
+    @valid_attrs %{
+      app_name: "some app_name",
+      link: "some link",
+      platform_id: "some platform_id",
+      version: "some version"
+    }
+
+    @update_attrs %{
+      app_name: "some updated app_name",
+      link: "some updated link",
+      platform_id: "some updated platform_id",
+      version: "some updated version"
+    }
+
+    @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
+
+    def app_fixture(attrs \\ %{}) do
+      {:ok, app} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Clients.create_app()
+
+      app
+    end
+
+    test "list_apps/0 returns all apps" do
+      app = app_fixture()
+      assert Clients.list_apps() == [app]
+    end
+
+    test "get_app!/1 returns the app with given id" do
+      app = app_fixture()
+      assert Clients.get_app!(app.id) == app
+    end
+
+    test "create_app/1 with valid data creates a app" do
+      assert {:ok, %App{} = app} = Clients.create_app(@valid_attrs)
+      assert app.app_name == "some app_name"
+      assert app.link == "some link"
+      assert app.platform_id == "some platform_id"
+      assert app.version == "some version"
+    end
+
+    test "create_app/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Clients.create_app(@invalid_attrs)
+    end
+
+    test "update_app/2 with valid data updates the app" do
+      app = app_fixture()
+      assert {:ok, app} = Clients.update_app(app, @update_attrs)
+      assert %App{} = app
+      assert app.app_name == "some updated app_name"
+      assert app.link == "some updated link"
+      assert app.platform_id == "some updated platform_id"
+      assert app.version == "some updated version"
+    end
+
+    test "update_app/2 with invalid data returns error changeset" do
+      app = app_fixture()
+      assert {:error, %Ecto.Changeset{}} = Clients.update_app(app, @invalid_attrs)
+      assert app == Clients.get_app!(app.id)
+    end
+
+    test "delete_app/1 deletes the app" do
+      app = app_fixture()
+      assert {:ok, %App{}} = Clients.delete_app(app)
+      assert_raise Ecto.NoResultsError, fn -> Clients.get_app!(app.id) end
+    end
+
+    test "change_app/1 returns a app changeset" do
+      app = app_fixture()
+      assert %Ecto.Changeset{} = Clients.change_app(app)
+    end
+  end
 end

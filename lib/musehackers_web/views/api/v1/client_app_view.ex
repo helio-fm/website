@@ -3,23 +3,19 @@ defmodule MusehackersWeb.Api.V1.ClientAppView do
   alias MusehackersWeb.Api.V1.ClientAppView
   @moduledoc false
 
-  def render("index.json", %{resources: resources}) do
-    %{data: render_many(resources, ClientAppView, "resource.json", as: :resource)}
+  def render("index.json", %{apps: apps}) do
+    %{data: render_many(apps, ClientAppView, "app.json", as: :app)}
   end
 
-  def render("show.json", %{resource: resource}) do
-    %{data: render_one(resource, ClientAppView, "resource.json", as: :resource)}
+  def render("show.json", %{app: app}) do
+    %{data: render_one(app, ClientAppView, "app.json", as: :app)}
   end
 
-  def render("resource.json", %{resource: resource}) do
-    %{id: resource.id,
-      resource_name: resource.resource_name,
-      app_name: resource.app_name,
-      hash: resource.hash,
-      data: resource.data}
-  end
-
-  def render("resource_data.json", %{resource: resource}) do
-    resource.data
+  def render("app.json", %{app: app}) do
+    %{id: app.id,
+      app_name: app.app_name,
+      platform_id: app.platform_id,
+      version: app.version,
+      link: app.link}
   end
 end

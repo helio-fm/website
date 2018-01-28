@@ -1,27 +1,28 @@
-defmodule MusehackersWeb.Api.V1.ClientAppControllerTest do
+defmodule MusehackersWeb.ClientAppControllerTest do
   use MusehackersWeb.ConnCase
 
   alias Musehackers.Clients
-  alias Musehackers.Clients.Resource
+  alias Musehackers.Clients.App
 
   @create_attrs %{
     app_name: "some app_name",
-    data: %{},
-    hash: "some hash",
-    resource_name: "some resource_name"
+    link: "some link",
+    platform_id: "some platform_id",
+    version: "some version"
   }
 
   @update_attrs %{
     app_name: "some updated app_name",
-    data: %{}, hash: "some updated hash",
-    resource_name: "some updated resource_name"
+    link: "some updated link",
+    platform_id: "some updated platform_id",
+    version: "some updated version"
   }
 
-  @invalid_attrs %{app_name: nil, data: nil, hash: nil, resource_name: nil}
+  @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
 
-  def fixture(:resource) do
-    {:ok, resource} = Clients.create_resource(@create_attrs)
-    resource
+  def fixture(:app) do
+    {:ok, app} = Clients.create_app(@create_attrs)
+    app
   end
 
   setup %{conn: conn} do
@@ -29,68 +30,68 @@ defmodule MusehackersWeb.Api.V1.ClientAppControllerTest do
   end
 
   describe "index" do
-    test "lists all resources", %{conn: conn} do
-      conn = get conn, api_v1_client_resource_path(conn, :index)
+    test "lists all apps", %{conn: conn} do
+      conn = get conn, api_v1_client_app_info_path(conn, :index)
       assert json_response(conn, 200)["data"] == []
     end
   end
 
-  describe "create resource" do
-    test "renders resource when data is valid", %{conn: conn} do
-      conn = post conn, api_v1_client_resource_path(conn, :create), resource: @create_attrs
+  describe "create app" do
+    test "renders app when data is valid", %{conn: conn} do
+      conn = post conn, api_v1_client_app_info_path(conn, :create), app: @create_attrs
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get conn, api_v1_client_resource_path(conn, :show, id)
+      conn = get conn, api_v1_client_app_info_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "app_name" => "some app_name",
-        "data" => %{},
-        "hash" => "some hash",
-        "resource_name" => "some resource_name"}
+        "link" => "some link",
+        "platform_id" => "some platform_id",
+        "version" => "some version"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, api_v1_client_resource_path(conn, :create), resource: @invalid_attrs
+      conn = post conn, api_v1_client_app_info_path(conn, :create), app: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
-  describe "update resource" do
-    setup [:create_resource]
+  describe "update app" do
+    setup [:create_app]
 
-    test "renders resource when data is valid", %{conn: conn, resource: %Resource{id: id} = resource} do
-      conn = put conn, api_v1_client_resource_path(conn, :update, resource), resource: @update_attrs
+    test "renders app when data is valid", %{conn: conn, app: %App{id: id} = app} do
+      conn = put conn, api_v1_client_app_info_path(conn, :update, app), app: @update_attrs
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get conn, api_v1_client_resource_path(conn, :show, id)
+      conn = get conn, api_v1_client_app_info_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "app_name" => "some updated app_name",
-        "data" => %{},
-        "hash" => "some updated hash",
-        "resource_name" => "some updated resource_name"}
+        "link" => "some updated link",
+        "platform_id" => "some updated platform_id",
+        "version" => "some updated version"}
     end
 
-    test "renders errors when data is invalid", %{conn: conn, resource: resource} do
-      conn = put conn, api_v1_client_resource_path(conn, :update, resource), resource: @invalid_attrs
+    test "renders errors when data is invalid", %{conn: conn, app: app} do
+      conn = put conn, api_v1_client_app_info_path(conn, :update, app), app: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
-  describe "delete resource" do
-    setup [:create_resource]
+  describe "delete app" do
+    setup [:create_app]
 
-    test "deletes chosen resource", %{conn: conn, resource: resource} do
-      conn = delete conn, api_v1_client_resource_path(conn, :delete, resource)
+    test "deletes chosen app", %{conn: conn, app: app} do
+      conn = delete conn, api_v1_client_app_info_path(conn, :delete, app)
       assert response(conn, 204)
       assert_error_sent 404, fn ->
-        get conn, api_v1_client_resource_path(conn, :show, resource)
+        get conn, api_v1_client_app_info_path(conn, :show, app)
       end
     end
   end
 
-  defp create_resource(_) do
-    resource = fixture(:resource)
-    {:ok, resource: resource}
+  defp create_app(_) do
+    app = fixture(:app)
+    {:ok, app: app}
   end
 end

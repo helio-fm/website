@@ -36,7 +36,8 @@ defmodule MusehackersWeb.Router do
       scope "/clients", as: :client do
         pipe_through :clients
 
-        resources "/resources", ClientAppController, except: [:new, :edit], as: :resource
+        resources "/resources", ClientResourceController, except: [:new, :edit], as: :resource
+        resources "/info", ClientAppController, except: [:new, :edit], as: :app_info
         # TODO replace that^ with:
         # get "/:app/info", ClientAppController, :get_client_info, as: :info
         # get "/:app/resources/:resource", ClientAppController, :get_client_resource, as: :resource
