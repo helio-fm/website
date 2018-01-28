@@ -15,32 +15,50 @@ defmodule MusehackersWeb.Router do
     # plug :accepts, ["json", "application/octet-stream"]
   end
 
+  pipeline :clients do
+    # TODO add some workstation app check?
+    # like header api key or so
+  end
+
   pipeline :authenticated do
     plug Musehackers.Guardian.AuthPipeline
   end
 
-  scope "/api/v1", MusehackersWeb.Api.V1, as: :api_v1 do
+  scope "/api", MusehackersWeb.Api, as: :api do
     pipe_through :api
 
-    post "/join", RegistrationController, :sign_up
-    post "/login", SessionController, :sign_in
+    scope "/v1", V1, as: :v1 do
+      post "/join", RegistrationController, :sign_up, as: :registration
+      post "/login", SessionController, :sign_in, as: :session
 
-    # restrict unauthenticated access for routes below
-    pipe_through :authenticated
+      # some stuff for specific client apps
+      # e.g. `/api/v1/clients/helio/resources/translations`
+      scope "/clients", as: :client do
+        pipe_through :clients
 
-    # this endpoint provides a kind of a sliding session:
-    # first, it checks for a token, that is
-    #   1) valid and unexpired,
-    #   2) present in active_sessions for a given device id;
-    # if passed, it issues a new token and saves it a related active session
-    # (there can be only one session per user and device id),
-    # so that if user runs the app, say, at least once a week, his session won't expire
-    # (and if the token is compromised/stolen, the user's session won't be prolonged,
-    # eventually forcing him to re-login, and thus invalidating attacker's session);
-    # and, although re-issuing a token is stateful, authentication is still stateless and fast
-    post "/relogin", SessionController, :refresh_token
+        resources "/resources", ClientAppController, except: [:new, :edit], as: :resource
+        # TODO replace that^ with:
+        # get "/:app/info", ClientAppController, :get_client_info, as: :info
+        # get "/:app/resources/:resource", ClientAppController, :get_client_resource, as: :resource
+      end
 
-    resources "/users", UserController, except: [:new, :edit]
+      # restrict unauthenticated access for routes below
+      pipe_through :authenticated
+
+      # this endpoint provides a kind of a sliding session:
+      # first, it checks for a token, that is
+      #   1) valid and unexpired,
+      #   2) present in active_sessions for a given device id;
+      # if passed, it issues a new token and saves it a related active session
+      # (there can be only one session per user and device id),
+      # so that if user runs the app, say, at least once a week, his session won't expire
+      # (and if the token is compromised/stolen, the user's session won't be prolonged,
+      # eventually forcing him to re-login, and thus invalidating attacker's session);
+      # and, although re-issuing a token is stateful, authentication is still stateless and fast
+      post "/relogin", SessionController, :refresh_token, as: :session
+
+      resources "/users", UserController, except: [:new, :edit]
+    end
   end
 
   scope "/", MusehackersWeb do
