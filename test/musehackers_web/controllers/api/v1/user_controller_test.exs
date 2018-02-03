@@ -1,6 +1,7 @@
 defmodule MusehackersWeb.Api.V1.UserControllerTest do
   use MusehackersWeb.ConnCase
 
+  alias Musehackers.Auth.Token
   alias Musehackers.Accounts
   alias Musehackers.Accounts.User
 
@@ -104,12 +105,12 @@ defmodule MusehackersWeb.Api.V1.UserControllerTest do
 
   defp authenticated(conn) do
     user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin"}
-    {:ok, jwt, _claims} = Musehackers.Guardian.encode_and_sign(user, %{}, token_ttl: {1, :minute})
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute})
     conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 
   defp authenticated(conn, user) do
-    {:ok, jwt, _claims} = Musehackers.Guardian.encode_and_sign(user, %{}, token_ttl: {1, :minute})
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute})
     conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 end

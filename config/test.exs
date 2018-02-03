@@ -21,7 +21,7 @@ config :musehackers, Musehackers.Repo,
 # Reduce the number of rounds so it does not slow down tests
 config :pbkdf2_elixir, :rounds, 1
 
-config :musehackers, Musehackers.Guardian,
+config :musehackers, Musehackers.Auth.Token,
   secret_key: "TEST_SECRET_KEY_GUARDIAN"
 
 config :musehackers, MusehackersWeb.Endpoint,

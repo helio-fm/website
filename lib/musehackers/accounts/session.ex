@@ -29,7 +29,7 @@ defmodule Musehackers.Accounts.Session do
     payload = %{user_id: user_id, device_id: device_id, platform_id: platform_id, token: token}
     case Accounts.create_or_update_session(payload) do
       {:error, _} -> {:error, :session_update_failed}
-      {:ok, inserted} -> {:ok, token}
+      {:ok, _inserted} -> {:ok, token}
     end
   end
 end

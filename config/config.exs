@@ -18,7 +18,7 @@ config :musehackers, MusehackersWeb.Endpoint,
            adapter: Phoenix.PubSub.PG2]
 
 # Configure Guardian for JWT authentication
-config :musehackers, Musehackers.Guardian,
+config :musehackers, Musehackers.Auth.Token,
   issuer: "musehackers",
   secret_key: System.get_env("SECRET_KEY_GUARDIAN"),
   token_verify_module: Guardian.Token.Jwt.Verify,

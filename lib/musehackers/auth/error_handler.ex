@@ -1,4 +1,4 @@
-defmodule Musehackers.Guardian.AuthErrorHandler do
+defmodule Musehackers.Auth.ErrorHandler do
   import Plug.Conn
   @moduledoc false
 

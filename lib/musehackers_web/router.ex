@@ -21,7 +21,7 @@ defmodule MusehackersWeb.Router do
   end
 
   pipeline :authenticated do
-    plug Musehackers.Guardian.AuthPipeline
+    plug Musehackers.Auth.Pipeline
   end
 
   scope "/api", MusehackersWeb.Api, as: :api do

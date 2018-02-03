@@ -50,7 +50,7 @@ config :logger, :console, format: "[$level] $message\n"
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
 
-config :musehackers, Musehackers.Guardian,
+config :musehackers, Musehackers.Auth.Token,
   secret_key: "DEV_SECRET_KEY_GUARDIAN"
 
 config :musehackers, MusehackersWeb.Endpoint,
