@@ -1,5 +1,6 @@
 defmodule Musehackers.Repo do
   use Ecto.Repo, otp_app: :musehackers
+  @moduledoc false
 
   @doc """
   Dynamically loads the repository url from the

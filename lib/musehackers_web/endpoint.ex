@@ -1,5 +1,6 @@
 defmodule MusehackersWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :musehackers
+  @moduledoc false
 
   socket "/socket", MusehackersWeb.UserSocket
 

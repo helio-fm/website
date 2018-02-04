@@ -1,24 +1,9 @@
 
   <div class="jumbotron">
 
-    <%= if @current_user do %>
+    <h2><%= gettext "Welcome to %{name}", name: "Muse Hackers" %></h2>
+    <p class="lead">Yet another procrastinator's pet project in <s>heavy</s> development.</p>
 
-      <h2>Welcome, <%= @current_user.name %>!</h2>
-      <p class="lead">Yet another procrastinator's pet project in <s>heavy</s> development.</p>
-      <%= button "Logout", to: auth_path(@conn, :delete), method: :delete, class: "btn btn-danger" %>
-      <br>
-
-    <% else %>
-
-      <h2><%= gettext "Welcome to %{name}", name: "Muse Hackers" %></h2>
-      <p class="lead">Yet another procrastinator's pet project in <s>heavy</s> development.</p>
-      
-      <a class="btn btn-primary btn-lg" href="/auth/facebook">
-        <i class="fa fa-facebook"></i>
-        <%= gettext "Sign in with Facebook" %>
-      </a>
-
-    <% end %>
   </div>
 
   <br>

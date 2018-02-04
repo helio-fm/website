@@ -3,7 +3,7 @@
     <defs></defs>
     <g id="Menu" stroke="none">
         <g id="End" transform="translate(0.0, 5.0)">
-            <circle cx="20" cy="20" r="18" stroke="#100F16" stroke-width="0.0" fill="#ebebeb"></circle>
+            <!-- <circle cx="20" cy="20" r="18" stroke="#100F16" stroke-width="0.0" fill="#ebebeb"></circle> -->
             <g id="Lines" stroke-opacity="0.75" stroke="#100F16" stroke-width="1">
                 <path d="M50.0,0.0 L50.0,40.5" id="v2"></path>
             </g>

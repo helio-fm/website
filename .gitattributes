@@ -1,0 +1,8 @@
+*.ex text=auto eol=lf
+*.eex text=auto eol=lf
+*.exs text=auto eol=lf
+*.js text=auto eol=lf
+*.css text=auto eol=lf
+*.pot text=auto eol=lf
+*.po text=auto eol=lf
+*.svg -text

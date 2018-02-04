@@ -17,6 +17,16 @@ config :musehackers, MusehackersWeb.Endpoint,
   pubsub: [name: Musehackers.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+# Configure Guardian for JWT authentication
+config :musehackers, Musehackers.Auth.Token,
+  issuer: "musehackers",
+  secret_key: System.get_env("SECRET_KEY_GUARDIAN"),
+  token_verify_module: Guardian.Token.Jwt.Verify,
+  allowed_algos: ["HS512"],
+  ttl: { 8, :days },
+  allowed_drift: 2000,
+  verify_issuer: true
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -25,16 +35,3 @@ config :logger, :console,
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
-
-config :ueberauth, Ueberauth,
-  providers: [
-    facebook: { Ueberauth.Strategy.Facebook, [] }
-  ]
-
-config :ueberauth, Ueberauth.Strategy.Facebook.OAuth,
-  client_id: System.get_env("FACEBOOK_APP_ID"),
-  client_secret: System.get_env("FACEBOOK_APP_SECRET"),
-  redirect_uri: System.get_env("FACEBOOK_REDIRECT_URI")
-
-config :dogma,
-  rule_set: Dogma.RuleSet.All

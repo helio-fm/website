@@ -13,7 +13,16 @@ config :logger, level: :warn
 config :musehackers, Musehackers.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "postgres",
+  password: "123",
   database: "musehackers_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Reduce the number of rounds so it does not slow down tests
+config :pbkdf2_elixir, :rounds, 1
+
+config :musehackers, Musehackers.Auth.Token,
+  secret_key: "TEST_SECRET_KEY_GUARDIAN"
+
+config :musehackers, MusehackersWeb.Endpoint,
+  secret_key_base: "TEST_SECRET_KEY_BASE"

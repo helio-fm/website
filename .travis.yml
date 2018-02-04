@@ -1,7 +1,7 @@
 dist: trusty
 language: elixir
 addons:
-  postgresql: '9.4'
+  postgresql: '9.6'
   ssh_known_hosts: musehackers.com
 elixir:
 - 1.4.0
@@ -13,6 +13,7 @@ cache:
   - deps
 env:
   global:
+  - MIX_ENV=test
   - ELIXIR_ASSERT_TIMEOUT=2000
   - SECRET_KEY_BASE=travistravistravistravistravistravistrvistravistravistrvistravis
   - SECRET_KEY_GUARDIAN=travistravistravistravistravistravistrvistravistravistrvistravis
@@ -24,7 +25,7 @@ before_script:
 - cp config/travis.exs config/test.exs
 - mix do ecto.create, ecto.migrate
 script:
-- mix test
+- mix do dogma, coveralls.travis
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_473de6575b5f_key -iv $encrypted_473de6575b5f_iv -in .deliver/deploy_rsa.enc -out /tmp/deploy_rsa -d
 - eval "$(ssh-agent -s)"

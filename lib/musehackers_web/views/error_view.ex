@@ -1,5 +1,6 @@
 defmodule MusehackersWeb.ErrorView do
   use MusehackersWeb, :view
+  @moduledoc false
 
   def render("404.html", _assigns) do
     "Page not found"
@@ -7,6 +8,10 @@ defmodule MusehackersWeb.ErrorView do
 
   def render("500.html", _assigns) do
     "Internal server error"
+  end
+
+  def render("error.json", %{status: status, message: message}) do
+    %{status: status, message: message}
   end
 
   # In case no render clause matches or no

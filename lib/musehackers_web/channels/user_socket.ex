@@ -1,10 +1,11 @@
 defmodule MusehackersWeb.UserSocket do
   use Phoenix.Socket
+  @moduledoc false
 
-  ## Channels
+  # Channels
   # channel "room:*", MusehackersWeb.RoomChannel
 
-  ## Transports
+  # Transports
   transport :websocket, Phoenix.Transports.WebSocket
   # transport :longpoll, Phoenix.Transports.LongPoll
 

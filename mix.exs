@@ -10,7 +10,14 @@ defmodule Musehackers.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        "coveralls": :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -23,8 +30,7 @@ defmodule Musehackers.Mixfile do
       extra_applications: [:logger,
                            :runtime_tools,
                            :edeliver,
-                           :oauth,
-                           :ueberauth_facebook]
+                           :comeonin]
     ]
   end
 
@@ -37,24 +43,24 @@ defmodule Musehackers.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.0-rc"},
+      {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.2"},
-      {:postgrex, ">= 0.0.0"},
+      {:phoenix_ecto, "~> 3.3.0"},
+      {:postgrex, ">= 0.13.3"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
 
-      {:oauth2, "~> 0.8", override: true},
-      {:oauth, github: "tim/erlang-oauth"},
-      {:ueberauth_facebook, "~> 0.5"},
-      {:poison, "~> 3.0", override: true},
+      {:guardian, "~> 1.0.0"},
+      {:comeonin, "~> 4.0.3"},
+      {:pbkdf2_elixir, "~> 0.12.3"},
 
       {:distillery, "~> 1.0"},
       {:edeliver, "~> 1.4.4"},
 
-      {:dogma, ">= 0.0.0", only: [:dev, :test]}
+      {:dogma, "~> 0.1.15", only: [:dev, :test]},
+      {:excoveralls, "~> 0.8", only: :test}
     ]
   end
 

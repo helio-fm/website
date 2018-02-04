@@ -19,17 +19,8 @@
         <nav role="navigation">
         </nav>
         <span class="logo">
-            <span class="menu">
-              <%= if @current_user do %>
-                <img src="<%= @current_user.avatar %>" class="img-circle"/>
-              <% else %>
-                <a href="/auth/facebook">
-                  <img id="login" title="<%= gettext "Sign in with Facebook" %>" src="<%= static_path(@conn, "/images/incognito.png") %>" class="img-circle"/>
-                  <script src="<%= static_path(@conn, "/js/tippy.min.js") %>"></script>
-                  <script> tippy('#login', { position: 'bottom', duration: 250, arrow: false, size: 'big', theme: 'dark', performance: true }) </script>
-                </a>
-              <% end %>
-            </span>
+          <span class="menu">
+          </span>
         </span>
       </header>
 
