@@ -9,14 +9,14 @@ defmodule Musehackers.AccountsTest do
     @valid_attrs %{
       login: "helio.fm",
       email: "email@helio.fm",
-      first_name: "john",
+      name: "john",
       password: "some password"
     }
 
     @update_attrs %{
       login: "helio.fm",
       email: "updated-email@helio.fm",
-      last_name: "doe",
+      name: "doe",
       password: "some updated password"
     }
 
@@ -41,9 +41,7 @@ defmodule Musehackers.AccountsTest do
       stored_user = Accounts.get_user!(user.id)
       assert user.login == stored_user.login
       assert user.email == stored_user.email
-      assert user.first_name == stored_user.first_name
-      assert user.last_name == stored_user.last_name
-      assert user.is_admin == stored_user.is_admin
+      assert user.name == stored_user.name
       assert user.inserted_at == stored_user.inserted_at
       assert user.password_hash == stored_user.password_hash
       assert stored_user.password == nil
@@ -74,9 +72,7 @@ defmodule Musehackers.AccountsTest do
       stored_user = Accounts.get_user!(user.id)
       assert user.login == stored_user.login
       assert user.email == stored_user.email
-      assert user.first_name == stored_user.first_name
-      assert user.last_name == stored_user.last_name
-      assert user.is_admin == stored_user.is_admin
+      assert user.name == stored_user.name
       assert user.inserted_at == stored_user.inserted_at
       assert user.password_hash == stored_user.password_hash
       assert stored_user.password == nil

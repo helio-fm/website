@@ -14,12 +14,10 @@ defmodule Musehackers.Accounts.User do
   schema "users" do
     field :login, :string
     field :email, :string
-    field :first_name, :string
-    field :last_name, :string
+    field :name, :string
     field :password, :string, virtual: true # virtual - i.e. not stored in db
     field :password_confirmation, :string, virtual: true
     field :password_hash, :string
-    field :is_admin, :boolean, default: false
     has_many :active_sessions, Session
 
     timestamps()
@@ -28,7 +26,7 @@ defmodule Musehackers.Accounts.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:login, :email, :first_name, :last_name, :password, :is_admin])
+    |> cast(attrs, [:login, :email, :name, :password])
     |> validate_required([:login, :email, :password])
     |> validate_changeset
   end
@@ -36,7 +34,7 @@ defmodule Musehackers.Accounts.User do
   @doc false
   def registration_changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:login, :email, :first_name, :last_name, :password, :password_confirmation])
+    |> cast(attrs, [:login, :email, :name, :password, :password_confirmation])
     |> validate_required([:login, :email, :password, :password_confirmation])
     |> validate_confirmation(:password)
     |> validate_changeset

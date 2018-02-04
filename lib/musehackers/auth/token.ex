@@ -19,7 +19,8 @@ defmodule Musehackers.Auth.Token do
 
   def get_permissions_for(user = %User{}) do
     cond do
-      user.is_admin ->
+      # Just a temporary hack :)
+      user.email == "peter.rudenko@gmail.com" ->
         {:ok, %{admin: [:read, :write]}}
       true ->
         {:ok, %{default: [:read]}}

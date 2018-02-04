@@ -7,16 +7,15 @@ defmodule MusehackersWeb.Api.V1.UserControllerTest do
 
   @create_attrs %{
     login: "test",
-    email: "email@helio.fm",
-    first_name: "first name",
-    password: "some password",
-    is_admin: true
+    email: "peter.rudenko@gmail.com",
+    name: "name",
+    password: "some password"
   }
 
   @update_attrs %{
     login: "test",
     email: "updated-email@helio.fm",
-    first_name: "some updated name",
+    name: "some updated name",
     password: "some updated password"
   }
 
@@ -40,7 +39,7 @@ defmodule MusehackersWeb.Api.V1.UserControllerTest do
 
       conn = get authenticated(conn), api_v1_user_path(conn, :show, id)
       assert json_response(conn, 200)["data"]["id"] == id
-      assert json_response(conn, 200)["data"]["email"] == "email@helio.fm"
+      assert json_response(conn, 200)["data"]["email"] == "peter.rudenko@gmail.com"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -105,15 +104,16 @@ defmodule MusehackersWeb.Api.V1.UserControllerTest do
   end
 
   defp authenticated(conn) do
-    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin", is_admin: true}
-    {:ok, permissions} = Token.get_permissions_for(user)
-    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute}, permissions: permissions)
+    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin"}
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{},
+      token_ttl: {1, :minute}, permissions: %{admin: [:read, :write]})
     conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 
   defp authenticated(conn, user) do
     {:ok, permissions} = Token.get_permissions_for(user)
-    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute}, permissions: permissions)
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{},
+      token_ttl: {1, :minute}, permissions: permissions)
     conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 end

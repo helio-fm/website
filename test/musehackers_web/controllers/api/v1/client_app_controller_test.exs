@@ -93,9 +93,9 @@ defmodule MusehackersWeb.ClientAppControllerTest do
   end
 
   defp authenticated(conn) do
-    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin", is_admin: true}
-    {:ok, permissions} = Token.get_permissions_for(user)
-    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute}, permissions: permissions)
+    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin"}
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{},
+      token_ttl: {1, :minute}, permissions: %{admin: [:read, :write]})
     conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 
