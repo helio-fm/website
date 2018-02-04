@@ -25,7 +25,7 @@ defmodule MusehackersWeb.Api.V1.FallbackController do
 
   defp login_failed(conn) do
     conn
-    |> put_status(401)
+    |> put_status(:unauthorized)
     |> render(MusehackersWeb.ErrorView, "error.json", status: :unauthorized, message: "Authentication failed!")
   end
 end

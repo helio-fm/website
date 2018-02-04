@@ -28,4 +28,10 @@ defmodule MusehackersWeb.Api.V1.SessionView do
       """
     }
   end
+
+  def render("session_status.json", _params) do
+    %{
+      status: :ok
+    }
+  end
 end

@@ -7,6 +7,9 @@ defmodule MusehackersWeb.Api.V1.UserController do
 
   action_fallback MusehackersWeb.Api.V1.FallbackController
 
+  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:read]}] when action in [:index, :show]
+  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:write]}] when action in [:create, :update, :delete]
+
   def index(conn, _params) do
     users = Accounts.list_users()
     render(conn, "index.json", users: users)

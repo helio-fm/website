@@ -9,7 +9,8 @@ defmodule MusehackersWeb.Api.V1.UserControllerTest do
     login: "test",
     email: "email@helio.fm",
     first_name: "first name",
-    password: "some password"
+    password: "some password",
+    is_admin: true
   }
 
   @update_attrs %{
@@ -104,13 +105,15 @@ defmodule MusehackersWeb.Api.V1.UserControllerTest do
   end
 
   defp authenticated(conn) do
-    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin"}
-    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute})
+    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin", is_admin: true}
+    {:ok, permissions} = Token.get_permissions_for(user)
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute}, permissions: permissions)
     conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 
   defp authenticated(conn, user) do
-    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute})
+    {:ok, permissions} = Token.get_permissions_for(user)
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute}, permissions: permissions)
     conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 end

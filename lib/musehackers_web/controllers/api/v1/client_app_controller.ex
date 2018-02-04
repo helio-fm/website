@@ -7,6 +7,9 @@ defmodule MusehackersWeb.Api.V1.ClientAppController do
 
   action_fallback MusehackersWeb.Api.V1.FallbackController
 
+  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:read]}] when action in [:index, :show]
+  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:write]}] when action in [:create, :update, :delete]
+
   def index(conn, _params) do
     apps = Clients.list_apps()
     render(conn, "index.json", apps: apps)

@@ -3,6 +3,8 @@ defmodule MusehackersWeb.ClientAppControllerTest do
 
   alias Musehackers.Clients
   alias Musehackers.Clients.App
+  alias Musehackers.Accounts.User
+  alias Musehackers.Auth.Token
 
   @create_attrs %{
     app_name: "some app_name",
@@ -31,17 +33,17 @@ defmodule MusehackersWeb.ClientAppControllerTest do
 
   describe "index" do
     test "lists all apps", %{conn: conn} do
-      conn = get conn, api_v1_client_app_info_path(conn, :index)
+      conn = get authenticated(conn), api_v1_client_app_info_path(conn, :index)
       assert json_response(conn, 200)["data"] == []
     end
   end
 
   describe "create app" do
     test "renders app when data is valid", %{conn: conn} do
-      conn = post conn, api_v1_client_app_info_path(conn, :create), app: @create_attrs
+      conn = post authenticated(conn), api_v1_client_app_info_path(conn, :create), app: @create_attrs
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get conn, api_v1_client_app_info_path(conn, :show, id)
+      conn = get authenticated(conn), api_v1_client_app_info_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "app_name" => "some app_name",
@@ -51,7 +53,7 @@ defmodule MusehackersWeb.ClientAppControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, api_v1_client_app_info_path(conn, :create), app: @invalid_attrs
+      conn = post authenticated(conn), api_v1_client_app_info_path(conn, :create), app: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -60,10 +62,10 @@ defmodule MusehackersWeb.ClientAppControllerTest do
     setup [:create_app]
 
     test "renders app when data is valid", %{conn: conn, app: %App{id: id} = app} do
-      conn = put conn, api_v1_client_app_info_path(conn, :update, app), app: @update_attrs
+      conn = put authenticated(conn), api_v1_client_app_info_path(conn, :update, app), app: @update_attrs
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get conn, api_v1_client_app_info_path(conn, :show, id)
+      conn = get authenticated(conn), api_v1_client_app_info_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "app_name" => "some updated app_name",
@@ -73,7 +75,7 @@ defmodule MusehackersWeb.ClientAppControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, app: app} do
-      conn = put conn, api_v1_client_app_info_path(conn, :update, app), app: @invalid_attrs
+      conn = put authenticated(conn), api_v1_client_app_info_path(conn, :update, app), app: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -82,12 +84,19 @@ defmodule MusehackersWeb.ClientAppControllerTest do
     setup [:create_app]
 
     test "deletes chosen app", %{conn: conn, app: app} do
-      conn = delete conn, api_v1_client_app_info_path(conn, :delete, app)
+      conn = delete authenticated(conn), api_v1_client_app_info_path(conn, :delete, app)
       assert response(conn, 204)
       assert_error_sent 404, fn ->
-        get conn, api_v1_client_app_info_path(conn, :show, app)
+        get authenticated(conn), api_v1_client_app_info_path(conn, :show, app)
       end
     end
+  end
+
+  defp authenticated(conn) do
+    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin", is_admin: true}
+    {:ok, permissions} = Token.get_permissions_for(user)
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{}, token_ttl: {1, :minute}, permissions: permissions)
+    conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
   end
 
   defp create_app(_) do

@@ -55,8 +55,8 @@ defmodule MusehackersWeb.Api.V1.SessionControllerTest do
       assert json_response(conn, 200)["data"]["email"] == "email@helio.fm"
 
       jwt = json_response(conn, 200)["data"]["token"]
-      conn = get authenticated(conn, jwt), api_v1_user_path(conn, :index)
-      assert json_response(conn, 200)["data"] != []
+      conn = get authenticated(conn, jwt), api_v1_session_status_path(conn, :is_authenticated)
+      assert json_response(conn, 200)["status"] == "ok"
     end
 
     test "renders login error when email is invalid", %{conn: conn} do
@@ -137,8 +137,8 @@ defmodule MusehackersWeb.Api.V1.SessionControllerTest do
       new_token = json_response(conn, 200)["data"]["token"]
 
       assert new_token != token
-      conn = get authenticated(conn, new_token), api_v1_user_path(conn, :index)
-      assert json_response(conn, 200)["data"] != []
+      conn = get authenticated(conn, new_token), api_v1_session_status_path(conn, :is_authenticated)
+      assert json_response(conn, 200)["status"] == "ok"
     end
 
     test "fails to re-generate token given valid token but different device id", %{conn: conn} do

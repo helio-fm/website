@@ -25,4 +25,11 @@ defmodule MusehackersWeb.Api.V1.SessionController do
          {:ok, jwt} <- Session.update_token_for_device(user.id, device_id, platform_id, jwt),
     do: render(conn, "refresh_token.json", user: user, jwt: jwt)
   end
+
+  # todo show current permissions?
+  def is_authenticated(conn, _params) do
+    conn
+    |> put_status(:ok)
+    |> render(MusehackersWeb.Api.V1.SessionView, "session_status.json")
+  end
 end

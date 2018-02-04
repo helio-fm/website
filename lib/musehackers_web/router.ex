@@ -16,6 +16,7 @@ defmodule MusehackersWeb.Router do
   end
 
   pipeline :clients do
+    plug Musehackers.Auth.Pipeline
     # TODO add some workstation app check?
     # like header api key or so
   end
@@ -38,13 +39,20 @@ defmodule MusehackersWeb.Router do
 
         resources "/resources", ClientResourceController, except: [:new, :edit], as: :resource
         resources "/info", ClientAppController, except: [:new, :edit], as: :app_info
+
         # TODO replace that^ with:
         # get "/:app/info", ClientAppController, :get_client_info, as: :info
         # get "/:app/resources/:resource", ClientAppController, :get_client_resource, as: :resource
+
+        # pipe_through :authenticated
+        # post "/:app/resources/:resource", ClientAppController, :update_client_resource, as: :resource
+        # post "/:app/info", ClientAppController, :update_client_info, as: :info
       end
 
       # restrict unauthenticated access for routes below
       pipe_through :authenticated
+
+      get "/session-status", SessionController, :is_authenticated, as: :session_status
 
       # this endpoint provides a kind of a sliding session:
       # first, it checks for a token, that is

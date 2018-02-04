@@ -19,6 +19,6 @@ defmodule Musehackers.Clients.Resource do
     |> cast(attrs, [:resource_name, :app_name, :hash, :data])
     |> validate_required([:resource_name, :app_name, :hash, :data])
     |> unique_constraint(:resource_name)
-    |> unique_constraint(:resource_name, name: :resources_one_resource_per_app)    
+    |> unique_constraint(:resource_name, name: :resources_one_resource_per_app)
   end
 end
