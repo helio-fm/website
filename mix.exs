@@ -52,13 +52,20 @@ defmodule Musehackers.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
 
+      # For auth
       {:guardian, "~> 1.0.0"},
       {:comeonin, "~> 4.0.3"},
       {:pbkdf2_elixir, "~> 0.12.3"},
 
+      # For jobs
+      {:tesla, "~> 0.10.0"},
+      {:nimble_csv, "~> 0.4"},
+
+      # For deployment
       {:distillery, "~> 1.0"},
       {:edeliver, "~> 1.4.4"},
 
+      # For tests
       {:dogma, "~> 0.1.15", only: [:dev, :test]},
       {:excoveralls, "~> 0.8", only: :test}
     ]
