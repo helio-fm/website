@@ -4,7 +4,7 @@ addons:
   postgresql: '9.6'
   ssh_known_hosts: musehackers.com
 elixir:
-- 1.4.0
+- 1.5.0
 services:
 - postgresql
 cache:
