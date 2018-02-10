@@ -66,7 +66,7 @@ defmodule Musehackers.Mixfile do
       {:edeliver, "~> 1.4.4"},
 
       # For tests
-      {:dogma, "~> 0.1.15", only: [:dev, :test]},
+      {:credo, "~> 0.9.0-rc3", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.8", only: :test}
     ]
   end

@@ -75,7 +75,7 @@ defmodule MusehackersWeb.Api.V1.RegistrationControllerTest do
     end
 
     test "renders error when invalid email provided", %{conn: conn} do
-      conn = post conn, api_v1_registration_path(conn, :sign_up),user: %{@data | email: "no_at_character"}
+      conn = post conn, api_v1_registration_path(conn, :sign_up), user: %{@data | email: "no_at_character"}
       assert json_response(conn, 422)["errors"]["email"] != ""
     end
 
@@ -88,7 +88,7 @@ defmodule MusehackersWeb.Api.V1.RegistrationControllerTest do
     test "renders error when already provided same email in different case", %{conn: conn} do
       conn = post conn, api_v1_registration_path(conn, :sign_up), user: @data
       conn = post conn, api_v1_registration_path(conn, :sign_up),
-        user: %{@data | login: "other-login", email: "eMail@hElio.FM",}
+        user: %{@data | login: "other-login", email: "eMail@hElio.FM"}
 
       assert "has already been taken" in json_response(conn, 422)["errors"]["email"]
     end

@@ -17,6 +17,7 @@ defmodule MusehackersWeb.Router do
 
   pipeline :clients do
     plug Musehackers.Auth.Pipeline
+    # credo:disable-for-next-line
     # TODO add some workstation app check?
     # like header api key or so
   end
@@ -40,6 +41,7 @@ defmodule MusehackersWeb.Router do
         resources "/resources", ClientResourceController, except: [:new, :edit], as: :resource
         resources "/info", ClientAppController, except: [:new, :edit], as: :app_info
 
+        # credo:disable-for-next-line
         # TODO replace that^ with:
         # get "/:app/info", ClientAppController, :get_client_info, as: :info
         # get "/:app/resources/:resource", ClientAppController, :get_client_resource, as: :resource
