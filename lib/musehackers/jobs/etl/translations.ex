@@ -50,7 +50,7 @@ defmodule Musehackers.Jobs.Etl.Translations do
   defp extract_transform_load(source_url) do
     with {:ok, body} <- download(source_url),
          {:ok, translations_map} = transform(body),
-    do: {} # TODO %Resource{} from translations_map, Clients.update_resource(:translations, translations_resource)
+    do: {} # %Resource{} from translations_map, Clients.update_resource(:translations, translations_resource)
   end
 
   def transform(body) do
@@ -79,19 +79,21 @@ defmodule Musehackers.Jobs.Etl.Translations do
     result = translations
       |> Enum.map(fn(x) ->
         # Iterate sublists to remove columns marked as incomplete
-        Enum.filter(x, fn(y) ->
-          idx = Enum.find_index(x, fn(z) -> z == y end)
-          is_draft = (String.downcase(Enum.at(headers, idx)) =~ "todo")
-          !is_draft
-        end)
+        Enum.filter(x, fn(y) -> columt_belongs_to_draft(headers, x, y) end)
       end)
     {:ok, result}
   end
 
+  defp columt_belongs_to_draft(headers, column, token) do
+    index = column |> Enum.find_index(fn(x) -> x == token end)
+    is_draft = String.downcase(Enum.at(headers, index)) =~ "todo"
+    !is_draft
+  end
+
   defp transform_translations_map(translations) do
-    ids = Enum.at(translations, 1) |> Enum.with_index(0)
-    names = Enum.at(translations, 2)
-    formulas = Enum.at(translations, 3)
+    ids = translations |> Enum.at(1) |> Enum.with_index(0)
+    names = translations |> Enum.at(2)
+    formulas = translations |> Enum.at(3)
 
     # At this point raw data is like:
     # [
@@ -125,8 +127,8 @@ defmodule Musehackers.Jobs.Etl.Translations do
   defp extract_singulars(translations, locale_index) do
     translations
       |> Enum.flat_map(fn(x) ->
-        name = Enum.at(x, 0) |> elem(0);
-        translation = Enum.at(x, locale_index) |> elem(0);
+        name = x |> Enum.at(0) |> elem(0)
+        translation = x |> Enum.at(locale_index) |> elem(0)
         case translation == "" || name =~ "{x}" do
           false -> [%{
             "name": name,
@@ -140,8 +142,8 @@ defmodule Musehackers.Jobs.Etl.Translations do
   defp extract_plurals(translations, locale_index) do
     translations
       |> Enum.flat_map(fn(x) ->
-        name = Enum.at(x, 0) |> elem(0);
-        translations = Enum.at(x, locale_index) |> elem(0);
+        name = x |> Enum.at(0) |> elem(0)
+        translations = x |> Enum.at(locale_index) |> elem(0)
         case translations != "" && name =~ "{x}" do
           true -> [%{
             "name": name,

@@ -13,43 +13,43 @@ defmodule Musehackers.TranslationsTest do
             name: "English",
             pluralEquation: "({x}==1 ? 1 : 2)",
             literal: [
-              %{ name: "defaults::newproject::firstcommit", translation: "Project started" },
-              %{ name: "defaults::newproject::name", translation: "New project" } ],
+              %{name: "defaults::newproject::firstcommit", translation: "Project started"},
+              %{name: "defaults::newproject::name", translation: "New project"}],
             pluralLiteral: [
-              %{ name: "{x} input channels", translation: [
-                  %{ name: "{x} input channel", pluralForm: "1" },
-                  %{ name: "{x} input channels", pluralForm: "2" } ] },
-              %{ name: "{x} output channels", translation: [
-                  %{ name: "{x} output channel", pluralForm: "1" },
-                  %{ name: "{x} output channels", pluralForm: "2" } ] } ]
+              %{name: "{x} input channels", translation: [
+                  %{name: "{x} input channel", pluralForm: "1"},
+                  %{name: "{x} input channels", pluralForm: "2"}]},
+              %{name: "{x} output channels", translation: [
+                  %{name: "{x} output channel", pluralForm: "1"},
+                  %{name: "{x} output channels", pluralForm: "2"}]}]
           },
           %{
             id: "ru",
             name: "Русский",
             pluralEquation: "({x}%10==1 && {x}%100!=11 ? 1 : {x}%10>=2 && {x}%10<=4 && ({x}%100<10 || {x}%100>=20) ? 2 : 3)",
             literal: [
-              %{ name: "defaults::newproject::firstcommit", translation: "Проект создан" },
-              %{ name: "defaults::newproject::name", translation: "Новый проект" } ],
+              %{name: "defaults::newproject::firstcommit", translation: "Проект создан"},
+              %{name: "defaults::newproject::name", translation: "Новый проект"}],
             pluralLiteral: [
-              %{ name: "{x} input channels", translation: [
-                  %{ name: "{x} входной канал", pluralForm: "1" },
-                  %{ name: "{x} входных канала", pluralForm: "2" },
-                  %{ name: "{x} входных каналов", pluralForm: "3" } ] },
-              %{ name: "{x} output channels", translation: [
-                  %{ name: "{x} выходной канал", pluralForm: "1" },
-                  %{ name: "{x} выходных канала", pluralForm: "2" },
-                  %{ name: "{x} выходных каналов", pluralForm: "3" } ] } ]
+              %{name: "{x} input channels", translation: [
+                  %{name: "{x} входной канал", pluralForm: "1"},
+                  %{name: "{x} входных канала", pluralForm: "2"},
+                  %{name: "{x} входных каналов", pluralForm: "3"}]},
+              %{name: "{x} output channels", translation: [
+                  %{name: "{x} выходной канал", pluralForm: "1"},
+                  %{name: "{x} выходных канала", pluralForm: "2"},
+                  %{name: "{x} выходных каналов", pluralForm: "3"}]}]
           },
           %{
             id: "ja",
             name: "日本語",
             pluralEquation: "1",
             literal: [
-              %{ name: "defaults::newproject::firstcommit", translation: "プロジェクト開始" },
-              %{ name: "defaults::newproject::name", translation: "新規プロジェクト" } ],
+              %{name: "defaults::newproject::firstcommit", translation: "プロジェクト開始"},
+              %{name: "defaults::newproject::name", translation: "新規プロジェクト"}],
             pluralLiteral: [
-              %{ name: "{x} input channels", translation: [ %{ name: "{x} 入力チャンネル", pluralForm: "1" } ] },
-              %{ name: "{x} output channels", translation: [ %{ name: "{x} 出力チャンネル", pluralForm: "1" } ] } ]
+              %{name: "{x} input channels", translation: [%{name: "{x} 入力チャンネル", pluralForm: "1"}]},
+              %{name: "{x} output channels", translation: [%{name: "{x} 出力チャンネル", pluralForm: "1"}]}]
           }          
         ]
       }
