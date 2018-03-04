@@ -75,8 +75,11 @@ Plural forms:,,,,,
 {X} uitgangskanalen\""
 
     test "transform/1 returns properly transformed translations map" do
-      {:ok, translations_map} = Translations.transform(@valid_imported_csv)
-      assert Map.equal?(translations_map, @valid_translations_map)
+      {:ok, resource_map} = Translations.transform(@valid_imported_csv)
+      assert resource_map.data == @valid_translations_map
+      assert resource_map.app_name == "helio"
+      assert resource_map.resource_name == "translations"
+      assert resource_map.hash != ""
     end
   end
 end

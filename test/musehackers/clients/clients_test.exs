@@ -49,6 +49,26 @@ defmodule Musehackers.ClientsTest do
       assert resource.resource_name == "some resource_name"
     end
 
+    test "create_or_update_resource/1 with valid data creates and updates a resource" do
+      assert {:ok, %Resource{} = resource} = Clients.create_or_update_resource(@valid_attrs)
+      assert resource.app_name == "some app_name"
+      assert resource.data == %{}
+      assert resource.hash == "some hash"
+      assert resource.resource_name == "some resource_name"
+
+      conflict_attrs = %{@valid_attrs | hash: "some updated hash", data: %{translations: ""}}
+
+      assert {:ok, %Resource{} = resource2} = Clients.create_or_update_resource(conflict_attrs)
+      assert resource2.app_name == "some app_name"
+      assert resource2.data == %{translations: ""}
+      assert resource2.hash == "some updated hash"
+      assert resource2.resource_name == "some resource_name"
+    end
+
+    test "create_or_update_resource/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Clients.create_or_update_resource(@invalid_attrs)
+    end
+
     test "create_resource/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Clients.create_resource(@invalid_attrs)
     end

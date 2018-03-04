@@ -74,6 +74,26 @@ defmodule Musehackers.Clients do
   end
 
   @doc """
+  Creates or updates a resource.
+
+  ## Examples
+
+      iex> create_or_update_resource(%{field: value})
+      {:ok, %Resource{}}
+
+      iex> create_or_update_resource(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_or_update_resource(attrs \\ %{}) do
+    on_conflict = [set: [data: attrs.data, hash: attrs.hash]]
+    conflict_target = [:app_name, :resource_name]
+    %Resource{}
+    |> Resource.changeset(attrs)
+    |> Repo.insert(on_conflict: on_conflict, conflict_target: conflict_target)
+  end
+
+  @doc """
   Deletes a Resource.
 
   ## Examples

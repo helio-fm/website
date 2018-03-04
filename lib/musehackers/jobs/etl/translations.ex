@@ -7,6 +7,7 @@ defmodule Musehackers.Jobs.Etl.Translations do
   require Logger
   import Musehackers.Jobs.Etl.Helpers
   alias Musehackers.Clients
+  alias Musehackers.Clients.Resource
   alias NimbleCSV.RFC4180, as: CSV
   alias NimbleCSV.ParseError
 
@@ -49,15 +50,22 @@ defmodule Musehackers.Jobs.Etl.Translations do
 
   defp extract_transform_load(source_url) do
     with {:ok, body} <- download(source_url),
-         {:ok, translations_map} = transform(body),
-    do: {} # %Resource{} from translations_map, Clients.update_resource(:translations, translations_resource)
+         {:ok, resource} = transform(body),
+    do: Clients.create_or_update_resource(resource)
   end
 
   def transform(body) do
     with {:ok, parsed_csv} <- parse_csv(body),
          {:ok, cleaned_up_csv} <- remove_draft_translations(parsed_csv),
          {:ok, locales_list} <- transform_translations_map(cleaned_up_csv),
-    do: {:ok, %{"translations": %{"locale": locales_list}}}
+    do: {:ok, to_resource(%{"translations": %{"locale": locales_list}})}
+  end
+
+  defp to_resource(translations) do
+    %{"app_name": "helio",
+    "data": translations,
+    "hash": Resource.hash(translations),
+    "resource_name": "translations"}
   end
 
   defp schedule_work do
