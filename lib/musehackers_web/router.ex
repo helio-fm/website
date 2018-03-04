@@ -41,6 +41,9 @@ defmodule MusehackersWeb.Router do
         resources "/resources", ClientResourceController, except: [:new, :edit], as: :resource
         resources "/info", ClientAppController, except: [:new, :edit], as: :app_info
 
+        # One-off endpoint to force running a worker to fetch translations
+        get "/update-translations", JobsController, :update_translations
+
         # credo:disable-for-next-line
         # TODO replace that^ with:
         # get "/:app/info", ClientAppController, :get_client_info, as: :info
@@ -54,6 +57,7 @@ defmodule MusehackersWeb.Router do
       # restrict unauthenticated access for routes below
       pipe_through :authenticated
 
+      # a simple authentication check
       get "/session-status", SessionController, :is_authenticated, as: :session_status
 
       # this endpoint provides a kind of a sliding session:

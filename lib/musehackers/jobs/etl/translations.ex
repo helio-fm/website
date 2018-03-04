@@ -17,6 +17,7 @@ defmodule Musehackers.Jobs.Etl.Translations do
   end
 
   def start_link(_) do
+    Logger.info IO.ANSI.magenta <> "Starting Helio translations update job as " <> to_string(__MODULE__) <> IO.ANSI.reset
     GenServer.start_link(__MODULE__, name: __MODULE__)
   end
 
@@ -24,7 +25,6 @@ defmodule Musehackers.Jobs.Etl.Translations do
     try do
       source_url = googledoc_export_link()
       # turned off for now
-      # Logger.info IO.ANSI.magenta <> "Starting Helio translations update job" <> IO.ANSI.reset
       # schedule_work()
       {:ok, source_url}
     rescue
@@ -43,10 +43,10 @@ defmodule Musehackers.Jobs.Etl.Translations do
 
   # Sync call used by web controller to fetch translations immediately:
   # GenServer.call(Musehackers.Jobs.Etl.Translations, :process)
-  def handle_call(:process) do
+  def handle_call(:process, _from, state) do
     source_url = googledoc_export_link()
     extract_transform_load(source_url)
-    {:ok, source_url}
+    {:reply, state, state}
   end
 
   defp extract_transform_load(source_url) do
