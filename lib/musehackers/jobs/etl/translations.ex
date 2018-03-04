@@ -12,7 +12,8 @@ defmodule Musehackers.Jobs.Etl.Translations do
   alias NimbleCSV.ParseError
 
   def googledoc_export_link do
-    "http://docs.google.com/feeds/download/spreadsheets/Export?key=todo&exportFormat=csv&gid=0"
+    doc_key = System.get_env("ETL_DOC_TRANSLATIONS")
+    "http://docs.google.com/feeds/download/spreadsheets/Export?key=#{doc_key}&exportFormat=csv&gid=0"
   end
 
   def start_link(_) do
