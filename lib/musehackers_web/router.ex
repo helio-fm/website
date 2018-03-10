@@ -13,6 +13,9 @@ defmodule MusehackersWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
     # plug :accepts, ["json", "application/octet-stream"]
+
+    # transforms camelCase json keys into elixir's snake_case
+    plug ProperCase.Plug.SnakeCaseParams
   end
 
   pipeline :clients do

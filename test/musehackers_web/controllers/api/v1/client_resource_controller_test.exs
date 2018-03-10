@@ -45,10 +45,10 @@ defmodule MusehackersWeb.Api.V1.ClientResourceControllerTest do
       conn = get authenticated(conn), api_v1_client_resource_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "app_name" => "some app_name",
+        "appName" => "some app_name",
         "data" => %{},
         "hash" => "some hash",
-        "resource_name" => "some resource_name"}
+        "resourceName" => "some resource_name"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -67,10 +67,10 @@ defmodule MusehackersWeb.Api.V1.ClientResourceControllerTest do
       conn = get authenticated(conn), api_v1_client_resource_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "app_name" => "some updated app_name",
+        "appName" => "some updated app_name",
         "data" => %{},
         "hash" => "some updated hash",
-        "resource_name" => "some updated resource_name"}
+        "resourceName" => "some updated resource_name"}
     end
 
     test "renders errors when data is invalid", %{conn: conn, resource: resource} do

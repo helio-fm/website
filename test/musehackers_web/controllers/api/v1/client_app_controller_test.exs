@@ -46,9 +46,9 @@ defmodule MusehackersWeb.ClientAppControllerTest do
       conn = get authenticated(conn), api_v1_client_app_info_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "app_name" => "some app_name",
+        "appName" => "some app_name",
         "link" => "some link",
-        "platform_id" => "some platform_id",
+        "platformId" => "some platform_id",
         "version" => "some version"}
     end
 
@@ -68,9 +68,9 @@ defmodule MusehackersWeb.ClientAppControllerTest do
       conn = get authenticated(conn), api_v1_client_app_info_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "app_name" => "some updated app_name",
+        "appName" => "some updated app_name",
         "link" => "some updated link",
-        "platform_id" => "some updated platform_id",
+        "platformId" => "some updated platform_id",
         "version" => "some updated version"}
     end
 

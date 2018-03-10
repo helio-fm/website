@@ -30,7 +30,8 @@ defmodule Musehackers.Mixfile do
       extra_applications: [:logger,
                            :runtime_tools,
                            :edeliver,
-                           :comeonin]
+                           :comeonin,
+                           :proper_case]
     ]
   end
 
@@ -60,6 +61,10 @@ defmodule Musehackers.Mixfile do
       # For jobs
       {:tesla, "~> 0.10.0"},
       {:nimble_csv, "~> 0.4"},
+
+      # Faster json encoding and case transform
+      {:jason, "~> 1.0"},
+      {:proper_case, "~> 1.1"},
 
       # For deployment
       {:distillery, "~> 1.0"},
