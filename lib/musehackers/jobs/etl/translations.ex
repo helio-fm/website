@@ -17,16 +17,14 @@ defmodule Musehackers.Jobs.Etl.Translations do
   end
 
   def start_link(_) do
-    Logger.info IO.ANSI.magenta <> "Starting Helio translations update job as " <> to_string(__MODULE__) <> IO.ANSI.reset
     GenServer.start_link(__MODULE__, name: __MODULE__)
   end
 
   def init(_) do
     try do
-      source_url = googledoc_export_link()
-      # turned off for now
-      # schedule_work()
-      {:ok, source_url}
+      Logger.info IO.ANSI.magenta <> "Starting Helio translations update job as " <> to_string(__MODULE__) <> IO.ANSI.reset
+      schedule_work()
+      {:ok, nil}
     rescue
       exception ->
          Logger.error inspect exception
@@ -35,7 +33,9 @@ defmodule Musehackers.Jobs.Etl.Translations do
   end
 
   # Async call used by schedule_work() with Process.send_after
-  def handle_info(:process, source_url) do
+  def handle_info(:process, _) do
+    Logger.info IO.ANSI.magenta <> "Updating translations" <> IO.ANSI.reset
+    source_url = googledoc_export_link()
     extract_transform_load(source_url)
     schedule_work()
     {:noreply, source_url}
