@@ -41,20 +41,12 @@ defmodule MusehackersWeb.Router do
       scope "/clients", as: :client do
         pipe_through :clients
 
-        resources "/resources", ClientResourceController, except: [:new, :edit], as: :resource
-        resources "/info", ClientAppController, except: [:new, :edit], as: :app_info
+        get "/info", ClientAppController, :index, as: :list
+        post "/info", ClientAppController, :create_or_update, as: :update
 
-        # One-off endpoint to force running a worker to fetch translations
-        get "/update-translations", JobsController, :update_translations
-
-        # credo:disable-for-next-line
-        # TODO replace that^ with:
-        # get "/:app/info", ClientAppController, :get_client_info, as: :info
-        # get "/:app/resources/:resource", ClientAppController, :get_client_resource, as: :resource
-
-        # pipe_through :authenticated
-        # post "/:app/resources/:resource", ClientAppController, :update_client_resource, as: :resource
-        # post "/:app/info", ClientAppController, :update_client_info, as: :info
+        get "/:app/info", ClientAppController, :get_client_info, as: :app_info
+        get "/:app/:resource", ClientResourceController, :get_client_resource, as: :resource
+        post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
       end
 
       # restrict unauthenticated access for routes below

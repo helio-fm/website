@@ -22,10 +22,18 @@ defmodule MusehackersWeb.Api.V1.FallbackController do
   def call(conn, {:error, :login_not_found}), do: login_failed(conn, "authentication failed, login not found")
   def call(conn, {:error, :session_update_failed}), do: login_failed(conn, "failed to re-issue a token")
   def call(conn, {:error, :session_not_found}), do: login_failed(conn, "failed to re-issue a token, no valid session")
+  def call(conn, {:error, :client_not_found}), do: not_found(conn, "client not found")
+  def call(conn, {:error, :resource_not_found}), do: not_found(conn, "resource not found")
 
   defp login_failed(conn, message) do
     conn
     |> put_status(:unauthorized)
     |> render(MusehackersWeb.ErrorView, "error.json", status: :unauthorized, message: message)
+  end
+
+  defp not_found(conn, message) do
+    conn
+    |> put_status(:not_found)
+    |> render(MusehackersWeb.ErrorView, "error.json", status: :not_found, message: message)
   end
 end

@@ -80,7 +80,7 @@ defmodule Musehackers.Accounts.User do
 
   def find_user_for_session(device_id, token) do
     query = from u in User,
-          join: s in Session, where: s.user_id == u.id,
+          join: s in Session, on: s.user_id == u.id,
           where: s.device_id == ^device_id and s.token == ^token,
           select: struct(u, [:id, :login, :email])
     case Repo.one(query) do

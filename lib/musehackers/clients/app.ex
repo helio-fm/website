@@ -18,6 +18,6 @@ defmodule Musehackers.Clients.App do
     app
     |> cast(attrs, [:app_name, :platform_id, :version, :link])
     |> validate_required([:app_name, :platform_id, :version, :link])
-    |> unique_constraint(:app_name)
+    |> unique_constraint(:app_name, name: :apps_one_version_per_platform)
   end
 end

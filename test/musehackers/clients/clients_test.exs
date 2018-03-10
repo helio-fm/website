@@ -13,40 +13,27 @@ defmodule Musehackers.ClientsTest do
       resource_name: "some resource_name"
     }
 
-    @update_attrs %{
-      app_name: "some updated app_name",
-      data: %{},
-      hash: "some updated hash",
-      resource_name: "some updated resource_name"
-    }
-
     @invalid_attrs %{app_name: nil, data: nil, hash: nil, resource_name: nil}
 
     def resource_fixture(attrs \\ %{}) do
       {:ok, resource} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Clients.create_resource()
+        |> Clients.create_or_update_resource()
 
       resource
     end
 
-    test "list_resources/0 returns all resources" do
+    test "get_resource_for_app!/2 returns the resource for given app and name" do
       resource = resource_fixture()
-      assert Clients.list_resources() == [resource]
+      {:ok, %Resource{} = resource2} = Clients.get_resource_for_app(resource.app_name, resource.resource_name)
+      assert resource2.data == resource.data
+      assert resource2.resource_name == resource.resource_name
     end
 
-    test "get_resource!/1 returns the resource with given id" do
+    test "get_resource_for_app!/2 returns error for invalid app" do
       resource = resource_fixture()
-      assert Clients.get_resource!(resource.id) == resource
-    end
-
-    test "create_resource/1 with valid data creates a resource" do
-      assert {:ok, %Resource{} = resource} = Clients.create_resource(@valid_attrs)
-      assert resource.app_name == "some app_name"
-      assert resource.data == %{}
-      assert resource.hash == "some hash"
-      assert resource.resource_name == "some resource_name"
+      assert {:error, :resource_not_found} = Clients.get_resource_for_app("invalid", resource.resource_name)
     end
 
     test "create_or_update_resource/1 with valid data creates and updates a resource" do
@@ -59,45 +46,20 @@ defmodule Musehackers.ClientsTest do
       conflict_attrs = %{@valid_attrs | hash: "some updated hash", data: %{translations: ""}}
 
       assert {:ok, %Resource{} = resource2} = Clients.create_or_update_resource(conflict_attrs)
-      assert resource2.app_name == "some app_name"
+      assert resource2.app_name == resource.app_name
+      assert resource2.resource_name == resource.resource_name
       assert resource2.data == %{translations: ""}
       assert resource2.hash == "some updated hash"
-      assert resource2.resource_name == "some resource_name"
     end
 
     test "create_or_update_resource/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Clients.create_or_update_resource(@invalid_attrs)
     end
 
-    test "create_resource/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Clients.create_resource(@invalid_attrs)
-    end
-
-    test "update_resource/2 with valid data updates the resource" do
-      resource = resource_fixture()
-      assert {:ok, resource} = Clients.update_resource(resource, @update_attrs)
-      assert %Resource{} = resource
-      assert resource.app_name == "some updated app_name"
-      assert resource.data == %{}
-      assert resource.hash == "some updated hash"
-      assert resource.resource_name == "some updated resource_name"
-    end
-
-    test "update_resource/2 with invalid data returns error changeset" do
-      resource = resource_fixture()
-      assert {:error, %Ecto.Changeset{}} = Clients.update_resource(resource, @invalid_attrs)
-      assert resource == Clients.get_resource!(resource.id)
-    end
-
     test "delete_resource/1 deletes the resource" do
       resource = resource_fixture()
       assert {:ok, %Resource{}} = Clients.delete_resource(resource)
-      assert_raise Ecto.NoResultsError, fn -> Clients.get_resource!(resource.id) end
-    end
-
-    test "change_resource/1 returns a resource changeset" do
-      resource = resource_fixture()
-      assert %Ecto.Changeset{} = Clients.change_resource(resource)
+      assert {:error, :resource_not_found} = Clients.get_resource_for_app(resource.app_name, resource.resource_name)
     end
   end
 
@@ -111,20 +73,13 @@ defmodule Musehackers.ClientsTest do
       version: "some version"
     }
 
-    @update_attrs %{
-      app_name: "some updated app_name",
-      link: "some updated link",
-      platform_id: "some updated platform_id",
-      version: "some updated version"
-    }
-
     @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
 
     def app_fixture(attrs \\ %{}) do
       {:ok, app} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Clients.create_app()
+        |> Clients.create_or_update_app()
 
       app
     end
@@ -134,48 +89,39 @@ defmodule Musehackers.ClientsTest do
       assert Clients.list_apps() == [app]
     end
 
-    test "get_app!/1 returns the app with given id" do
+    test "get_clients_by_name!/1 returns the app with given name" do
       app = app_fixture()
-      assert Clients.get_app!(app.id) == app
+      {:ok, apps} = Clients.get_clients_by_name(app.app_name)
+      app2 = List.first(apps)
+      assert app2.platform_id == app.platform_id
+      assert app2.version == app.version
+      assert app2.link == app.link
     end
 
-    test "create_app/1 with valid data creates a app" do
-      assert {:ok, %App{} = app} = Clients.create_app(@valid_attrs)
+    test "create_or_update_app/1 with valid data creates and updates a app" do
+      assert {:ok, %App{} = app} = Clients.create_or_update_app(@valid_attrs)
       assert app.app_name == "some app_name"
       assert app.link == "some link"
       assert app.platform_id == "some platform_id"
       assert app.version == "some version"
+
+      conflict_attrs = %{@valid_attrs | link: "some updated link", version: "some updated version"}
+
+      assert {:ok, %App{} = app2} = Clients.create_or_update_app(conflict_attrs)
+      assert app2.app_name == app.app_name
+      assert app2.platform_id == app.platform_id
+      assert app2.version == "some updated version"
+      assert app2.link == "some updated link"
     end
 
-    test "create_app/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Clients.create_app(@invalid_attrs)
-    end
-
-    test "update_app/2 with valid data updates the app" do
-      app = app_fixture()
-      assert {:ok, app} = Clients.update_app(app, @update_attrs)
-      assert %App{} = app
-      assert app.app_name == "some updated app_name"
-      assert app.link == "some updated link"
-      assert app.platform_id == "some updated platform_id"
-      assert app.version == "some updated version"
-    end
-
-    test "update_app/2 with invalid data returns error changeset" do
-      app = app_fixture()
-      assert {:error, %Ecto.Changeset{}} = Clients.update_app(app, @invalid_attrs)
-      assert app == Clients.get_app!(app.id)
+    test "create_or_update_app/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Clients.create_or_update_app(@invalid_attrs)
     end
 
     test "delete_app/1 deletes the app" do
       app = app_fixture()
       assert {:ok, %App{}} = Clients.delete_app(app)
-      assert_raise Ecto.NoResultsError, fn -> Clients.get_app!(app.id) end
-    end
-
-    test "change_app/1 returns a app changeset" do
-      app = app_fixture()
-      assert %Ecto.Changeset{} = Clients.change_app(app)
-    end
+      assert {:ok, []} = Clients.get_clients_by_name(app.app_name)
+     end
   end
 end

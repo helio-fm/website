@@ -2,7 +2,6 @@ defmodule MusehackersWeb.ClientAppControllerTest do
   use MusehackersWeb.ConnCase
 
   alias Musehackers.Clients
-  alias Musehackers.Clients.App
   alias Musehackers.Accounts.User
   alias Musehackers.Auth.Token
 
@@ -14,16 +13,16 @@ defmodule MusehackersWeb.ClientAppControllerTest do
   }
 
   @update_attrs %{
-    app_name: "some updated app_name",
+    app_name: "some app_name",
     link: "some updated link",
-    platform_id: "some updated platform_id",
+    platform_id: "some platform_id",
     version: "some updated version"
   }
 
   @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
 
   def fixture(:app) do
-    {:ok, app} = Clients.create_app(@create_attrs)
+    {:ok, app} = Clients.create_or_update_app(@create_attrs)
     app
   end
 
@@ -33,62 +32,51 @@ defmodule MusehackersWeb.ClientAppControllerTest do
 
   describe "index" do
     test "lists all apps", %{conn: conn} do
-      conn = get authenticated(conn), api_v1_client_app_info_path(conn, :index)
+      conn = get authenticated(conn), api_v1_client_list_path(conn, :index)
       assert json_response(conn, 200)["data"] == []
     end
   end
 
-  describe "create app" do
-    test "renders app when data is valid", %{conn: conn} do
-      conn = post authenticated(conn), api_v1_client_app_info_path(conn, :create), app: @create_attrs
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+  describe "create app versions" do
+    test "renders client info when data is valid", %{conn: conn} do
+      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: @create_attrs
+      assert json_response(conn, 200)["data"] != %{}
 
-      conn = get authenticated(conn), api_v1_client_app_info_path(conn, :show, id)
+      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
+      assert json_response(conn, 200)["data"] != %{}
+
+      conn = get authenticated(conn), api_v1_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "appName" => "some app_name",
-        "link" => "some link",
-        "platformId" => "some platform_id",
-        "version" => "some version"}
+        "resources" => [],
+        "versions" => [%{"link" => "some link",
+          "platformId" => "some platform_id",
+          "version" => "some version"},
+          %{"link" => "some link",
+          "platformId" => "some platform_id 2",
+          "version" => "some version"}]}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post authenticated(conn), api_v1_client_app_info_path(conn, :create), app: @invalid_attrs
+      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
-  describe "update app" do
-    setup [:create_app]
+  describe "update exisitng app version" do
+    test "renders client info when data is valid", %{conn: conn} do
+      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: @create_attrs
+      assert json_response(conn, 200)["data"] != %{}
 
-    test "renders app when data is valid", %{conn: conn, app: %App{id: id} = app} do
-      conn = put authenticated(conn), api_v1_client_app_info_path(conn, :update, app), app: @update_attrs
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: @update_attrs
+      assert json_response(conn, 200)["data"] != %{}
 
-      conn = get authenticated(conn), api_v1_client_app_info_path(conn, :show, id)
+      conn = get authenticated(conn), api_v1_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "appName" => "some updated app_name",
-        "link" => "some updated link",
-        "platformId" => "some updated platform_id",
-        "version" => "some updated version"}
-    end
-
-    test "renders errors when data is invalid", %{conn: conn, app: app} do
-      conn = put authenticated(conn), api_v1_client_app_info_path(conn, :update, app), app: @invalid_attrs
-      assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
-  describe "delete app" do
-    setup [:create_app]
-
-    test "deletes chosen app", %{conn: conn, app: app} do
-      conn = delete authenticated(conn), api_v1_client_app_info_path(conn, :delete, app)
-      assert response(conn, 204)
-      assert_error_sent 404, fn ->
-        get authenticated(conn), api_v1_client_app_info_path(conn, :show, app)
-      end
+        "resources" => [],
+        "versions" => [%{
+          "link" => "some updated link",
+          "platformId" => "some platform_id",
+          "version" => "some updated version"}]}
     end
   end
 
@@ -97,10 +85,5 @@ defmodule MusehackersWeb.ClientAppControllerTest do
     {:ok, jwt, _claims} = Token.encode_and_sign(user, %{},
       token_ttl: {1, :minute}, permissions: %{admin: [:read, :write]})
     conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
-  end
-
-  defp create_app(_) do
-    app = fixture(:app)
-    {:ok, app: app}
   end
 end
