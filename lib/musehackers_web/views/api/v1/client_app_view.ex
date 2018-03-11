@@ -19,8 +19,8 @@ defmodule MusehackersWeb.Api.V1.ClientAppView do
 
   def render("clients_info.json", %{clients: clients, resources: resources}) do
     %{data: %{
-      versions: render_many(clients, ClientAppView, "client_info.json", as: :client),
-      resources: render_many(resources, ClientAppView, "resource_info.json", as: :resource)}}
+      version_info: render_many(clients, ClientAppView, "client_info.json", as: :client),
+      resource_info: render_many(resources, ClientAppView, "resource_info.json", as: :resource)}}
   end
 
   def render("client_info.json", %{client: client}) do

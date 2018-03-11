@@ -33,16 +33,16 @@ defmodule MusehackersWeb.Router do
     pipe_through :api
 
     scope "/v1", V1, as: :v1 do
-      post "/join", RegistrationController, :sign_up, as: :registration
-      post "/login", SessionController, :sign_in, as: :session
+      post "/join", RegistrationController, :sign_up, as: :signup
+      post "/login", SessionController, :sign_in, as: :login
 
       # some stuff for specific client apps
       # e.g. `/api/v1/clients/helio/resources/translations`
       scope "/clients", as: :client do
         pipe_through :clients
 
-        get "/info", ClientAppController, :index, as: :list
-        post "/info", ClientAppController, :create_or_update, as: :update
+        get "/", ClientAppController, :index, as: :list
+        post "/", ClientAppController, :create_or_update, as: :update
 
         get "/:app/info", ClientAppController, :get_client_info, as: :app_info
         get "/:app/:resource", ClientResourceController, :get_client_resource, as: :resource
@@ -65,7 +65,7 @@ defmodule MusehackersWeb.Router do
       # (and if the token is compromised/stolen, the user's session won't be prolonged,
       # eventually forcing him to re-login, and thus invalidating attacker's session);
       # and, although re-issuing a token is stateful, authentication is still stateless and fast
-      post "/relogin", SessionController, :refresh_token, as: :session
+      post "/relogin", SessionController, :refresh_token, as: :relogin
 
       resources "/users", UserController, except: [:new, :edit]
     end
