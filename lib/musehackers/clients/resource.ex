@@ -21,4 +21,8 @@ defmodule Musehackers.Clients.Resource do
     |> unique_constraint(:resource_name)
     |> unique_constraint(:resource_name, name: :resources_one_resource_per_app)
   end
+
+  def hash(attrs \\ %{}) do
+    Base.encode16(:erlang.md5(:erlang.term_to_binary(attrs)), case: :lower)
+  end
 end

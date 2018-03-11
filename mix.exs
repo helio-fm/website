@@ -5,7 +5,7 @@ defmodule Musehackers.Mixfile do
     [
       app: :musehackers,
       version: "0.0.1",
-      elixir: "~> 1.4",
+      elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
@@ -30,7 +30,8 @@ defmodule Musehackers.Mixfile do
       extra_applications: [:logger,
                            :runtime_tools,
                            :edeliver,
-                           :comeonin]
+                           :comeonin,
+                           :proper_case]
     ]
   end
 
@@ -43,7 +44,7 @@ defmodule Musehackers.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.0"},
+      {:phoenix, "~> 1.3"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.3.0"},
       {:postgrex, ">= 0.13.3"},
@@ -52,14 +53,25 @@ defmodule Musehackers.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
 
+      # For auth
       {:guardian, "~> 1.0.0"},
       {:comeonin, "~> 4.0.3"},
       {:pbkdf2_elixir, "~> 0.12.3"},
 
+      # For jobs
+      {:tesla, "~> 0.10.0"},
+      {:nimble_csv, "~> 0.4"},
+
+      # Faster json encoding and case transform
+      {:jason, "~> 1.0"},
+      {:proper_case, "~> 1.1"},
+
+      # For deployment
       {:distillery, "~> 1.0"},
       {:edeliver, "~> 1.4.4"},
 
-      {:dogma, "~> 0.1.15", only: [:dev, :test]},
+      # For tests
+      {:credo, "~> 0.9.0-rc3", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.8", only: :test}
     ]
   end
@@ -72,6 +84,7 @@ defmodule Musehackers.Mixfile do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
+      "deploy.prod": ["edeliver update production --start-deploy --run-migrations"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "test": ["ecto.create --quiet", "ecto.migrate", "test"]

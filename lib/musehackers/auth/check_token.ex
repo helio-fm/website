@@ -1,6 +1,5 @@
-defmodule Musehackers.Auth.Pipeline do
+defmodule Musehackers.Auth.CheckToken do
   @moduledoc false
-  # TODO :api token type instead of default one?
   @claims %{typ: "access"}
 
   use Guardian.Plug.Pipeline, otp_app: :musehackers,

@@ -4,7 +4,7 @@ addons:
   postgresql: '9.6'
   ssh_known_hosts: musehackers.com
 elixir:
-- 1.4.0
+- 1.5.0
 services:
 - postgresql
 cache:
@@ -25,7 +25,7 @@ before_script:
 - cp config/travis.exs config/test.exs
 - mix do ecto.create, ecto.migrate
 script:
-- mix do dogma, coveralls.travis
+- mix do credo, coveralls.travis
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_473de6575b5f_key -iv $encrypted_473de6575b5f_iv -in .deliver/deploy_rsa.enc -out /tmp/deploy_rsa -d
 - eval "$(ssh-agent -s)"
@@ -34,6 +34,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: mix edeliver update production --start-deploy
+  script: mix deploy.prod
   on:
     branch: master

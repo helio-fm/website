@@ -14,8 +14,9 @@ defmodule Musehackers.Application do
       supervisor(Musehackers.Repo, []),
       # Start the endpoint when the application starts
       supervisor(MusehackersWeb.Endpoint, []),
+      # Start the supervisor for scheduled ETL jobs
+      supervisor(Musehackers.Jobs.Supervisor, []),
       # Start your own worker by calling: Musehackers.Worker.start_link(arg1, arg2, arg3)
-      # worker(Musehackers.Worker, [arg1, arg2, arg3]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

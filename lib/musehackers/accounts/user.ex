@@ -49,10 +49,10 @@ defmodule Musehackers.Accounts.User do
     |> unique_constraint(:email)
     |> validate_length(:login, min: 3, max: 16)
     |> validate_format(:login, ~r/^[a-zA-Z][a-zA-Z0-9]*[.-]?[a-zA-Z0-9]+$/,
-      [message: "Only letters and numbers allowed, should start with a letter, only one char of (.-) allowed"])
+      [message: "only letters and numbers allowed, should start with a letter, only one char of (.-) allowed"])
     |> validate_length(:password, min: 8)
-    |> validate_format(:password, ~r/^(?=.*[a-z]).*/,
-      [message: "Must include at least one lowercase letter"])
+    |> validate_format(:password, ~r/^(?=.*[a-zA-Z]).*/,
+      [message: "must include at least one letter"])
     |> generate_password_hash
   end
 
@@ -80,7 +80,7 @@ defmodule Musehackers.Accounts.User do
 
   def find_user_for_session(device_id, token) do
     query = from u in User,
-          join: s in Session, where: s.user_id == u.id,
+          join: s in Session, on: s.user_id == u.id,
           where: s.device_id == ^device_id and s.token == ^token,
           select: struct(u, [:id, :login, :email])
     case Repo.one(query) do

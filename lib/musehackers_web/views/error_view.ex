@@ -11,7 +11,7 @@ defmodule MusehackersWeb.ErrorView do
   end
 
   def render("error.json", %{status: status, message: message}) do
-    %{status: status, message: message}
+    %{errors: %{status: status, message: message}}
   end
 
   # In case no render clause matches or no

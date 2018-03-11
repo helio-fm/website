@@ -3,41 +3,31 @@ defmodule MusehackersWeb.Api.V1.ClientResourceController do
   @moduledoc false
 
   alias Musehackers.Clients
-  alias Musehackers.Clients.Resource
 
   action_fallback MusehackersWeb.Api.V1.FallbackController
 
-  def index(conn, _params) do
-    resources = Clients.list_resources()
-    render(conn, "index.json", resources: resources)
+  def get_client_resource(conn, %{"app" => app_name, "resource" => resource_name}) do
+    with {:ok, resource} <- Clients.get_resource_for_app(app_name, resource_name),
+     do: render(conn, "resource_data.json", resource: resource)
   end
 
-  def create(conn, %{"resource" => resource_params}) do
-    with {:ok, %Resource{} = resource} <- Clients.create_resource(resource_params) do
-      conn
-      |> put_status(:created)
-      # |> put_resp_header("location", api_v1_client_resource_path(conn, :show, resource))
-      |> render("show.json", resource: resource)
-    end
+  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:write]}] when action in [:update_client_resource]
+
+  # for helio translations, force running a worker to fetch them
+  def update_client_resource(conn, %{"app" => app_name, "resource" => resource_name})
+  when app_name == "helio" and resource_name == "translations" do
+    children = Supervisor.which_children(Musehackers.Jobs.Supervisor)
+    pid = children
+      |> Enum.filter(fn{name, _, _, _} -> name == Elixir.Musehackers.Jobs.Etl.Translations end)
+      |> Enum.map(fn{_, pid, _, _} -> pid end)
+      |> List.first
+    GenServer.call(pid, :process)
+    conn
+    |> put_status(:ok)
+    |> render(MusehackersWeb.Api.V1.JobsView, "job_status.json")
   end
 
-  def show(conn, %{"id" => id}) do
-    resource = Clients.get_resource!(id)
-    render(conn, "show.json", resource: resource)
-  end
+  def update_client_resource(conn, _params),
+    do: conn |> put_status(:not_found) |> send_resp(:not_found, "")
 
-  def update(conn, %{"id" => id, "resource" => resource_params}) do
-    resource = Clients.get_resource!(id)
-
-    with {:ok, %Resource{} = resource} <- Clients.update_resource(resource, resource_params) do
-      render(conn, "show.json", resource: resource)
-    end
-  end
-
-  def delete(conn, %{"id" => id}) do
-    resource = Clients.get_resource!(id)
-    with {:ok, %Resource{}} <- Clients.delete_resource(resource) do
-      send_resp(conn, :no_content, "")
-    end
-  end
 end

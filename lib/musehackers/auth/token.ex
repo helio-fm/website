@@ -17,17 +17,16 @@ defmodule Musehackers.Auth.Token do
   alias Musehackers.Repo
   alias Musehackers.Accounts.User
 
-  def get_permissions_for(user = %User{}) do
-    cond do
-      # Just a temporary hack :)
-      user.email == "peter.rudenko@gmail.com" ->
-        {:ok, %{admin: [:read, :write]}}
-      true ->
-        {:ok, %{default: [:read]}}
+  def get_permissions_for(%User{} = user) do
+    # Just a temporary hack :)
+    if user.email == "peter.rudenko@gmail.com" do
+      {:ok, %{admin: [:read, :write]}}
+    else
+      {:ok, %{default: [:read]}}
     end
   end
 
-  def subject_for_token(user = %User{}, _claims) do
+  def subject_for_token(%User{} = user, _claims) do
     {:ok, to_string(user.id)}
   end
 

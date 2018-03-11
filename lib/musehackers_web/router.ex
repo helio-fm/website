@@ -11,47 +11,43 @@ defmodule MusehackersWeb.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
-    # plug :accepts, ["json", "application/octet-stream"]
+    plug :accepts, ["json"] # ["json", "application/octet-stream"]
+    # transforms camelCase json keys into elixir's snake_case
+    plug ProperCase.Plug.SnakeCaseParams
   end
 
   pipeline :clients do
-    plug Musehackers.Auth.Pipeline
-    # TODO add some workstation app check?
-    # like header api key or so
+    plug Musehackers.Auth.CheckClient
   end
 
   pipeline :authenticated do
-    plug Musehackers.Auth.Pipeline
+    plug Musehackers.Auth.CheckToken
   end
 
   scope "/api", MusehackersWeb.Api, as: :api do
     pipe_through :api
 
     scope "/v1", V1, as: :v1 do
-      post "/join", RegistrationController, :sign_up, as: :registration
-      post "/login", SessionController, :sign_in, as: :session
+      post "/join", RegistrationController, :sign_up, as: :signup
+      post "/login", SessionController, :sign_in, as: :login
 
       # some stuff for specific client apps
       # e.g. `/api/v1/clients/helio/resources/translations`
       scope "/clients", as: :client do
         pipe_through :clients
+        get "/:app/info", ClientAppController, :get_client_info, as: :app_info
+        get "/:app/:resource", ClientResourceController, :get_client_resource, as: :resource
 
-        resources "/resources", ClientResourceController, except: [:new, :edit], as: :resource
-        resources "/info", ClientAppController, except: [:new, :edit], as: :app_info
-
-        # TODO replace that^ with:
-        # get "/:app/info", ClientAppController, :get_client_info, as: :info
-        # get "/:app/resources/:resource", ClientAppController, :get_client_resource, as: :resource
-
-        # pipe_through :authenticated
-        # post "/:app/resources/:resource", ClientAppController, :update_client_resource, as: :resource
-        # post "/:app/info", ClientAppController, :update_client_info, as: :info
+        pipe_through :authenticated
+        get "/", ClientAppController, :index, as: :list
+        post "/", ClientAppController, :create_or_update, as: :update
+        post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
       end
 
       # restrict unauthenticated access for routes below
       pipe_through :authenticated
 
+      # a simple authentication check
       get "/session-status", SessionController, :is_authenticated, as: :session_status
 
       # this endpoint provides a kind of a sliding session:
@@ -64,7 +60,7 @@ defmodule MusehackersWeb.Router do
       # (and if the token is compromised/stolen, the user's session won't be prolonged,
       # eventually forcing him to re-login, and thus invalidating attacker's session);
       # and, although re-issuing a token is stateful, authentication is still stateless and fast
-      post "/relogin", SessionController, :refresh_token, as: :session
+      post "/relogin", SessionController, :refresh_token, as: :relogin
 
       resources "/users", UserController, except: [:new, :edit]
     end
