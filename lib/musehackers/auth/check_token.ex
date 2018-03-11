@@ -1,4 +1,4 @@
-defmodule Musehackers.Auth.Pipeline do
+defmodule Musehackers.Auth.CheckToken do
   @moduledoc false
   @claims %{typ: "access"}
 

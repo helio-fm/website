@@ -11,22 +11,17 @@ defmodule MusehackersWeb.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
-    # plug :accepts, ["json", "application/octet-stream"]
-
+    plug :accepts, ["json"] # ["json", "application/octet-stream"]
     # transforms camelCase json keys into elixir's snake_case
     plug ProperCase.Plug.SnakeCaseParams
   end
 
   pipeline :clients do
-    plug Musehackers.Auth.Pipeline
-    # credo:disable-for-next-line
-    # TODO add some workstation app check?
-    # like header api key or so
+    plug Musehackers.Auth.CheckClient
   end
 
   pipeline :authenticated do
-    plug Musehackers.Auth.Pipeline
+    plug Musehackers.Auth.CheckToken
   end
 
   scope "/api", MusehackersWeb.Api, as: :api do
@@ -40,12 +35,12 @@ defmodule MusehackersWeb.Router do
       # e.g. `/api/v1/clients/helio/resources/translations`
       scope "/clients", as: :client do
         pipe_through :clients
-
-        get "/", ClientAppController, :index, as: :list
-        post "/", ClientAppController, :create_or_update, as: :update
-
         get "/:app/info", ClientAppController, :get_client_info, as: :app_info
         get "/:app/:resource", ClientResourceController, :get_client_resource, as: :resource
+
+        pipe_through :authenticated
+        get "/", ClientAppController, :index, as: :list
+        post "/", ClientAppController, :create_or_update, as: :update
         post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
       end
 
