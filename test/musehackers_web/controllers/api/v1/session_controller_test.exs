@@ -64,7 +64,7 @@ defmodule MusehackersWeb.Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_v1_login_path(conn, :sign_in), session: %{@sign_in_payload | email: "invalid"}
-      assert %{"status" => "unauthorized"} = json_response(conn, 401)
+      assert %{"errors" => %{"status" => "unauthorized"}} = json_response(conn, 401)
     end
 
     test "renders login error when password is invalid", %{conn: conn} do
@@ -72,7 +72,7 @@ defmodule MusehackersWeb.Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_v1_login_path(conn, :sign_in), session: %{@sign_in_payload | password: "invalid"}
-      assert %{"status" => "unauthorized"} = json_response(conn, 401)
+      assert %{"errors" => %{"status" => "unauthorized"}} = json_response(conn, 401)
     end
   end
 
