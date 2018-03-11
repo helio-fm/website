@@ -49,10 +49,10 @@ defmodule Musehackers.Accounts.User do
     |> unique_constraint(:email)
     |> validate_length(:login, min: 3, max: 16)
     |> validate_format(:login, ~r/^[a-zA-Z][a-zA-Z0-9]*[.-]?[a-zA-Z0-9]+$/,
-      [message: "Only letters and numbers allowed, should start with a letter, only one char of (.-) allowed"])
+      [message: "only letters and numbers allowed, should start with a letter, only one char of (.-) allowed"])
     |> validate_length(:password, min: 8)
-    |> validate_format(:password, ~r/^(?=.*[a-z]).*/,
-      [message: "Must include at least one lowercase letter"])
+    |> validate_format(:password, ~r/^(?=.*[a-zA-Z]).*/,
+      [message: "must include at least one letter"])
     |> generate_password_hash
   end
 
