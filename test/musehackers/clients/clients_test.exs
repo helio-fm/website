@@ -121,7 +121,7 @@ defmodule Musehackers.ClientsTest do
     test "delete_app/1 deletes the app" do
       app = app_fixture()
       assert {:ok, %App{}} = Clients.delete_app(app)
-      assert {:ok, []} = Clients.get_clients_by_name(app.app_name)
+      assert {:error, :client_not_found} = Clients.get_clients_by_name(app.app_name)
      end
   end
 end

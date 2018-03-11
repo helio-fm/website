@@ -99,7 +99,7 @@ defmodule Musehackers.Clients do
           where: a.app_name == ^name,
           select: struct(a, [:platform_id, :version, :link])
     case Repo.all(query) do
-      nil -> {:error, :client_not_found}
+      [] -> {:error, :client_not_found}
       apps -> {:ok, apps}
     end
   end
@@ -108,10 +108,7 @@ defmodule Musehackers.Clients do
     query = from r in Resource,
       where: r.app_name == ^name,
       select: struct(r, [:hash, :resource_name])
-    case Repo.all(query) do
-      nil -> {:ok, []}
-      resources -> {:ok, resources}
-    end
+    {:ok, Repo.all(query)}
   end
 
   @doc """
