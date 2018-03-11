@@ -11,7 +11,7 @@ defmodule Musehackers.Jobs.Etl.Translations do
   alias NimbleCSV.RFC4180, as: CSV
   alias NimbleCSV.ParseError
 
-  def googledoc_export_link do
+  def source_url do
     doc_key = System.get_env("ETL_DOC_TRANSLATIONS")
     "http://docs.google.com/feeds/download/spreadsheets/Export?key=#{doc_key}&exportFormat=csv&gid=0"
   end
@@ -33,19 +33,16 @@ defmodule Musehackers.Jobs.Etl.Translations do
   end
 
   # Async call used by schedule_work() with Process.send_after
-  def handle_info(:process, _) do
-    Logger.info IO.ANSI.magenta <> "Updating translations" <> IO.ANSI.reset
-    source_url = googledoc_export_link()
-    extract_transform_load(source_url)
+  def handle_info(:process, state) do
+    extract_transform_load(source_url())
     schedule_work()
-    {:noreply, source_url}
+    {:noreply, state}
   end
 
   # Sync call used by web controller to fetch translations immediately:
   # GenServer.call(Musehackers.Jobs.Etl.Translations, :process)
   def handle_call(:process, _from, state) do
-    source_url = googledoc_export_link()
-    extract_transform_load(source_url)
+    extract_transform_load(source_url())
     {:reply, state, state}
   end
 

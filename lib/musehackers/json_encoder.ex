@@ -27,23 +27,13 @@ defmodule Musehackers.JSONEncoder do
 
   defp camelize(key) when is_atom(key),
     do: key |> Atom.to_string |> camelize
-  defp camelize(val) when is_integer(val) or is_float(val),
-    do: val
-  defp camelize(<<?_, t::binary>>),
-    do: camelize(t)
   defp camelize(<<h, t::binary>>),
     do: <<to_lower_char(h)>> <> do_camelize(t)
 
-  defp do_camelize(<<?_, ?_, t::binary>>),
-    do: do_camelize(<<?_, t::binary >>)
   defp do_camelize(<<?_, h, t::binary>>) when h >= ?a and h <= ?z,
     do: <<to_upper_char(h)>> <> do_camelize(t)
   defp do_camelize(<<?_, h, t::binary>>) when h >= ?0 and h <= ?9,
     do: <<h>> <> do_camelize(t)
-  defp do_camelize(<<?_>>),
-    do: <<>>
-  defp do_camelize(<<?/, t::binary>>),
-    do: <<?.>> <> camelize(t)
   defp do_camelize(<<h, t::binary>>),
     do: <<h>> <> do_camelize(t)
   defp do_camelize(<<>>),
