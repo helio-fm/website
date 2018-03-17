@@ -34,7 +34,7 @@ config :logger, :console,
 
 # Configure encoders
 config :phoenix, :format_encoders,
-  json: Musehackers.JSONEncoder
+  json: Musehackers.Json.CamelCaseEncoder
 
 config :ecto, json_library: Jason
 
