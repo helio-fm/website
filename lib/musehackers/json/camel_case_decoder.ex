@@ -14,7 +14,7 @@ defmodule Musehackers.Json.CamelCaseDecoder do
     try do
       for {key, val} <- map,
         into: %{},
-        do: {snake_case(key), to_snake_case(val)}
+        do: {Macro.underscore(key), to_snake_case(val)}
     rescue
       # Not Enumerable
       Protocol.UndefinedError -> map
@@ -22,15 +22,8 @@ defmodule Musehackers.Json.CamelCaseDecoder do
   end
 
   defp to_snake_case(list) when is_list(list),
-  	do: list |> Enum.map(&to_snake_case/1)
+    do: list |> Enum.map(&to_snake_case/1)
   defp to_snake_case(other_types),
-  	do: other_types
-
-  defp snake_case(val) when is_atom(val),
-  	do: val |> Atom.to_string |> Macro.underscore
-  defp snake_case(val) when is_integer(val) or is_float(val),
-  	do: val
-  defp snake_case(val),
-    do: val |> Macro.underscore
+    do: other_types
 
 end

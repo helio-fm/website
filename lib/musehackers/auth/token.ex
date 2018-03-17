@@ -35,12 +35,11 @@ defmodule Musehackers.Auth.Token do
   end
 
   def resource_from_claims(claims) do
-    {:ok, Repo.get(User, claims["sub"])}
+    case Repo.get(User, claims["sub"]) do
+      nil -> {:error, :not_found}
+      user -> {:ok, user}
+    end
   end
-
-  # def resource_from_claims(_) do
-  #   {:error, "Unknown resource type"}
-  # end
 
   def build_claims(claims, _resource, opts) do
     claims =

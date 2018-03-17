@@ -33,22 +33,22 @@ defmodule MusehackersWeb.Router do
 
       # some stuff for specific client apps
       # e.g. `/api/v1/clients/helio/resources/translations`
-      scope "/clients", as: :client do
+      scope "/client", as: :client do
         pipe_through :clients
         get "/:app/info", ClientAppController, :get_client_info, as: :app_info
         get "/:app/:resource", ClientResourceController, :get_client_resource, as: :resource
 
         pipe_through :authenticated
-        get "/", ClientAppController, :index, as: :list
-        post "/", ClientAppController, :create_or_update, as: :update
         post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
+        post "/", ClientAppController, :create_or_update, as: :update
+        get "/", ClientAppController, :index, as: :list
       end
 
       # restrict unauthenticated access for routes below
       pipe_through :authenticated
 
-      # a simple authentication check
-      get "/session-status", SessionController, :is_authenticated, as: :session_status
+      get "/me", UserController, :get_current_user, as: :user
+      resources "/user", UserController, only: [:index, :delete], as: :user
 
       # this endpoint provides a kind of a sliding session:
       # first, it checks for a token, that is
@@ -62,7 +62,8 @@ defmodule MusehackersWeb.Router do
       # and, although re-issuing a token is stateful, authentication is still stateless and fast
       post "/relogin", SessionController, :refresh_token, as: :relogin
 
-      resources "/users", UserController, except: [:new, :edit]
+      # a simple authentication check (mainly used in tests)
+      get "/session-status", SessionController, :is_authenticated, as: :session_status
     end
   end
 
