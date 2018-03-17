@@ -42,14 +42,14 @@ defmodule Musehackers.Jobs.Etl.Translations do
   # Sync call used by web controller to fetch translations immediately:
   # GenServer.call(Musehackers.Jobs.Etl.Translations, :process)
   def handle_call(:process, _from, state) do
-    extract_transform_load(source_url())
-    {:reply, state, state}
+    resource = extract_transform_load(source_url())
+    {:reply, resource, state}
   end
 
   defp extract_transform_load(source_url) do
     with {:ok, body} <- download(source_url),
-         {:ok, resource} = transform(body),
-    do: Clients.create_or_update_resource(resource)
+         {:ok, resource_attrs} = transform(body),
+    do: Clients.create_or_update_resource(resource_attrs)
   end
 
   def transform(body) do
