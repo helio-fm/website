@@ -30,6 +30,8 @@ defmodule MusehackersWeb.Api.V1.UserControllerTest do
     test "renders profile when data is valid", %{conn: conn, user: user} do
       conn = get authenticated(conn, user), api_v1_user_path(conn, :get_current_user)
       assert json_response(conn, 200)["data"]["email"] == user.email
+      assert json_response(conn, 200)["data"]["login"] == user.login
+      assert json_response(conn, 200)["data"]["name"] == user.name
     end
 
     test "renders errors when not authenticated", %{conn: conn} do

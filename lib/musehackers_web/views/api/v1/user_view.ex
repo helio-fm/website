@@ -12,8 +12,8 @@ defmodule MusehackersWeb.Api.V1.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{id: user.id,
+    %{login: user.login,
       email: user.email,
-      password_hash: user.password_hash}
+      name: user.name}
   end
 end
