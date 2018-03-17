@@ -34,9 +34,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script:
-  - mix edeliver update production --start-deploy
-  - mix edeliver migrate production
-  - mix edeliver show migrations on production
+  script: mix deploy.prod
   on:
     branch: master

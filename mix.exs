@@ -84,6 +84,7 @@ defmodule Musehackers.Mixfile do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
+      "deploy.prod": ["edeliver update production --start-deploy", "edeliver migrate production"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "test": ["ecto.create --quiet", "ecto.migrate", "test"]
