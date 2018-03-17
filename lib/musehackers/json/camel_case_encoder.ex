@@ -1,4 +1,4 @@
-defmodule Musehackers.JSONEncoder do
+defmodule Musehackers.Json.CamelCaseEncoder do
   @moduledoc """
   Converts all the keys in a map to `camelCase`.
   If the map is a struct with no `Enumerable` implementation,
