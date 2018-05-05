@@ -32,7 +32,7 @@ defmodule MusehackersWeb.Router do
       post "/login", SessionController, :sign_in, as: :login
 
       # some stuff for specific client apps
-      # e.g. `/api/v1/clients/helio/resources/translations`
+      # e.g. `/api/v1/clients/helio/translations`
       scope "/client", as: :client do
         pipe_through :clients
         get "/:app/info", ClientAppController, :get_client_info, as: :app_info
@@ -47,8 +47,9 @@ defmodule MusehackersWeb.Router do
       # restrict unauthenticated access for routes below
       pipe_through :authenticated
 
+      # my profile and some users admin endpoints
       get "/me", UserController, :get_current_user, as: :user
-      resources "/user", UserController, only: [:index, :delete], as: :user
+      resources "/users", UserController, only: [:index, :delete], as: :user
 
       # this endpoint provides a kind of a sliding session:
       # first, it checks for a token, that is
@@ -70,6 +71,7 @@ defmodule MusehackersWeb.Router do
   scope "/", MusehackersWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", HelioClientPageController, :index
+    get "/translations", TranslationsRedirectController, :index
   end
 end
