@@ -72,5 +72,6 @@ defmodule MusehackersWeb.Router do
     pipe_through :browser
 
     get "/", HelioClientPageController, :index
+    get "/translations", TranslationsRedirectController, :index
   end
 end
