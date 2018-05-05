@@ -13,7 +13,7 @@ defmodule Musehackers.Jobs.Etl.Translations do
 
   def source_url do
     doc_key = System.get_env("ETL_DOC_TRANSLATIONS")
-    "http://docs.google.com/feeds/download/spreadsheets/Export?key=#{doc_key}&exportFormat=csv&gid=0"
+    "https://docs.google.com/feeds/download/spreadsheets/Export?key=#{doc_key}&exportFormat=csv&gid=0"
   end
 
   def start_link(_) do
