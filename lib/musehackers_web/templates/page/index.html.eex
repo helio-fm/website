@@ -1,9 +1,0 @@
-
-  <div class="jumbotron">
-
-    <h2><%= gettext "Welcome to %{name}", name: "Muse Hackers" %></h2>
-    <p class="lead">Yet another procrastinator's pet project in <s>heavy</s> development.</p>
-
-  </div>
-
-  <br>
