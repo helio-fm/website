@@ -1,7 +1,6 @@
 defmodule MusehackersWeb.ClientAppControllerTest do
   use MusehackersWeb.ConnCase
 
-  alias Musehackers.Clients
   alias Musehackers.Accounts.User
   alias Musehackers.Auth.Token
 
@@ -20,15 +19,6 @@ defmodule MusehackersWeb.ClientAppControllerTest do
   }
 
   @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
-
-  def fixture(:app) do
-    {:ok, app} = Clients.create_or_update_app(@create_attrs)
-    app
-  end
-
-  setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
-  end
 
   describe "get client info" do
     test "lists all apps", %{conn: conn} do

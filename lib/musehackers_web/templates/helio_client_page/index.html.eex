@@ -8,35 +8,14 @@
           </script>
           <h1 class="white-text main-title">Free Music Sequencer</h1>
           <h5 class="white-text sub-title">For macOS, Linux, Windows, iOS and Android</h5>
-          <style><%=
-            case @platform do
-              "linux" ->
-                ".windows,.macos,.ios,.android {display:none;}"
-              "windows" ->
-                ".linux,.macos,.ios,.android {display:none;}"
-              "macos" ->
-                ".linux,.windows,.ios,.android {display:none;}"
-              "ios" ->
-                ".linux,.macos,.windows,.android {display:none;}"
-              "android" ->
-                ".linux,.macos,.windows,.ios {display:none;}"
-            end
-            %><%=
-            case @architecture do
-              "amd64" ->
-                ".i386 {display:none;}"
-              "i386" ->
-                ".amd64 {display:none;}"
-            end
-          %></style>
           <%= for app <- @clients do %>
-            <span class="<%= String.downcase(app.platform_id) %>">
-                <a href="<%= app.link %>" class="btn btn-large">
-                  <span class="button-title-text">Get Helio <%= app.version %></span>
-                  <br>
-                  <span class="button-subtitle-text">for <%= app.platform_id %></span>
-                </a>
-            </span>
+            <%= if String.downcase(app.platform_id) == @platform do %>
+              <a href="<%= app.link %>" class="btn btn-large">
+                <span class="button-title-text">Get Helio <%= app.version %></span>
+                <br>
+                <span class="button-subtitle-text">for <%= app.platform_id %></span>
+              </a>
+            <% end %>
           <% end %>
         </div>
       </div>
