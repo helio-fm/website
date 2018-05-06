@@ -273,9 +273,9 @@ h6 {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .2);
 }
 .z-depth-2 {
-  -webkit-box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
-  -moz-box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
-  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
+  -webkit-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
+  -moz-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
 }
 html {
   -ms-text-size-adjust: 100%;
@@ -371,10 +371,10 @@ footer #built-with-love {
   z-index: 3;
 }
 #helio-header .screencast {
-  background-color: #2D2E5A!important;
+  background-color: #363568!important;
   position: absolute;
   width: 568px;
-  height: 323px;
+  height: 324px;
   left: 50%;
   top: 530px;
   border-radius: 8px;
@@ -394,8 +394,8 @@ footer #built-with-love {
   width: 100%
 }
 iframe {
-  border: 4px solid #2D2E5A;
-  border-radius: 8px!important;
+  border: 4px solid #363568;
+  border-radius: 4px!important;
 }
 #helio-header .sub-title {
   padding: 0 0 15px;
