@@ -25,7 +25,7 @@ defmodule MusehackersWeb.Api.V1.UserController do
   def delete(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
     with {:ok, %User{}} <- Accounts.delete_user(user) do
-      send_resp(conn, :no_content, "")
+      conn |> send_resp(:no_content, "") |> halt()
     end
   end
 end
