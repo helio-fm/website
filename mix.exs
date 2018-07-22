@@ -30,7 +30,9 @@ defmodule Musehackers.Mixfile do
       extra_applications: [:logger,
                            :runtime_tools,
                            :edeliver,
-                           :comeonin]
+                           :comeonin,
+                           :ueberauth,
+                           :ueberauth_github]
     ]
   end
 
@@ -53,6 +55,8 @@ defmodule Musehackers.Mixfile do
       {:cowboy, "~> 1.0"},
 
       # For auth
+      {:ueberauth, "~> 0.5"},
+      {:ueberauth_github, "~> 0.7.0"},
       {:guardian, "~> 1.0.0"},
       {:comeonin, "~> 4.0.3"},
       {:pbkdf2_elixir, "~> 0.12.3"},

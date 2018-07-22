@@ -16,3 +16,7 @@ erl_crash.dump
 # variables.
 /config/*.secret.exs
 *.tar.gz
+
+/.idea
+*.iml
+errors.txt
