@@ -86,7 +86,7 @@ defmodule MusehackersWeb.Router do
 
   scope "/auth", MusehackersWeb do
     pipe_through :browser
-    get "/:provider/from-app", AuthController, :confirmation
+    get "/", AuthController, :confirmation, as: :auth_confirmation
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
     post "/:provider/callback", AuthController, :callback

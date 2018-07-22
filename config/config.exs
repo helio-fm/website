@@ -48,6 +48,11 @@ config :phoenix, :format_encoders,
 
 config :ecto, json_library: Jason
 
+# Uploads locations
+config :musehackers, music_path: "/opt/musehackers/files/music/"
+config :musehackers, builds_path: "/opt/musehackers/files/builds/"
+config :musehackers, avatars_path: "/opt/musehackers/files/images/"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
