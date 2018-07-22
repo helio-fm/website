@@ -15,9 +15,15 @@ defmodule Musehackers.Accounts.User do
     field :login, :string
     field :email, :string
     field :name, :string
+
     field :password, :string, virtual: true # virtual - i.e. not stored in db
     field :password_confirmation, :string, virtual: true
     field :password_hash, :string
+
+    field :avatar, :string
+    field :location, :string
+    field :github_uid, :string
+
     has_many :active_sessions, Session
 
     timestamps(type: :utc_datetime)
@@ -26,18 +32,29 @@ defmodule Musehackers.Accounts.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:login, :email, :name, :password])
+    |> cast(attrs, [:login, :email, :name, :avatar, :location, :github_uid, :password])
     |> validate_required([:login, :email, :password])
     |> validate_changeset
+    |> validate_password
   end
 
   @doc false
-  def registration_changeset(%User{} = user, attrs) do
+  def identity_registration_changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:login, :email, :name, :password, :password_confirmation])
+    |> cast(attrs, [:login, :email, :name, :avatar, :location, :password, :password_confirmation])
     |> validate_required([:login, :email, :password, :password_confirmation])
     |> validate_confirmation(:password)
     |> validate_changeset
+    |> validate_password
+  end
+
+  @doc false
+  def github_registration_changeset(%User{} = user, attrs) do
+    user
+    |> cast(attrs, [:github_uid, :login, :email, :avatar, :location, :name])
+    |> validate_required([:github_uid, :login, :email])
+    |> validate_changeset
+    |> put_change(:password_hash, "")
   end
 
   defp validate_changeset(user) do
@@ -50,6 +67,14 @@ defmodule Musehackers.Accounts.User do
     |> validate_length(:login, min: 3, max: 16)
     |> validate_format(:login, ~r/^[a-zA-Z][a-zA-Z0-9]*[.-]?[a-zA-Z0-9]+$/,
       [message: "only letters and numbers allowed, should start with a letter, only one char of (.-) allowed"])
+    |> validate_length(:password, min: 8)
+    |> validate_format(:password, ~r/^(?=.*[a-zA-Z]).*/,
+      [message: "must include at least one letter"])
+    |> generate_password_hash
+  end
+
+  defp validate_password(user) do
+    user
     |> validate_length(:password, min: 8)
     |> validate_format(:password, ~r/^(?=.*[a-zA-Z]).*/,
       [message: "must include at least one letter"])
@@ -70,7 +95,7 @@ defmodule Musehackers.Accounts.User do
       nil ->
         {:error, :login_not_found}
       user ->
-        if Comeonin.Pbkdf2.checkpw(password, user.password_hash) do
+        if user.password_hash != "" && Comeonin.Pbkdf2.checkpw(password, user.password_hash) do
           {:ok, user}
         else
           {:error, :login_failed}
