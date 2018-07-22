@@ -10,7 +10,7 @@ defmodule Musehackers.Clients.App do
     field :platform_id, :string
     field :version, :string
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

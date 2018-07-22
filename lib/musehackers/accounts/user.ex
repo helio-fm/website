@@ -20,7 +20,7 @@ defmodule Musehackers.Accounts.User do
     field :password_hash, :string
     has_many :active_sessions, Session
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false
