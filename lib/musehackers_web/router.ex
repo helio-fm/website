@@ -45,14 +45,14 @@ defmodule MusehackersWeb.Router do
 
         # initialize web authentication via, say, Github:
         # creates a new Clients.AuthSession and returns its id, secret key and browser url
-        post "/:app/auth", AuthController, :init_client_auth_session, as: :init_auth_session
+        post "/:app/auth", AuthSessionController, :init_client_auth_session, as: :auth_init
 
         # requires auth id and secret key received using a method above,
         # returns 404, if auth with such id and key does not exist
         # returns 204, if auth is still in progress and there is no token available,
         # returns 410, if auth was completed with an error (or is stale), then deletes auth request 
         # returns 200 with token, if auth completed successfully, then deletes the auth request
-        post "/:app/auth/check", AuthController, :finalise_client_auth_session, as: :finalise_auth_session
+        post "/:app/auth/check", AuthSessionController, :finalise_client_auth_session, as: :auth_finalise
 
         pipe_through :authenticated
         post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
