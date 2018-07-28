@@ -32,8 +32,8 @@ defmodule MusehackersWeb.Router do
     scope "/v1", V1, as: :v1 do
 
       # username/password registration and login;
-      # registration commented out: I wonder if there should be the only way to signup via Github
-      # post "/join", RegistrationController, :sign_up, as: :signup
+      # I wonder if there should be the only way to signup via Github
+      if Mix.env != :prod, do: post "/join", RegistrationController, :sign_up, as: :signup
       post "/login", SessionController, :sign_in, as: :login
 
       # some stuff for specific client apps
