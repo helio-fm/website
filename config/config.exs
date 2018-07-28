@@ -23,14 +23,15 @@ config :musehackers, Musehackers.Auth.Token,
   secret_key: System.get_env("SECRET_KEY_GUARDIAN"),
   token_verify_module: Guardian.Token.Jwt.Verify,
   allowed_algos: ["HS512"],
-  ttl: { 8, :days },
+  ttl: {8, :days},
   allowed_drift: 2000,
   verify_issuer: true
 
 # Configure OAuth authentication providers
 config :ueberauth, Ueberauth,
   providers: [
-    github: { Ueberauth.Strategy.Github, [] }
+    github: {Ueberauth.Strategy.Github,
+      [default_scope: "read:user,user:email"]}
   ]
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
