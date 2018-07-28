@@ -88,20 +88,54 @@ Location: `/etc/nginx/sites-available/default`
 Example config:
 
 ```
-upstream musehackers.com {
+##
+#
+# /etc/nginx/sites-available/default
+#
+# A nice tutorial:
+# https://medium.com/@a4word/setting-up-phoenix-elixir-with-nginx-and-letsencrypt-ada9398a9b2c
+#
+# Don't forget to `service nginx restart` after changing this :)
+#
+##
+
+upstream helio.fm {
     server 127.0.0.1:4000;
 }
 
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+    listen 80;
+    listen [::]:80;
 
-    server_name musehackers.com www.musehackers.com;
+    server_name helio.fm www.helio.fm musehackers.com www.musehackers.com;
     ssl_dhparam /etc/ssl/certs/dhparam.pem;
 
     location / {
         proxy_redirect off;
-        proxy_pass http://musehackers.com;
+        proxy_pass http://helio.fm;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/musehackers.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/musehackers.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+
+    if ($scheme != "https") {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name files.helio.fm;
+    root /opt/musehackers/files;
+
+    ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+    location / {
+        try_files $uri $uri/ =404;
     }
 
     listen 443 ssl; # managed by Certbot
@@ -118,7 +152,7 @@ server {
 #### Let's Encrypt
 
 ```
-letsencrypt-auto certonly -a manual --rsa-key-size 4096 --email example@email.com -d yourdomain.com
+sudo certbot --authenticator standalone --installer nginx -d helio.fm -d www.helio.fm -d files.helio.fm -d api.helio.fm -d musehackers.com -d www.musehackers.com --pre-hook "service nginx stop" --post-hook "service nginx start"
 ```
 
 ### Deploy and upgrade
