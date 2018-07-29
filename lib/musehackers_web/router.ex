@@ -84,13 +84,13 @@ defmodule MusehackersWeb.Router do
     end
   end
 
-  scope "/auth", MusehackersWeb do
+  scope "/auth", MusehackersWeb, as: :auth do
     pipe_through :browser
-    get "/", AuthController, :confirmation, as: :auth_confirmation
-    get "/:provider", AuthController, :request
-    get "/:provider/callback", AuthController, :callback
-    post "/:provider/callback", AuthController, :callback
-    delete "/logout", AuthController, :delete
+    get "/", AuthPageController, :confirmation, as: :confirmation
+    get "/:provider", AuthPageController, :request, as: :request
+    get "/:provider/callback", AuthPageController, :callback, as: :callback
+    post "/:provider/callback", AuthPageController, :callback, as: :callback
+    delete "/logout", AuthPageController, :delete, as: :delete
   end
 
   scope "/", MusehackersWeb do

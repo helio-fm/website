@@ -25,4 +25,4 @@ config :musehackers, Musehackers.Auth.Token,
   secret_key: "TEST_SECRET_KEY_GUARDIAN"
 
 config :musehackers, MusehackersWeb.Endpoint,
-  secret_key_base: "TEST_SECRET_KEY_BASE"
+  secret_key_base: "TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE__"

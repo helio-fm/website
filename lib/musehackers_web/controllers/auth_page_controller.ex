@@ -1,4 +1,4 @@
-defmodule MusehackersWeb.AuthController do
+defmodule MusehackersWeb.AuthPageController do
   @moduledoc """
   Auth controller responsible for handling Ueberauth responses
   """
@@ -12,15 +12,16 @@ defmodule MusehackersWeb.AuthController do
   alias Musehackers.Auth.UserFromAuth
 
   alias Musehackers.Clients
+  alias Musehackers.Clients.AuthSession
   alias Musehackers.Accounts.Session
 
   def confirmation(conn, %{"session" => auth_session_id}) do
     try do
       client_auth_session = Clients.get_auth_session!(auth_session_id)
       cond do
-        client_auth_session.token != nil ->
+        !AuthSession.is_unfinished(client_auth_session) ->
           conn |> render("index.html", auth_session: nil, current_user: nil)
-        DateTime.diff(client_auth_session.updated_at, DateTime.utc_now) > 600 ->
+        AuthSession.is_stale(client_auth_session) ->
           conn |> render("index.html", auth_session: nil, current_user: nil)
         true ->
           conn
@@ -28,7 +29,7 @@ defmodule MusehackersWeb.AuthController do
             |> render("index.html", auth_session: client_auth_session, current_user: nil)
       end
     rescue
-      _any -> conn |> redirect(to: "/")
+      _any -> conn |> redirect(to: "/") |> halt()
     end
   end
 
