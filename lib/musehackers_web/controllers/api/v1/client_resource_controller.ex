@@ -28,6 +28,6 @@ defmodule MusehackersWeb.Api.V1.ClientResourceController do
   end
 
   def update_client_resource(conn, _params),
-    do: conn |> put_status(:not_found) |> send_resp(:not_found, "")
+    do: conn |> send_resp(:not_found, "") |> halt()
 
 end

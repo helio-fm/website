@@ -1,0 +1,24 @@
+<div id="helio-subheader">
+  <div class="container">
+  <%= if @auth_session do %>
+    <center>
+      <h3>Please confirm to continue.</h3>
+      <h6>The client app <b><%= @auth_session.app_name %></b> of version <b><%= @auth_session.app_version %></b> for <b><%= @auth_session.app_platform %></b> requests sign in with <b><%= @auth_session.provider %></b>:</h6>
+
+      <%= if @current_user do %>
+        <h2>Welcome, <%= @current_user.name %>!</h2>
+        <h6><%= inspect(@current_user) %></h6>
+        <img src="https://img.helio.fm/<%= @current_user.avatar %>" class="img-circle"/>
+        <br>
+      <% else %>
+        <a class="btn btn-primary btn-lg" href="/auth/<%= String.downcase(@auth_session.provider) %>">
+          Sign in with <%= @auth_session.provider %>
+        </a>
+      <% end %>
+    </center>
+  <% else %>
+    <h3>Not today, sir.</h3>
+    <h6>If you believe this is an error, feel free to <a href="https://github.com/helio-fm/muse-hackers/issues/new">report</h6>.
+  <% end %>
+  </div>
+</div>

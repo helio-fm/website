@@ -10,17 +10,17 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="author" content="Peter Rudenko" />
-    <meta name="description" content="Helio, the free music sequencer." />
+    <meta name="description" content="helio.fm" />
     <meta name="keywords" content="helio, music, midi, sequencer, composition, audio, vst, host" />
     <meta name="robots" content="noydir, noopd" />
     <meta name="copyright" content="(c) 2014-2018" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="apple-mobile-web-app-title" content="Helio Workstation">
     <meta name="application-name" content="Helio Workstation">
-    <meta property="og:title" content="Helio.fm" />
+    <meta property="og:title" content="helio.fm" />
     <meta property="og:description" content="Vive la cultura libre." />
     <meta property="og:url" content="https:/helio.fm/" />
-    <meta property="og:site_name" content="Helio, the free music sequencer." />
+    <meta property="og:site_name" content="helio.fm" />
     <meta property="fb:app_id" content="729120477206819" />
     <meta property="fb:admins" content="100003911442395" />
     <meta property="fb:profile_id" content="750187808328705" />
@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/helio.css") %>">
     <link rel="icon" type="image/png" href="<%= static_path(@conn, "/images/favicon.png") %>" />
 
-    <title>Helio.fm</title>
+    <title>helio.fm</title>
   </head>
 
   <body>

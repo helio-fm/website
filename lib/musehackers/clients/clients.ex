@@ -149,4 +149,93 @@ defmodule Musehackers.Clients do
   def delete_app(%App{} = app) do
     Repo.delete(app)
   end
+
+  alias Musehackers.Clients.AuthSession
+
+  @doc """
+  Returns the list of auth_sessions.
+
+  ## Examples
+
+      iex> list_auth_sessions()
+      [%AuthSession{}, ...]
+
+  """
+  def list_auth_sessions do
+    Repo.all(AuthSession)
+  end
+
+  @doc """
+  Gets a single auth_session.
+
+  Raises `Ecto.NoResultsError` if the Auth session does not exist.
+
+  ## Examples
+
+      iex> get_auth_session!(123)
+      %AuthSession{}
+
+      iex> get_auth_session!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_auth_session!(id), do: Repo.get!(AuthSession, id)
+
+  @doc """
+  Creates an auth_session.
+
+  ## Examples
+
+      iex> create_or_update_auth_session(%{field: value})
+      {:ok, %AuthSession{}}
+
+  """
+  def create_auth_session(attrs \\ %{}) do
+    %AuthSession{}
+    |> AuthSession.create_changeset(attrs)
+    |> Repo.insert()
+  end
+
+
+  @doc """
+  Updates a auth_session.
+
+  ## Examples
+
+      iex> update_auth_session(auth_session, %{field: new_value})
+      {:ok, %AuthSession{}}
+
+      iex> update_auth_session(auth_session, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def finalise_auth_session(%AuthSession{} = auth_session, token) do
+    auth_session
+    |> Ecto.Changeset.change(%{token: token})
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a AuthSession.
+
+  ## Examples
+
+      iex> delete_auth_session(auth_session)
+      {:ok, %AuthSession{}}
+
+      iex> delete_auth_session(auth_session)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_auth_session(%AuthSession{} = auth_session) do
+    Repo.delete(auth_session)
+  end
+
+  def delete_auth_session(provider, device_id) do
+    if provider != nil && device_id != nil do
+      query = from(s in AuthSession, where: s.provider == ^provider and s.device_id == ^device_id)
+      Repo.delete_all(query)
+    end
+  end
+
 end

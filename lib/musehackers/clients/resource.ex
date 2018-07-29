@@ -10,7 +10,7 @@ defmodule Musehackers.Clients.Resource do
     field :hash, :string
     field :resource_name, :string
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

@@ -124,4 +124,69 @@ defmodule Musehackers.ClientsTest do
       assert {:error, :client_not_found} = Clients.get_clients_by_name(app.app_name)
      end
   end
+
+  describe "auth_sessions" do
+    alias Musehackers.Clients.AuthSession
+
+    @valid_attrs %{
+      provider: "provider",
+      app_name: "app_name",
+      app_platform: "app_platform",
+      app_version: "app_version",
+      device_id: "device_id",
+      secret_key: "secret_key",
+      token: "token"
+    }
+
+    def auth_session_fixture(attrs \\ %{}) do
+      {:ok, auth_session} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Clients.create_auth_session()
+
+      auth_session
+    end
+
+    test "list_auth_sessions/0 returns all auth_sessions" do
+      auth_session = auth_session_fixture()
+      assert Clients.list_auth_sessions() == [auth_session]
+    end
+
+    test "get_auth_session!/1 returns the auth_session with given id" do
+      auth_session = auth_session_fixture()
+      assert Clients.get_auth_session!(auth_session.id) == auth_session
+    end
+
+    test "create_auth_session/1 with valid data creates a auth_session" do
+      assert {:ok, %AuthSession{} = auth_session} = Clients.create_auth_session(@valid_attrs)
+      assert auth_session.app_name == "app_name"
+      assert auth_session.app_platform == "app_platform"
+      assert auth_session.app_version == "app_version"
+      assert auth_session.token == ""
+      assert auth_session.secret_key != nil
+      assert auth_session.secret_key != ""
+      assert auth_session.secret_key != "secret_key"
+    end
+
+    test "create_auth_session/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Clients.create_auth_session(@invalid_attrs)
+    end
+
+    test "update_auth_session/2 with valid data updates the auth_session" do
+      auth_session = auth_session_fixture()
+      assert {:ok, auth_session} = Clients.finalise_auth_session(auth_session, "token")
+      assert %AuthSession{} = auth_session
+      assert auth_session.app_name == "app_name"
+      assert auth_session.app_platform == "app_platform"
+      assert auth_session.app_version == "app_version"
+      assert auth_session.secret_key != ""
+      assert auth_session.token == "token"
+    end
+
+    test "delete_auth_session/1 deletes the auth_session" do
+      auth_session = auth_session_fixture()
+      assert {:ok, %AuthSession{}} = Clients.delete_auth_session(auth_session)
+      assert_raise Ecto.NoResultsError, fn -> Clients.get_auth_session!(auth_session.id) end
+    end
+  end
 end
