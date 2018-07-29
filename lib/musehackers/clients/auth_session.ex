@@ -29,6 +29,16 @@ defmodule Musehackers.Clients.AuthSession do
     |> empty_token
   end
 
+  @doc false
+  def is_stale(%AuthSession{} = auth_session) do
+    DateTime.diff(auth_session.updated_at, DateTime.utc_now) > 86_400
+  end
+
+  @doc false
+  def is_unfinished(%AuthSession{} = auth_session) do
+    auth_session.token == nil || auth_session.token == ""
+  end
+
   defp empty_token(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true} ->

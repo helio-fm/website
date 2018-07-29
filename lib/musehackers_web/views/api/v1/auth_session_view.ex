@@ -10,6 +10,10 @@ defmodule MusehackersWeb.Api.V1.AuthSessionView do
     %{data: render_one(auth_session, AuthSessionView, "auth_session.json")}
   end
 
+  def render("finalise.json", %{auth_session: auth_session}) do
+    %{data: render_one(auth_session, AuthSessionView, "auth_token.json")}
+  end
+
   def render("auth_session.json", %{auth_session: auth_session}) do
     %{id: auth_session.id,
       secret_key: auth_session.secret_key,
@@ -21,7 +25,7 @@ defmodule MusehackersWeb.Api.V1.AuthSessionView do
       app_platform: auth_session.app_platform}
   end
 
-  def render("finalise.json", %{auth_session: auth_session}) do
+  def render("auth_token.json", %{auth_session: auth_session}) do
     %{token: auth_session.token}
   end
 end

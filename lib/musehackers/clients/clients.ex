@@ -232,8 +232,10 @@ defmodule Musehackers.Clients do
   end
 
   def delete_auth_session(provider, device_id) do
-    query = from(s in AuthSession, where: s.provider == ^provider and s.device_id == ^device_id)
-    Repo.delete_all(query)
+    if provider != nil && device_id != nil do
+      query = from(s in AuthSession, where: s.provider == ^provider and s.device_id == ^device_id)
+      Repo.delete_all(query)
+    end
   end
 
 end
