@@ -15,6 +15,9 @@ defmodule MusehackersWeb.AuthPageController do
   alias Musehackers.Clients.AuthSession
   alias Musehackers.Accounts.Session
 
+  import MusehackersWeb
+  plug :assign_custom_css, custom_css: "user.css"
+
   def confirmation(conn, %{"session" => auth_session_id}) do
     try do
       client_auth_session = Clients.get_auth_session!(auth_session_id)

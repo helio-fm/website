@@ -58,6 +58,10 @@ defmodule MusehackersWeb do
     end
   end
 
+  def assign_custom_css(conn, opts) do
+    Plug.Conn.assign(conn, :custom_css, Keyword.get(opts, :custom_css))
+  end
+
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """

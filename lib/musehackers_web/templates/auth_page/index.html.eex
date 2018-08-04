@@ -1,24 +1,30 @@
-<div id="helio-subheader">
-  <div class="container">
-  <%= if @auth_session do %>
-    <center>
-      <h3>Please confirm to continue.</h3>
-      <h6>The client app <b><%= @auth_session.app_name %></b> of version <b><%= @auth_session.app_version %></b> for <b><%= @auth_session.app_platform %></b> requests sign in with <b><%= @auth_session.provider %></b>:</h6>
-
-      <%= if @current_user do %>
-        <h2>Welcome, <%= @current_user.name %>!</h2>
-        <h6><%= inspect(@current_user) %></h6>
-        <img src="https://img.helio.fm/<%= @current_user.avatar %>" class="img-circle"/>
-        <br>
-      <% else %>
-        <a class="btn btn-primary btn-lg" href="/auth/<%= String.downcase(@auth_session.provider) %>">
-          Sign in with <%= @auth_session.provider %>
-        </a>
-      <% end %>
-    </center>
-  <% else %>
-    <h3>Not today, sir.</h3>
-    <h6>If you believe this is an error, feel free to <a href="https://github.com/helio-fm/muse-hackers/issues/new">report</h6>.
-  <% end %>
-  </div>
-</div>
+    <div class="container">
+<%# 
+      <header class="header">
+        <nav role="navigation" />
+        <span class="logo">
+          <span class="menu" />
+        </span>
+      </header>
+ %>
+      <div class="jumbotron">
+        <center>
+        <%= if @auth_session do %>
+          <%= if @current_user do %>
+            <img src="https://img.helio.fm/<%= @current_user.avatar %>" class="img-circle"/>
+            <h2>Success</h2>
+            <p class="lead">Your <%= @auth_session.provider %> connection is good to go.</p>
+          <% else %>
+            <h2>Please confirm</h2>
+            <p class="lead">If you initiated this authorization <br />from <b><%= @auth_session.app_name %></b> <b><%= @auth_session.app_version %></b> for <b><%= @auth_session.app_platform %></b>, <br />please proceed:</p>
+            <h3><a href="/auth/<%= String.downcase(@auth_session.provider) %>">
+              Sign in with <%= @auth_session.provider %>
+            </a></h3>
+          <% end %>
+        <% else %>
+          <h2>Not today, sir.</h2>
+          <p class="lead">If you believe this is an error, feel free to <a href="https://github.com/helio-fm/muse-hackers/issues/new">report</a>.</p>
+        <% end %>
+        </center>
+      </div>
+    </div>
