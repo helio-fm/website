@@ -17,10 +17,14 @@ defmodule MusehackersWeb.Api.V1.AuthSessionController do
     end
   end
 
-  def finalise_client_auth_session(conn, %{"app" => app_name, "session" => session_id}) do
+  def finalise_client_auth_session(conn, %{"app" => app_name, "session" => session}) do
     # will throw and return 404, if auth with such id and key does not exist:
+    session_id = session["id"]
+    session_secret = session["secret_key"]
     auth_session = Clients.get_auth_session!(session_id)
     cond do
+      auth_session.secret_key != session_secret ->
+        conn |> send_resp(:forbidden, "") |> halt()
       AuthSession.is_unfinished(auth_session) ->
         conn |> send_resp(:no_content, "") |> halt()
       AuthSession.is_stale(auth_session) ->
