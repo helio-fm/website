@@ -96,7 +96,7 @@ defmodule MusehackersWeb.Router do
   scope "/", MusehackersWeb do
     pipe_through :browser
 
-    get "/", HelioClientPageController, :index
+    get "/", HelioClientPageController, :index, as: :root
     get "/translations", TranslationsRedirectController, :index
 
     # get "/:user", UserPageController, :index

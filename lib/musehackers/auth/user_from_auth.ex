@@ -41,7 +41,7 @@ defmodule Musehackers.Auth.UserFromAuth do
   defp upload_avatar({:ok, %Tesla.Env{status: 200, body: body} = env}, login) do
     dir_subpath = login
     file_subpath = Path.join(dir_subpath, "avatar." <> get_file_extension(env))
-    root_dir = Application.get_env(:musehackers, :avatars_path)
+    root_dir = Application.get_env(:musehackers, :images_path)
     dir_path = Path.join(root_dir, dir_subpath)
     file_path = Path.join(root_dir, file_subpath)
     Logger.debug(file_path)

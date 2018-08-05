@@ -11,7 +11,7 @@
         <center>
         <%= if @auth_session do %>
           <%= if @current_user do %>
-            <img src="https://img.helio.fm/<%= @current_user.avatar %>" class="img-circle"/>
+            <img src="<%= Application.get_env(:musehackers, :images_base_url) <> @current_user.avatar %>" class="img-circle"/>
             <h2>Success</h2>
             <p class="lead">Your <%= @auth_session.provider %> connection is good to go.</p>
           <% else %>

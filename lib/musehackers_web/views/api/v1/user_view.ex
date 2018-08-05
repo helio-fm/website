@@ -14,6 +14,7 @@ defmodule MusehackersWeb.Api.V1.UserView do
   def render("user.json", %{user: user}) do
     %{login: user.login,
       email: user.email,
-      name: user.name}
+      name: user.name,
+      avatar: Application.get_env(:musehackers, :images_base_url) <> Kernel.inspect(user.avatar)}
   end
 end
