@@ -14,7 +14,7 @@ defmodule Musehackers.Accounts.Session do
     field :platform_id, :string
     field :user_id, :binary_id
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

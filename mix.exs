@@ -4,7 +4,7 @@ defmodule Musehackers.Mixfile do
   def project do
     [
       app: :musehackers,
-      version: "0.0.1",
+      version: "0.0.6",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
@@ -30,7 +30,9 @@ defmodule Musehackers.Mixfile do
       extra_applications: [:logger,
                            :runtime_tools,
                            :edeliver,
-                           :comeonin]
+                           :comeonin,
+                           :ueberauth,
+                           :ueberauth_github]
     ]
   end
 
@@ -43,30 +45,32 @@ defmodule Musehackers.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3"},
+      {:phoenix, "~> 1.3.4"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.3.0"},
-      {:postgrex, ">= 0.13.3"},
+      {:postgrex, "~> 0.13.3"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
 
       # For auth
-      {:guardian, "~> 1.0.0"},
-      {:comeonin, "~> 4.0.3"},
+      {:ueberauth, "~> 0.5"},
+      {:ueberauth_github, "~> 0.7.0"},
+      {:guardian, "~> 1.1.0"},
+      {:comeonin, "~> 4.1.1"},
       {:pbkdf2_elixir, "~> 0.12.3"},
 
       # For jobs
-      {:tesla, "~> 0.10.0"},
+      {:tesla, "~> 1.1"},
       {:nimble_csv, "~> 0.4"},
 
       # Faster json encoding
-      {:jason, "~> 1.0"},
+      {:jason, "~> 1.1.1"},
 
       # For deployment
-      {:distillery, "~> 1.0"},
-      {:edeliver, "~> 1.4.4"},
+      {:distillery, "~> 1.5"},
+      {:edeliver, "~> 1.5.3"},
 
       # For tests
       {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},

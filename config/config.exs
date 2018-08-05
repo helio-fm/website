@@ -23,9 +23,20 @@ config :musehackers, Musehackers.Auth.Token,
   secret_key: System.get_env("SECRET_KEY_GUARDIAN"),
   token_verify_module: Guardian.Token.Jwt.Verify,
   allowed_algos: ["HS512"],
-  ttl: { 8, :days },
+  ttl: {8, :days},
   allowed_drift: 2000,
   verify_issuer: true
+
+# Configure OAuth authentication providers
+config :ueberauth, Ueberauth,
+  providers: [
+    github: {Ueberauth.Strategy.Github,
+      [default_scope: "read:user,user:email"]}
+  ]
+
+config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+  client_id: System.get_env("GITHUB_CLIENT_ID"),
+  client_secret: System.get_env("GITHUB_CLIENT_SECRET")
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -37,6 +48,11 @@ config :phoenix, :format_encoders,
   json: Musehackers.Json.CamelCaseEncoder
 
 config :ecto, json_library: Jason
+
+# Uploads locations
+config :musehackers, music_path: "/opt/musehackers/files/music/"
+config :musehackers, builds_path: "/opt/musehackers/files/builds/"
+config :musehackers, avatars_path: "/opt/musehackers/files/images/"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

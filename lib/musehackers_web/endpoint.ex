@@ -36,8 +36,9 @@ defmodule MusehackersWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session,
     store: :cookie,
-    key: "_musehackers_key",
-    signing_salt: "HZZMrBrK"
+    key: "helio.fm",
+    signing_salt: "HZZMrBrK",
+    encryption_salt: "Gcm3FNgI"
 
   plug MusehackersWeb.Router
 
