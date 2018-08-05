@@ -30,7 +30,7 @@ defmodule MusehackersWeb.Api.V1.AuthSessionController do
       AuthSession.is_stale(auth_session) ->
         Clients.delete_auth_session(auth_session)
         conn |> send_resp(:gone, "") |> halt()
-      auth_session.app_name != app_name ->
+      String.downcase(auth_session.app_name) != String.downcase(app_name) ->
         Clients.delete_auth_session(auth_session)
         conn |> send_resp(:conflict, "") |> halt()
       true ->
