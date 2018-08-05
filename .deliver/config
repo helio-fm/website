@@ -6,16 +6,16 @@ GIT_CLEAN_PATHS=${GIT_CLEAN_PATHS:="rel"}
 
 APP="musehackers"
 
-BUILD_HOST="musehackers.com"
+BUILD_HOST="helio.fm"
 BUILD_USER="deploy"
 BUILD_AT="/home/$BUILD_USER/edeliver/$APP/builds"
 RELEASE_DIR="$BUILD_AT/rel/$APP"
 
-STAGING_HOSTS="musehackers.com"
+STAGING_HOSTS="helio.fm"
 STAGING_USER="git"
 TEST_AT="/test/$APP"
 
-PRODUCTION_HOSTS="musehackers.com"
+PRODUCTION_HOSTS="helio.fm"
 PRODUCTION_USER="deploy"
 DELIVER_TO="/opt/$APP"
 
