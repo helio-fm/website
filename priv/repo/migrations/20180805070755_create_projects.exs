@@ -11,7 +11,7 @@ defmodule Musehackers.Repo.Migrations.CreateProjects do
       timestamps()
     end
 
-    create index(:projects, [:title])
+    create index(:projects, [:alias])
     create index(:projects, [:author_id])
     create unique_index(:projects, [:id])
     create unique_index(:projects, [:author_id, :alias], name: :projects_one_alias_per_author)

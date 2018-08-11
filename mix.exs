@@ -29,10 +29,10 @@ defmodule Musehackers.Mixfile do
       mod: {Musehackers.Application, []},
       extra_applications: [:logger,
                            :runtime_tools,
-                           :edeliver,
                            :comeonin,
                            :ueberauth,
-                           :ueberauth_github]
+                           :ueberauth_github,
+                           :edeliver]
     ]
   end
 
@@ -53,6 +53,7 @@ defmodule Musehackers.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
+      {:slugify, "~> 1.1"},
 
       # For auth
       {:ueberauth, "~> 0.5"},

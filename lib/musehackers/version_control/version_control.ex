@@ -7,6 +7,7 @@ defmodule Musehackers.VersionControl do
   alias Musehackers.Repo
 
   alias Musehackers.VersionControl.Project
+  alias Musehackers.VersionControl.Revision
 
   @doc """
   Returns the list of projects.
@@ -36,6 +37,14 @@ defmodule Musehackers.VersionControl do
 
   """
   def get_project!(id), do: Repo.get!(Project, id)
+
+  def get_project_heads(id) do
+    query = from r in Revision,
+          left_join: child in Revision, on: r.id == child.parent_id,
+          where: r.project_id == ^id and is_nil(child.parent_id),
+          select: struct(r, [:id, :message, :hash, :project_id, :parent_id])
+    {:ok, Repo.all(query)}
+  end
 
   @doc """
   Creates a project.
@@ -133,6 +142,26 @@ defmodule Musehackers.VersionControl do
   """
   def get_revision!(id), do: Repo.get!(Revision, id)
 
+  def get_revision_summary(id) do
+    query = from r in Revision,
+      where: r.id == ^id,
+      select: struct(r, [:id, :parent_id, :message, :hash])
+    case Repo.one(query) do
+      nil -> {:error, :revision_not_found}
+      revision -> {:ok, revision}
+    end
+  end
+
+  def get_revision_data(id) do
+    query = from r in Revision,
+      where: r.id == ^id,
+      select: struct(r, [:id, :hash, :data])
+    case Repo.one(query) do
+      nil -> {:error, :revision_not_found}
+      revision -> {:ok, revision}
+    end
+  end
+
   @doc """
   Creates a revision.
 
@@ -151,23 +180,12 @@ defmodule Musehackers.VersionControl do
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a revision.
-
-  ## Examples
-
-      iex> update_revision(revision, %{field: new_value})
-      {:ok, %Revision{}}
-
-      iex> update_revision(revision, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_revision(%Revision{} = revision, attrs) do
-    revision
-    |> Revision.changeset(attrs)
-    |> Repo.update()
-  end
+  # defp transaction(f) do
+  #   Repo.transaction fn ->
+  #     Repo.query!("set transaction isolation level repeatable read;")
+  #     f.()
+  #   end
+  # end
 
   @doc """
   Deletes a Revision.
@@ -183,18 +201,5 @@ defmodule Musehackers.VersionControl do
   """
   def delete_revision(%Revision{} = revision) do
     Repo.delete(revision)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking revision changes.
-
-  ## Examples
-
-      iex> change_revision(revision)
-      %Ecto.Changeset{source: %Revision{}}
-
-  """
-  def change_revision(%Revision{} = revision) do
-    Revision.changeset(revision, %{})
   end
 end

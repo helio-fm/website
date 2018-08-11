@@ -34,8 +34,8 @@ defmodule Musehackers.Accounts.User do
     user
     |> cast(attrs, [:login, :email, :name, :avatar, :location, :github_uid, :password])
     |> validate_required([:login, :email, :password])
-    |> validate_changeset
-    |> validate_password
+    |> validate_changeset()
+    |> validate_constraints()
   end
 
   @doc false
@@ -44,8 +44,8 @@ defmodule Musehackers.Accounts.User do
     |> cast(attrs, [:login, :email, :name, :avatar, :location, :password, :password_confirmation])
     |> validate_required([:login, :email, :password, :password_confirmation])
     |> validate_confirmation(:password)
-    |> validate_changeset
-    |> validate_password
+    |> validate_changeset()
+    |> validate_constraints()
   end
 
   @doc false
@@ -53,7 +53,7 @@ defmodule Musehackers.Accounts.User do
     user
     |> cast(attrs, [:github_uid, :login, :email, :avatar, :location, :name])
     |> validate_required([:github_uid, :login, :email])
-    |> validate_changeset
+    |> validate_constraints()
     |> put_change(:password_hash, "")
   end
 
@@ -62,8 +62,6 @@ defmodule Musehackers.Accounts.User do
     |> validate_length(:email, min: 5, max: 255)
     |> validate_format(:email, ~r/@/)
     |> update_change(:email, &String.downcase/1)
-    |> unique_constraint(:login)
-    |> unique_constraint(:email)
     |> validate_length(:login, min: 3, max: 16)
     |> validate_format(:login, ~r/^[a-zA-Z][a-zA-Z0-9]*[.-]?[a-zA-Z0-9]+$/,
       [message: "only letters and numbers allowed, should start with a letter, only one char of (.-) allowed"])
@@ -73,12 +71,10 @@ defmodule Musehackers.Accounts.User do
     |> generate_password_hash
   end
 
-  defp validate_password(user) do
+  defp validate_constraints(user) do
     user
-    |> validate_length(:password, min: 8)
-    |> validate_format(:password, ~r/^(?=.*[a-zA-Z]).*/,
-      [message: "must include at least one letter"])
-    |> generate_password_hash
+    |> unique_constraint(:login)
+    |> unique_constraint(:email)
   end
 
   defp generate_password_hash(changeset) do

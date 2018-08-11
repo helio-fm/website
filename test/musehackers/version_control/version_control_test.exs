@@ -12,7 +12,7 @@ defmodule Musehackers.VersionControlTest do
   }
 
   @project_attrs %{
-    alias: "some alias",
+    alias: "some-alias",
     id: "some id",
     title: "some title",
     author_id: nil
@@ -22,26 +22,12 @@ defmodule Musehackers.VersionControlTest do
     alias Musehackers.VersionControl.Project
 
     @update_attrs %{
-      alias: "some updated alias",
+      alias: "",
       id: "some updated id",
-      title: "some updated title"
+      title: "Тестовая симфония ;%:"
     }
 
     @invalid_attrs %{alias: nil, id: nil, title: nil}
-
-    def project_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@user_attrs)
-        |> Accounts.create_user()
-
-      {:ok, project} =
-        attrs
-        |> Enum.into(%{@project_attrs | author_id: user.id})
-        |> VersionControl.create_project()
-
-      project
-    end
 
     test "list_projects/0 returns all projects" do
       project = project_fixture()
@@ -61,9 +47,9 @@ defmodule Musehackers.VersionControlTest do
       project = project_fixture()
       assert {:ok, project} = VersionControl.update_project(project, @update_attrs)
       assert %Project{} = project
-      assert project.alias == "some updated alias"
       assert project.id == "some updated id"
-      assert project.title == "some updated title"
+      assert project.title == "Тестовая симфония ;%:"
+      assert project.alias == "testovaya-simfoniya"
     end
 
     test "update_project/2 with invalid data returns error changeset" do
@@ -92,29 +78,14 @@ defmodule Musehackers.VersionControlTest do
       hash: "some hash",
       id: "some id",
       message: "some message",
-      project_id: "1"
-    }
-
-    @update_attrs %{
-      data: %{},
-      hash: "some updated hash",
-      id: "some updated id",
-      message: "some updated message",
-      project_id: "2"
+      project_id: nil,
+      parent_id: nil
     }
 
     @invalid_attrs %{data: nil, hash: nil, id: nil, message: nil}
 
     def revision_fixture(attrs \\ %{}) do
-      {:ok, user} =
-        attrs
-        |> Enum.into(@user_attrs)
-        |> Accounts.create_user()
-
-      {:ok, project} =
-        attrs
-        |> Enum.into(%{@project_attrs | author_id: user.id})
-        |> VersionControl.create_project()
+      project = project_fixture()
 
       {:ok, revision} =
         attrs
@@ -138,25 +109,19 @@ defmodule Musehackers.VersionControlTest do
       assert {:error, %Ecto.Changeset{}} = VersionControl.create_revision(@invalid_attrs)
     end
 
-    test "update_revision/2 with valid data updates the revision" do
-      revision = revision_fixture()
-      assert {:ok, revision} = VersionControl.update_revision(revision, %{@update_attrs | project_id: revision.project_id})
+    test "create_revision/2 with valid data creates the revision" do
+      project = project_fixture()
+      assert {:ok, revision} = VersionControl.create_revision(%{@valid_attrs | project_id: project.id})
       assert %Revision{} = revision
       assert revision.data == %{}
-      assert revision.hash == "some updated hash"
-      assert revision.id == "some updated id"
-      assert revision.message == "some updated message"
+      assert revision.hash == "some hash"
+      assert revision.id == "some id"
+      assert revision.message == "some message"
     end
 
-    test "update_revision/2 fails to update project id of non-existent project" do
+    test "create_revision/2 fails when clasing with existing revision" do
       revision = revision_fixture()
-      assert {:error, %Ecto.Changeset{}} = VersionControl.update_revision(revision, @update_attrs)
-      assert revision == VersionControl.get_revision!(revision.id)
-    end
-
-    test "update_revision/2 with invalid data returns error changeset" do
-      revision = revision_fixture()
-      assert {:error, %Ecto.Changeset{}} = VersionControl.update_revision(revision, @invalid_attrs)
+      assert_raise Ecto.ConstraintError, fn -> VersionControl.create_revision(%{@valid_attrs | project_id: revision.project_id}) end
       assert revision == VersionControl.get_revision!(revision.id)
     end
 
@@ -165,10 +130,19 @@ defmodule Musehackers.VersionControlTest do
       assert {:ok, %Revision{}} = VersionControl.delete_revision(revision)
       assert_raise Ecto.NoResultsError, fn -> VersionControl.get_revision!(revision.id) end
     end
+  end
 
-    test "change_revision/1 returns a revision changeset" do
-      revision = revision_fixture()
-      assert %Ecto.Changeset{} = VersionControl.change_revision(revision)
-    end
+  defp project_fixture(attrs \\ %{}) do
+    {:ok, user} =
+      attrs
+      |> Enum.into(@user_attrs)
+      |> Accounts.create_user()
+
+    {:ok, project} =
+      attrs
+      |> Enum.into(%{@project_attrs | author_id: user.id})
+      |> VersionControl.create_project()
+
+    project
   end
 end
