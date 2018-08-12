@@ -19,10 +19,13 @@ defmodule MusehackersWeb.Api.V1.ProjectController do
     end
   end
 
+  plug Guardian.Plug.LoadResource, ensure: true
+
   def create_or_update(conn, %{"id" => id, "project" => project_params}) do
-    # TODO get author_id from token
-    # check if id matchese params?
-    with {:ok, %Project{} = project} <- VersionControl.create_or_update_project(project_params) do
+    # TODO check id?
+    with user <- Guardian.Plug.current_resource(conn),
+        attrs <- Map.put(project_params, "author_id", user.id),
+        {:ok, %Project{} = project} <- VersionControl.create_or_update_project(attrs) do
       conn
       |> put_status(:ok)
       |> render("show.json", project: project)

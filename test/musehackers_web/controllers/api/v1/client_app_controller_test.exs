@@ -22,12 +22,12 @@ defmodule MusehackersWeb.ClientAppControllerTest do
 
   describe "get client info" do
     test "lists all apps", %{conn: conn} do
-      conn = get authenticated(conn), api_v1_client_list_path(conn, :index)
+      conn = get authenticated(conn), api_v1_client_app_path(conn, :index)
       assert json_response(conn, 200)["data"] == []
     end
 
     test "renders error on unauthenticated request to lists all apps", %{conn: conn} do
-      conn = get conn, api_v1_client_list_path(conn, :index)
+      conn = get conn, api_v1_client_app_path(conn, :index)
       assert response(conn, 401)
     end
 
@@ -44,10 +44,10 @@ defmodule MusehackersWeb.ClientAppControllerTest do
 
   describe "create app versions" do
     test "renders client info when data is valid", %{conn: conn} do
-      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: @create_attrs
+      conn = post authenticated(conn), api_v1_client_app_path(conn, :create_or_update), app: @create_attrs
       assert json_response(conn, 200)["data"] != %{}
 
-      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
+      conn = post authenticated(conn), api_v1_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
       assert json_response(conn, 200)["data"] != %{}
 
       conn = get client(conn), api_v1_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
@@ -62,17 +62,17 @@ defmodule MusehackersWeb.ClientAppControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: @invalid_attrs
+      conn = post authenticated(conn), api_v1_client_app_path(conn, :create_or_update), app: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
   describe "update exisitng app version" do
     test "renders client info when data is valid", %{conn: conn} do
-      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: @create_attrs
+      conn = post authenticated(conn), api_v1_client_app_path(conn, :create_or_update), app: @create_attrs
       assert json_response(conn, 200)["data"] != %{}
 
-      conn = post authenticated(conn), api_v1_client_update_path(conn, :create_or_update), app: @update_attrs
+      conn = post authenticated(conn), api_v1_client_app_path(conn, :create_or_update), app: @update_attrs
       assert json_response(conn, 200)["data"] != %{}
 
       conn = get client(conn), api_v1_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)

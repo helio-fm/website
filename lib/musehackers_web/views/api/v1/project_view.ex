@@ -1,4 +1,6 @@
 defmodule MusehackersWeb.Api.V1.ProjectView do
+  @moduledoc false
+
   use MusehackersWeb, :view
   alias MusehackersWeb.Api.V1.ProjectView
   alias MusehackersWeb.Api.V1.RevisionView
@@ -19,7 +21,6 @@ defmodule MusehackersWeb.Api.V1.ProjectView do
     %{id: project.id,
       title: project.title,
       alias: project.alias,
-      head: project.head,
-      link: TODO}
+      head: project.head}
   end
 end

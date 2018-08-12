@@ -56,8 +56,8 @@ defmodule MusehackersWeb.Router do
 
         pipe_through :authenticated
         post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
-        post "/", ClientAppController, :create_or_update, as: :update
-        get "/", ClientAppController, :index, as: :list
+        post "/", ClientAppController, :create_or_update, as: :app
+        get "/", ClientAppController, :index, as: :app
       end
 
       # restrict unauthenticated access for routes below
@@ -83,12 +83,16 @@ defmodule MusehackersWeb.Router do
       get "/session-status", SessionController, :is_authenticated, as: :session_status
 
       scope "/vcs", as: :vcs do
-        get "/projects/:id", ProjectController, :summary, as: :get_summary
-        get "/projects/:id/heads", ProjectController, :heads, as: :get_heads
-        put "/projects/:id", ProjectController, :create_or_update, as: :update_project
+        scope "/projects" do
+          get "/:id", ProjectController, :summary
+          get "/:id/heads", ProjectController, :heads
+          put "/:id", ProjectController, :create_or_update
+        end
 
-        get "/revisions/:id", RevisionController, :show, as: :get_revision
-        put "/revisions/:id", RevisionController, :create, as: :create_revision
+        scope "/revisions" do
+          get "/:id", RevisionController, :show
+          put "/:id", RevisionController, :create
+        end
       end
     end
   end
