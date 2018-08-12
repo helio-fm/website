@@ -33,8 +33,10 @@ defmodule MusehackersWeb.Router do
 
       # username/password registration and login;
       # I wonder if there should be the only way to signup via Github
-      if Mix.env != :prod, do: post "/join", RegistrationController, :sign_up, as: :signup
-      post "/login", SessionController, :sign_in, as: :login
+      if Mix.env == :test do
+        post "/join", RegistrationController, :sign_up, as: :signup
+        post "/login", SessionController, :sign_in, as: :login
+      end
 
       # some stuff for specific client apps
       # e.g. `/api/v1/clients/helio/translations`

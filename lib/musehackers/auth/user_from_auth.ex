@@ -3,7 +3,7 @@ defmodule Musehackers.Auth.UserFromAuth do
   Retrieve the user information from an auth request
   """
 
-  @images_base_url Application.get_env(:musehackers, :images_base_url)
+  @images_store_path Application.get_env(:musehackers, :images_path)
 
   require Logger
   require Poison
@@ -44,8 +44,8 @@ defmodule Musehackers.Auth.UserFromAuth do
   defp upload_avatar({:ok, %Tesla.Env{status: 200, body: body} = env}, login) do
     dir_subpath = login
     file_subpath = Path.join(dir_subpath, "avatar." <> get_file_extension(env))
-    dir_path = Path.join(@images_base_url, dir_subpath)
-    file_path = Path.join(@images_base_url, file_subpath)
+    dir_path = Path.join(@images_store_path, dir_subpath)
+    file_path = Path.join(@images_store_path, file_subpath)
     Logger.debug(file_path)
     Logger.debug(file_subpath)
     File.mkdir_p(dir_path)
