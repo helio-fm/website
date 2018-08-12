@@ -126,8 +126,8 @@ defmodule Musehackers.Clients do
   def create_or_update_app(attrs \\ %{}) do
     app = %App{}
     changeset = App.changeset(app, attrs)
-    link = Map.get(attrs, "link")
-    version = Map.get(attrs, "version")
+    link = Map.get(changeset.changes, :link)
+    version = Map.get(changeset.changes, :version)
     on_conflict = [set: [link: link, version: version]]
     conflict_target = [:app_name, :platform_id]
     Repo.insert(changeset, on_conflict: on_conflict, conflict_target: conflict_target)

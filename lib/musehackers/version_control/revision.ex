@@ -5,15 +5,14 @@ defmodule Musehackers.VersionControl.Revision do
   alias Musehackers.VersionControl.Project
 
   @primary_key {:id, :string, autogenerate: false}
-  @foreign_key_type :string
 
   schema "revisions" do
     field :message, :string
     field :hash, :string
     field :data, :map
 
-    belongs_to :project, Project, foreign_key: :project_id
-    belongs_to :parent, Revision, foreign_key: :parent_id
+    field :parent_id, :string
+    field :project_id, :string
 
     timestamps(type: :utc_datetime)
   end

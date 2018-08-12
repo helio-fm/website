@@ -42,7 +42,7 @@ defmodule Musehackers.VersionControl do
     query = from r in Revision,
           left_join: child in Revision, on: r.id == child.parent_id,
           where: r.project_id == ^id and is_nil(child.parent_id),
-          select: struct(r, [:id, :message, :hash, :project_id, :parent_id])
+          select: struct(r, [:id, :hash, :message, :parent_id])
     {:ok, Repo.all(query)}
   end
 
@@ -51,35 +51,22 @@ defmodule Musehackers.VersionControl do
 
   ## Examples
 
-      iex> create_project(%{field: value})
+      iex> create_or_update_project(%{field: value})
       {:ok, %Project{}}
 
-      iex> create_project(%{field: bad_value})
+      iex> create_or_update_project(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_project(attrs \\ %{}) do
-    %Project{}
-    |> Project.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a project.
-
-  ## Examples
-
-      iex> update_project(project, %{field: new_value})
-      {:ok, %Project{}}
-
-      iex> update_project(project, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_project(%Project{} = project, attrs) do
-    project
-    |> Project.changeset(attrs)
-    |> Repo.update()
+  def create_or_update_project(attrs \\ %{}) do
+    project = %Project{}
+    cs = Project.changeset(project, attrs)
+    title = Map.get(cs.changes, :title)
+    slug = Map.get(cs.changes, :alias)
+    head = Map.get(cs.changes, :head)
+    author_id = Map.get(cs.changes, :author_id)
+    on_conflict = [set: [title: title, alias: slug, head: head, author_id: author_id]]
+    Repo.insert(cs, on_conflict: on_conflict, conflict_target: [:id])
   end
 
   @doc """
@@ -96,19 +83,6 @@ defmodule Musehackers.VersionControl do
   """
   def delete_project(%Project{} = project) do
     Repo.delete(project)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking project changes.
-
-  ## Examples
-
-      iex> change_project(project)
-      %Ecto.Changeset{source: %Project{}}
-
-  """
-  def change_project(%Project{} = project) do
-    Project.changeset(project, %{})
   end
 
   alias Musehackers.VersionControl.Revision
@@ -141,26 +115,6 @@ defmodule Musehackers.VersionControl do
 
   """
   def get_revision!(id), do: Repo.get!(Revision, id)
-
-  def get_revision_summary(id) do
-    query = from r in Revision,
-      where: r.id == ^id,
-      select: struct(r, [:id, :parent_id, :message, :hash])
-    case Repo.one(query) do
-      nil -> {:error, :revision_not_found}
-      revision -> {:ok, revision}
-    end
-  end
-
-  def get_revision_data(id) do
-    query = from r in Revision,
-      where: r.id == ^id,
-      select: struct(r, [:id, :hash, :data])
-    case Repo.one(query) do
-      nil -> {:error, :revision_not_found}
-      revision -> {:ok, revision}
-    end
-  end
 
   @doc """
   Creates a revision.

@@ -24,7 +24,8 @@ defmodule Musehackers.VersionControlTest do
     @update_attrs %{
       alias: "",
       id: "some updated id",
-      title: "Тестовая симфония ;%:"
+      title: "Тестовая симфония ;%:",
+      author_id: nil
     }
 
     @invalid_attrs %{alias: nil, id: nil, title: nil}
@@ -39,22 +40,28 @@ defmodule Musehackers.VersionControlTest do
       assert VersionControl.get_project!(project.id) == project
     end
 
-    test "create_project/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = VersionControl.create_project(@invalid_attrs)
+    test "create_or_update_project/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = VersionControl.create_or_update_project(@invalid_attrs)
     end
 
-    test "update_project/2 with valid data updates the project" do
+    test "create_or_update_project/2 with new aliaa updates the project" do
       project = project_fixture()
-      assert {:ok, project} = VersionControl.update_project(project, @update_attrs)
-      assert %Project{} = project
-      assert project.id == "some updated id"
+      attrs = %{@update_attrs | author_id: project.author_id, id: project.id, alias: project.alias}
+      assert {:ok, project} = VersionControl.create_or_update_project(attrs)
+      assert project.alias == "some-alias"
+    end
+
+    test "create_or_update_project/2 with empty alias updates the project with generated one" do
+      project = project_fixture()
+      attrs = %{@update_attrs | author_id: project.author_id, id: project.id}
+      assert {:ok, project} = VersionControl.create_or_update_project(attrs)
       assert project.title == "Тестовая симфония ;%:"
       assert project.alias == "testovaya-simfoniya"
     end
 
-    test "update_project/2 with invalid data returns error changeset" do
+    test "create_or_update_project/2 with invalid data returns error changeset" do
       project = project_fixture()
-      assert {:error, %Ecto.Changeset{}} = VersionControl.update_project(project, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = VersionControl.create_or_update_project(%{@invalid_attrs | id: project.id})
       assert project == VersionControl.get_project!(project.id)
     end
 
@@ -62,11 +69,6 @@ defmodule Musehackers.VersionControlTest do
       project = project_fixture()
       assert {:ok, %Project{}} = VersionControl.delete_project(project)
       assert_raise Ecto.NoResultsError, fn -> VersionControl.get_project!(project.id) end
-    end
-
-    test "change_project/1 returns a project changeset" do
-      project = project_fixture()
-      assert %Ecto.Changeset{} = VersionControl.change_project(project)
     end
   end
 
@@ -141,7 +143,7 @@ defmodule Musehackers.VersionControlTest do
     {:ok, project} =
       attrs
       |> Enum.into(%{@project_attrs | author_id: user.id})
-      |> VersionControl.create_project()
+      |> VersionControl.create_or_update_project()
 
     project
   end
