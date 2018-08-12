@@ -8,26 +8,29 @@ defmodule MusehackersWeb.Api.V1.ProjectControllerTest do
 
   @id "some id"
 
-  @create_attrs %{
+  @project_attrs %{
     id: "some id",
     alias: "some-alias",
     title: "some title",
     author_id: "11111111-1111-1111-1111-111111111111"
   }
 
-  # @update_attrs %{
-  #   alias: "some updated alias",
-  #   title: "some updated title",
-  #   author_id: "11111111-1111-1111-1111-111111111111"
-  # }
-  
+  @revision_attrs %{
+    id: "some id",
+    message: "some message",
+    hash: "some hash",
+    data: %{},
+    parent_id: nil,
+    project_id: nil
+  }
+
   @invalid_attrs %{alias: nil, id: nil, title: nil}
 
   describe "create project" do
     setup [:create_user]
 
     test "renders project when data is valid", %{conn: conn, user: user} do
-      conn = put authenticated(conn, user), api_v1_vcs_project_path(conn, :create_or_update, @id), project: @create_attrs
+      conn = put authenticated(conn, user), api_v1_vcs_project_path(conn, :create_or_update, @id), project: @project_attrs
       assert %{"id" => id} = json_response(conn, :ok)["data"]
       assert json_response(conn, :ok)["data"] == %{
         "id" => @id,
@@ -49,25 +52,30 @@ defmodule MusehackersWeb.Api.V1.ProjectControllerTest do
     end
 
     test "renders unauthorized when not authenticated", %{conn: conn, user: _} do
-      conn = put conn, api_v1_vcs_project_path(conn, :create_or_update, @id), project: @create_attrs
+      conn = put conn, api_v1_vcs_project_path(conn, :create_or_update, @id), project: @project_attrs
       assert response(conn, :unauthorized)
     end
   end
 
   describe "get project heads" do
-    setup [:create_user_and_project]
+    setup [:create_revisions_tree]
 
-  #   test "renders project when data is valid", %{conn: conn, project: %Project{id: id} = project} do
-  #     conn = put conn, api_v1_project_path(conn, :update, project), project: @update_attrs
-  #     assert %{"id" => ^id} = json_response(conn, 200)["data"]
-
-  #     conn = get conn, api_v1_project_path(conn, :show, id)
-  #     assert json_response(conn, 200)["data"] == %{
-  #       "id" => id,
-  #       "alias" => "some updated alias",
-  #       "id" => "some updated id",
-  #       "title" => "some updated title"}
-  #   end
+    test "renders head list when data is valid", %{conn: conn, project: %Project{id: id}, user: user, tree: _} do
+      conn = get authenticated(conn, user), api_v1_vcs_project_path(conn, :heads, id)
+      assert json_response(conn, 200)["data"] == [%{
+        "id" => "5",
+        "hash" => "some hash",
+        "message" => "some message",
+        "parentId" => "3"}, %{
+        "id" => "4",
+        "hash" => "some hash",
+        "message" => "some message",
+        "parentId" => "3"}, %{
+        "id" => "2",
+        "hash" => "some hash",
+        "message" => "some message",
+        "parentId" => "1"}]
+    end
 
     test "renders unauthorized when not authenticated", %{conn: conn, project: _, user: _} do
       conn = get conn, api_v1_vcs_project_path(conn, :heads, @id)
@@ -77,15 +85,6 @@ defmodule MusehackersWeb.Api.V1.ProjectControllerTest do
 
   describe "create and show project revisions" do
     setup [:create_user_and_project]
-
-    @revision_attrs %{
-      id: "some id",
-      message: "some message",
-      hash: "some hash",
-      data: %{},
-      parent_id: nil,
-      project_id: nil
-    }
 
     test "renders revision when created one with valid data", %{conn: conn, project: %Project{id: id}, user: user} do
       attrs = %{@revision_attrs | project_id: id}
@@ -130,8 +129,20 @@ defmodule MusehackersWeb.Api.V1.ProjectControllerTest do
 
   defp create_user_and_project(_) do
     {:ok, user} = Accounts.create_user(@user_attrs)
-    {:ok, project} = VersionControl.create_or_update_project(%{@create_attrs | author_id: user.id})
+    {:ok, project} = VersionControl.create_or_update_project(%{@project_attrs | author_id: user.id})
     {:ok, project: project, user: user}
+  end
+
+  defp create_revisions_tree(_) do
+    {:ok, user} = Accounts.create_user(@user_attrs)
+    {:ok, project} = VersionControl.create_or_update_project(%{@project_attrs | author_id: user.id})
+    {:ok, r1} = VersionControl.create_revision(%{@revision_attrs | id: "1", project_id: project.id})
+    {:ok, r2} = VersionControl.create_revision(%{@revision_attrs | id: "2", project_id: project.id, parent_id: r1.id})
+    {:ok, r3} = VersionControl.create_revision(%{@revision_attrs | id: "3", project_id: project.id, parent_id: r1.id})
+    {:ok, r4} = VersionControl.create_revision(%{@revision_attrs | id: "4", project_id: project.id, parent_id: r3.id})
+    {:ok, r5} = VersionControl.create_revision(%{@revision_attrs | id: "5", project_id: project.id, parent_id: r3.id})
+    tree = [r1, r2, r3, r4, r5]
+    {:ok, project: project, user: user, tree: tree}
   end
 
   defp authenticated(conn, user) do

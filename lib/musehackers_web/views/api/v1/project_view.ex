@@ -14,7 +14,7 @@ defmodule MusehackersWeb.Api.V1.ProjectView do
   end
 
   def render("show_heads.json", %{heads: heads}) do
-    %{data: render_many(heads, RevisionView, "revision.json")}
+    %{data: render_many(heads, RevisionView, "brief.json")}
   end
 
   def render("project.json", %{project: project}) do
