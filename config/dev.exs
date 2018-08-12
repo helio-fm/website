@@ -60,7 +60,7 @@ config :musehackers, MusehackersWeb.Endpoint,
 config :musehackers, Musehackers.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "123",
+  password: "",
   database: "musehackers",
   hostname: "localhost",
   pool_size: 10
