@@ -123,8 +123,9 @@ defmodule Musehackers.VersionControlTest do
 
     test "create_revision/2 fails when clasing with existing revision" do
       revision = revision_fixture()
-      assert_raise Ecto.ConstraintError, fn -> VersionControl.create_revision(%{@valid_attrs | project_id: revision.project_id}) end
+      VersionControl.create_revision(%{@valid_attrs | project_id: revision.project_id, message: "new"})
       assert revision == VersionControl.get_revision!(revision.id)
+      assert revision.message == "some message"
     end
 
     test "delete_revision/1 deletes the revision" do

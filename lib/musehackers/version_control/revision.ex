@@ -1,8 +1,9 @@
 defmodule Musehackers.VersionControl.Revision do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
   alias Musehackers.VersionControl.Revision
-  alias Musehackers.VersionControl.Project
 
   @primary_key {:id, :string, autogenerate: false}
 
@@ -24,6 +25,7 @@ defmodule Musehackers.VersionControl.Revision do
     |> validate_required([:id, :message, :hash, :data])
     |> foreign_key_constraint(:project_id)
     |> foreign_key_constraint(:parent_id)
+    |> unique_constraint(:id, name: :revisions_pkey)
     |> unique_constraint(:id, name: :revisions_unique_id_per_project)
   end
 end

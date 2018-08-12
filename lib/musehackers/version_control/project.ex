@@ -1,4 +1,6 @@
 defmodule Musehackers.VersionControl.Project do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
   alias Musehackers.VersionControl.Project

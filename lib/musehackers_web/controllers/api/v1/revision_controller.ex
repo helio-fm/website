@@ -14,9 +14,8 @@ defmodule MusehackersWeb.Api.V1.RevisionController do
   end
 
   def create(conn, %{"id" => id, "revision" => revision_params}) do
-    # TODO check id?
     with attrs <- Map.put(revision_params, "id", id),
-        {:ok, %Revision{} = revision} <- VersionControl.create_revision(attrs) do
+        {:ok, %Revision{} = _} <- VersionControl.create_revision(attrs) do
       conn
       |> send_resp(:created, "")
       |> halt()

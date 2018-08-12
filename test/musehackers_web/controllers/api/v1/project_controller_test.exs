@@ -1,8 +1,10 @@
 defmodule MusehackersWeb.Api.V1.ProjectControllerTest do
   use MusehackersWeb.ConnCase
 
-  alias Musehackers.Auth.Token
   alias Musehackers.Accounts
+  alias Musehackers.Auth.Token
+  alias Musehackers.VersionControl
+  alias Musehackers.VersionControl.Project
 
   @id "some id"
 
@@ -26,34 +28,34 @@ defmodule MusehackersWeb.Api.V1.ProjectControllerTest do
 
     test "renders project when data is valid", %{conn: conn, user: user} do
       conn = put authenticated(conn, user), api_v1_vcs_project_path(conn, :create_or_update, @id), project: @create_attrs
-      assert %{"id" => id} = json_response(conn, 200)["data"]
-      assert json_response(conn, 200)["data"] == %{
+      assert %{"id" => id} = json_response(conn, :ok)["data"]
+      assert json_response(conn, :ok)["data"] == %{
         "id" => @id,
         "alias" => "some-alias",
         "head" => nil,
         "title" => "some title"}
 
       conn = get authenticated(conn, user), api_v1_vcs_project_path(conn, :summary, id)
-      assert json_response(conn, 200)["data"] == %{
+      assert json_response(conn, :ok)["data"] == %{
         "id" => @id,
         "alias" => "some-alias",
         "head" => nil,
         "title" => "some title"}
     end
 
-    test "renders errors when data is invalid", %{conn: conn, user: _} do
-      conn = put conn, api_v1_vcs_project_path(conn, :create_or_update, @id), project: @create_attrs
-      assert response(conn, 401)
+    test "renders errors when data is invalid", %{conn: conn, user: user} do
+      conn = put authenticated(conn, user), api_v1_vcs_project_path(conn, :create_or_update, @id), project: @invalid_attrs
+      assert json_response(conn, :unprocessable_entity)["errors"] != %{}
     end
 
-    test "renders forbidden when not authenticated", %{conn: conn, user: user} do
-      conn = put authenticated(conn, user), api_v1_vcs_project_path(conn, :create_or_update, @id), project: @invalid_attrs
-      assert json_response(conn, 422)["errors"] != %{}
+    test "renders unauthorized when not authenticated", %{conn: conn, user: _} do
+      conn = put conn, api_v1_vcs_project_path(conn, :create_or_update, @id), project: @create_attrs
+      assert response(conn, :unauthorized)
     end
   end
 
-  # describe "update project" do
-  #   setup [:create_project]
+  describe "get project heads" do
+    setup [:create_user_and_project]
 
   #   test "renders project when data is valid", %{conn: conn, project: %Project{id: id} = project} do
   #     conn = put conn, api_v1_project_path(conn, :update, project), project: @update_attrs
@@ -67,28 +69,52 @@ defmodule MusehackersWeb.Api.V1.ProjectControllerTest do
   #       "title" => "some updated title"}
   #   end
 
-  #   test "renders errors when data is invalid", %{conn: conn, project: project} do
-  #     conn = put conn, api_v1_project_path(conn, :update, project), project: @invalid_attrs
-  #     assert json_response(conn, 422)["errors"] != %{}
-  #   end
-  # end
+    test "renders unauthorized when not authenticated", %{conn: conn, project: _, user: _} do
+      conn = get conn, api_v1_vcs_project_path(conn, :heads, @id)
+      assert response(conn, :unauthorized)
+    end
+  end
 
-  # describe "delete project" do
-  #   setup [:create_project]
+  describe "create and show project revisions" do
+    setup [:create_user_and_project]
 
-  #   test "deletes chosen project", %{conn: conn, project: project} do
-  #     conn = delete conn, api_v1_project_path(conn, :delete, project)
-  #     assert response(conn, 204)
-  #     assert_error_sent 404, fn ->
-  #       get conn, api_v1_project_path(conn, :show, project)
-  #     end
-  #   end
-  # end
+    @revision_attrs %{
+      id: "some id",
+      message: "some message",
+      hash: "some hash",
+      data: %{},
+      parent_id: nil,
+      project_id: nil
+    }
 
-  # defp create_project(_) do
-  #   project = fixture(:project)
-  #   {:ok, project: project}
-  # end
+    test "renders revision when created one with valid data", %{conn: conn, project: %Project{id: id}, user: user} do
+      attrs = %{@revision_attrs | project_id: id}
+      conn = put authenticated(conn, user), api_v1_vcs_revision_path(conn, :create, attrs.id), revision: attrs
+      assert response(conn, :created)
+
+      conn = get authenticated(conn, user), api_v1_vcs_revision_path(conn, :show, id)
+      assert json_response(conn, :ok)["data"] == %{
+        "id" => "some id",
+        "message" => "some message",
+        "hash" => "some hash",
+        "data" => %{},
+        "parentId" => nil}
+    end
+
+    test "renders error when trying to create revision with existing id", %{conn: conn, project: %Project{id: id}, user: user} do
+      attrs = %{@revision_attrs | project_id: id}
+      conn = put authenticated(conn, user), api_v1_vcs_revision_path(conn, :create, attrs.id), revision: attrs
+      assert response(conn, :created)
+
+      conn = put authenticated(conn, user), api_v1_vcs_revision_path(conn, :create, attrs.id), revision: attrs
+      assert response(conn, :unprocessable_entity)
+    end
+
+    test "renders unauthorized when not authenticated", %{conn: conn, project: _, user: _} do
+      conn = get conn, api_v1_vcs_revision_path(conn, :create, @revision_attrs.id), @revision_attrs
+      assert response(conn, :unauthorized)
+    end
+  end
 
   @user_attrs %{
     login: "test",
@@ -100,6 +126,12 @@ defmodule MusehackersWeb.Api.V1.ProjectControllerTest do
   defp create_user(_) do
     {:ok, user} = Accounts.create_user(@user_attrs)
     {:ok, user: user}
+  end
+
+  defp create_user_and_project(_) do
+    {:ok, user} = Accounts.create_user(@user_attrs)
+    {:ok, project} = VersionControl.create_or_update_project(%{@create_attrs | author_id: user.id})
+    {:ok, project: project, user: user}
   end
 
   defp authenticated(conn, user) do

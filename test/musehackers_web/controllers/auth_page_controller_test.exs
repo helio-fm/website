@@ -60,7 +60,7 @@ defmodule MusehackersWeb.AuthPageControllerTest do
       |> post(auth_callback_path(conn, :callback, "github"))
 
       users = User |> Repo.all
-      assert Enum.count(users) == 0
+      assert Enum.empty?(users)
       assert redirected_to(conn, 302)
     end
 
