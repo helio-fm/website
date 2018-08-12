@@ -10,7 +10,7 @@ defmodule MusehackersWeb.Api.V1.UserController do
   plug Guardian.Plug.LoadResource, ensure: true
 
   def get_current_user(conn, _params) do
-    with user = Guardian.Plug.current_resource(conn),
+    with user <- Guardian.Plug.current_resource(conn),
       do: render(conn, "show.json", user: user)
   end
 

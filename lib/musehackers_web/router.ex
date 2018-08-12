@@ -38,7 +38,7 @@ defmodule MusehackersWeb.Router do
 
       # some stuff for specific client apps
       # e.g. `/api/v1/clients/helio/translations`
-      scope "/client", as: :client do
+      scope "/clients", as: :client do
         pipe_through :clients
         get "/:app/info", ClientAppController, :get_client_info, as: :app_info
         get "/:app/:resource", ClientResourceController, :get_client_resource, as: :resource
@@ -56,8 +56,8 @@ defmodule MusehackersWeb.Router do
 
         pipe_through :authenticated
         post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
-        post "/", ClientAppController, :create_or_update, as: :update
-        get "/", ClientAppController, :index, as: :list
+        post "/", ClientAppController, :create_or_update, as: :app
+        get "/", ClientAppController, :index, as: :app
       end
 
       # restrict unauthenticated access for routes below
@@ -81,6 +81,19 @@ defmodule MusehackersWeb.Router do
 
       # a simple authentication check (mainly used in tests)
       get "/session-status", SessionController, :is_authenticated, as: :session_status
+
+      scope "/vcs", as: :vcs do
+        scope "/projects" do
+          get "/:id", ProjectController, :summary
+          get "/:id/heads", ProjectController, :heads
+          put "/:id", ProjectController, :create_or_update
+        end
+
+        scope "/revisions" do
+          get "/:id", RevisionController, :show
+          put "/:id", RevisionController, :create
+        end
+      end
     end
   end
 

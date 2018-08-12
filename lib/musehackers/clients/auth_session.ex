@@ -5,7 +5,6 @@ defmodule Musehackers.Clients.AuthSession do
   @moduledoc false
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  @foreign_key_type :binary_id
 
   schema "auth_sessions" do
     field :provider, :string

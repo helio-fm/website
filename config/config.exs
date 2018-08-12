@@ -54,6 +54,7 @@ config :musehackers, music_path: "/opt/musehackers/files/music/"
 config :musehackers, builds_path: "/opt/musehackers/files/builds/"
 config :musehackers, images_path: "/opt/musehackers/files/images/"
 
+config :musehackers, users_base_url: "https://helio.fm/"
 config :musehackers, music_base_url: "https://helio.fm/"
 config :musehackers, builds_base_url: "https://ci.helio.fm/"
 config :musehackers, images_base_url: "https://img.helio.fm/"

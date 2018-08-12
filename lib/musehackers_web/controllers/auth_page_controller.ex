@@ -50,14 +50,17 @@ defmodule MusehackersWeb.AuthPageController do
       |> redirect(to: "/")
   end
 
-  def callback(%{assigns: %{ueberauth_failure: _fails}} = conn, _params) do
-    conn
-      |> delete_session(:client_auth)
-      |> redirect(to: "/")
-  end
+  def callback(%{assigns: %{ueberauth_failure: _fails}} = conn, _params),
+    do: delete_session_and_redirect(conn)
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
     session_id = get_session(conn, :client_auth)
+    login_user_for_session_id(conn, auth, session_id)
+  end
+
+  defp login_user_for_session_id(conn, _, nil), do: delete_session_and_redirect(conn)
+  defp login_user_for_session_id(conn, nil, _), do: delete_session_and_redirect(conn)
+  defp login_user_for_session_id(conn, auth, session_id) do
     auth_session = Clients.get_auth_session!(session_id)
     with {:ok, user} <- UserFromAuth.find_or_create(auth),
          {:ok, permissions} <- Token.get_permissions_for(user),
@@ -69,10 +72,13 @@ defmodule MusehackersWeb.AuthPageController do
         |> delete_session(:client_auth)
         |> render("index.html", current_user: user, auth_session: auth_session)
     else
-      {:error, _reason} ->
-        conn
-          |> delete_session(:client_auth)
-          |> redirect(to: "/")
+      {:error, _reason} -> delete_session_and_redirect(conn)
     end
+  end
+
+  defp delete_session_and_redirect(conn) do
+    conn
+      |> delete_session(:client_auth)
+      |> redirect(to: "/")
   end
 end

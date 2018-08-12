@@ -2,6 +2,9 @@ defmodule Musehackers.Auth.UserFromAuth do
   @moduledoc """
   Retrieve the user information from an auth request
   """
+
+  @images_base_url Application.get_env(:musehackers, :images_base_url)
+
   require Logger
   require Poison
 
@@ -31,19 +34,18 @@ defmodule Musehackers.Auth.UserFromAuth do
   defp user_from_github_auth(auth, local_avatar_uri),
     do: %{
       github_uid: uid_from_auth(auth),
-      login: auth.info.nickname,
-      email: auth.info.email,
+      login: Map.get(auth.info, :nickname),
+      email: Map.get(auth.info, :email),
       name: name_from_auth(auth),
-      location: auth.info.location,
+      location: Map.get(auth.info, :location),
       avatar: local_avatar_uri
     }
 
   defp upload_avatar({:ok, %Tesla.Env{status: 200, body: body} = env}, login) do
     dir_subpath = login
     file_subpath = Path.join(dir_subpath, "avatar." <> get_file_extension(env))
-    root_dir = Application.get_env(:musehackers, :images_path)
-    dir_path = Path.join(root_dir, dir_subpath)
-    file_path = Path.join(root_dir, file_subpath)
+    dir_path = Path.join(@images_base_url, dir_subpath)
+    file_path = Path.join(@images_base_url, file_subpath)
     Logger.debug(file_path)
     Logger.debug(file_subpath)
     File.mkdir_p(dir_path)
@@ -53,23 +55,24 @@ defmodule Musehackers.Auth.UserFromAuth do
   defp upload_avatar({:error, _error}, _login), do: nil
   defp upload_avatar({:ok, _other}, _login), do: nil
 
-  defp get_avatar(auth) do
-    with {:ok, %Tesla.Env{} = env} <- Tesla.get(avatar_url_from_auth(auth)) do
+  defp get_avatar(auth) do    
+    with url <- avatar_url_from_auth(auth),
+      {:ok, %Tesla.Env{} = env} <- Tesla.get(url) do
       {:ok, env}
     else
-      {:error, _err} -> auth.info.email
-        |> find_gravatar()
-        |> Tesla.get()
+      {:error, _err} -> auth.info |> Map.get(:email) |> get_gravatar()
     end
   end
 
-  defp find_gravatar(email) do
+  defp get_gravatar(nil), do: {:error, nil}
+  defp get_gravatar(email) do
     hash = email
       |> String.trim()
       |> String.downcase()
       |> :erlang.md5()
       |> Base.encode16(case: :lower)
-    "https://www.gravatar.com/avatar/#{hash}?s=150&d=identicon"
+    Logger.info("Getting Gravatar from: https://www.gravatar.com/avatar/#{hash}?s=150&d=identicon")
+    Tesla.get("https://www.gravatar.com/avatar/#{hash}?s=150&d=identicon")
   end
 
   defp get_file_extension(%Tesla.Env{} = env) do
@@ -86,8 +89,7 @@ defmodule Musehackers.Auth.UserFromAuth do
   defp avatar_url_from_auth(%{info: %{urls: %{avatar_url: image}}}), do: image # github-specific
   defp avatar_url_from_auth(%{info: %{image: image}}), do: image # facebook-specific 
   defp avatar_url_from_auth(auth) do # default case if nothing matches
-    Logger.warn auth.provider <> " needs to find an avatar URL!"
-    Logger.debug(Poison.encode!(auth))
+    Logger.info("No avatar found for auth: #{inspect(auth)}")
     nil
   end
 
