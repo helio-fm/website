@@ -1,9 +1,9 @@
-defmodule MusehackersWeb.Api.V1.ProjectView do
+defmodule MusehackersWeb.Api.ProjectView do
   @moduledoc false
 
   use MusehackersWeb, :view
-  alias MusehackersWeb.Api.V1.ProjectView
-  alias MusehackersWeb.Api.V1.RevisionView
+  alias MusehackersWeb.Api.ProjectView
+  alias MusehackersWeb.Api.RevisionView
 
   def render("index.json", %{projects: projects}) do
     %{data: render_many(projects, ProjectView, "project.json")}

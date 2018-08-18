@@ -4,6 +4,10 @@ defmodule MusehackersWeb.Api.V1.AuthSessionControllerTest do
   alias Musehackers.Clients
   alias Musehackers.Clients.AuthSession
 
+  setup %{conn: conn} do
+    {:ok, conn: put_req_header(conn, "accept", "application/helio.fm.v1+json")}
+  end
+
   @create_attrs %{
     provider: "Github",
     app_name: "helio",
@@ -24,7 +28,7 @@ defmodule MusehackersWeb.Api.V1.AuthSessionControllerTest do
 
   describe "init auth_session" do
     test "renders auth_session when data is valid", %{conn: conn} do
-      conn = post client(conn), api_v1_client_auth_init_path(conn, :init_client_auth_session, "helio"), %{session: @create_attrs}
+      conn = post client(conn), api_client_auth_init_path(conn, :init_client_auth_session, "helio"), %{session: @create_attrs}
       assert json_response(conn, :created)["data"]["provider"] == "Github"
       assert json_response(conn, :created)["data"]["appName"] == "helio"
       assert json_response(conn, :created)["data"]["appPlatform"] == "some app_platform"
@@ -36,18 +40,18 @@ defmodule MusehackersWeb.Api.V1.AuthSessionControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post client(conn), api_v1_client_auth_init_path(conn, :init_client_auth_session, "helio"), %{session: @invalid_attrs}
+      conn = post client(conn), api_client_auth_init_path(conn, :init_client_auth_session, "helio"), %{session: @invalid_attrs}
       assert response(conn, :unprocessable_entity)
     end
 
     test "renders errors when not authenticated", %{conn: conn} do
-      conn = post conn, api_v1_client_auth_init_path(conn, :init_client_auth_session, "helio"), %{session: @create_attrs}
+      conn = post conn, api_client_auth_init_path(conn, :init_client_auth_session, "helio"), %{session: @create_attrs}
       assert response(conn, :unauthorized)
     end
 
     test "renders 404 when trying to finalise non-existent session", %{conn: conn} do
       assert_error_sent :not_found, fn ->
-        post client(conn), api_v1_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), %{session: %{id: UUID.uuid4()}}
+        post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), %{session: %{id: UUID.uuid4()}}
       end
     end
   end
@@ -59,34 +63,34 @@ defmodule MusehackersWeb.Api.V1.AuthSessionControllerTest do
       token = UUID.uuid4()
       Clients.finalise_auth_session(auth_session, token)
       session = %{session: Map.from_struct(auth_session)}
-      conn = post client(conn), api_v1_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
+      conn = post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
       assert json_response(conn, :ok)["data"]["token"] == token
 
       assert_error_sent :not_found, fn ->
-        post client(conn), api_v1_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
+        post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
       end
     end
 
     test "renders forbidden when asked for session with wrong secret", %{conn: conn, auth_session: %AuthSession{} = auth_session} do
       session = %{session: %{Map.from_struct(auth_session) | secret_key: "some"}}
-      conn = post client(conn), api_v1_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
+      conn = post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
       assert response(conn, :forbidden)
     end
 
     test "renders no_content when existing session has no token", %{conn: conn, auth_session: %AuthSession{} = auth_session} do
       session = %{session: Map.from_struct(auth_session)}
-      conn = post client(conn), api_v1_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
+      conn = post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
       assert response(conn, :no_content)
     end
 
     test "renders confilct and deletes auth session when app name does not match", %{conn: conn, auth_session: %AuthSession{} = auth_session} do
       session = %{session: Map.from_struct(auth_session)}
       Clients.finalise_auth_session(auth_session, "token")
-      conn = post client(conn), api_v1_client_auth_finalise_path(conn, :finalise_client_auth_session, "other"), session
+      conn = post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "other"), session
       assert response(conn, :conflict)
 
       assert_error_sent :not_found, fn ->
-        post client(conn), api_v1_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
+        post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
       end
     end
   end

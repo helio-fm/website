@@ -1,11 +1,11 @@
-defmodule MusehackersWeb.Api.V1.UserView do
+defmodule MusehackersWeb.Api.UserView do
   @moduledoc false
 
   @users_base_url Application.get_env(:musehackers, :users_base_url)
   @images_base_url Application.get_env(:musehackers, :images_base_url)
 
   use MusehackersWeb, :view
-  alias MusehackersWeb.Api.V1.UserView
+  alias MusehackersWeb.Api.UserView
 
   def render("index.json", %{users: users}) do
     %{data: render_many(users, UserView, "user.json")}

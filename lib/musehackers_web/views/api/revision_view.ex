@@ -1,6 +1,6 @@
-defmodule MusehackersWeb.Api.V1.RevisionView do
+defmodule MusehackersWeb.Api.RevisionView do
   use MusehackersWeb, :view
-  alias MusehackersWeb.Api.V1.RevisionView
+  alias MusehackersWeb.Api.RevisionView
 
   def render("index.json", %{revisions: revisions}) do
     %{data: render_many(revisions, RevisionView, "revision.json")}

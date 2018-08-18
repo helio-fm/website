@@ -1,10 +1,10 @@
-defmodule MusehackersWeb.Api.V1.RevisionController do
+defmodule MusehackersWeb.Api.RevisionController do
   use MusehackersWeb, :controller
 
   alias Musehackers.VersionControl
   alias Musehackers.VersionControl.Revision
 
-  action_fallback MusehackersWeb.Api.V1.FallbackController
+  action_fallback MusehackersWeb.Api.FallbackController
 
   def show(conn, %{"id" => id}) do
     revision = VersionControl.get_revision!(id)

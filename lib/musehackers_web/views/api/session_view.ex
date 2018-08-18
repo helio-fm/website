@@ -1,4 +1,4 @@
-defmodule MusehackersWeb.Api.V1.SessionView do
+defmodule MusehackersWeb.Api.SessionView do
   use MusehackersWeb, :view
   @moduledoc false
 

@@ -1,4 +1,4 @@
-defmodule MusehackersWeb.Api.V1.SessionController do
+defmodule MusehackersWeb.Api.SessionController do
   use MusehackersWeb, :controller
   @moduledoc false
 
@@ -6,7 +6,7 @@ defmodule MusehackersWeb.Api.V1.SessionController do
   alias Musehackers.Accounts.User
   alias Musehackers.Accounts.Session
 
-  action_fallback MusehackersWeb.Api.V1.FallbackController
+  action_fallback MusehackersWeb.Api.FallbackController
 
   def sign_in(conn, %{"session" => %{"email" => email, "password" => pass,
     "device_id" => device_id, "platform_id" => platform_id}}) do
@@ -29,6 +29,6 @@ defmodule MusehackersWeb.Api.V1.SessionController do
   def is_authenticated(conn, _params) do
     conn
     |> put_status(:ok)
-    |> render(MusehackersWeb.Api.V1.SessionView, "session_status.json")
+    |> render(MusehackersWeb.Api.SessionView, "session_status.json")
   end
 end

@@ -1,10 +1,10 @@
-defmodule MusehackersWeb.Api.V1.ProjectController do
+defmodule MusehackersWeb.Api.ProjectController do
   use MusehackersWeb, :controller
 
   alias Musehackers.VersionControl
   alias Musehackers.VersionControl.Project
 
-  action_fallback MusehackersWeb.Api.V1.FallbackController
+  action_fallback MusehackersWeb.Api.FallbackController
 
   def summary(conn, %{"id" => id}) do
     project = VersionControl.get_project!(id)

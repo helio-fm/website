@@ -19,31 +19,31 @@ defmodule MusehackersWeb.Api.V1.ClientResourceControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    {:ok, conn: put_req_header(conn, "accept", "application/helio.fm.v1+json")}
   end
 
   describe "get client resource" do
     setup [:create_resource]
 
     test "renders resource when data is valid", %{conn: conn, resource: %Resource{} = resource} do
-      conn = get client(conn), api_v1_client_resource_path(conn, :get_client_resource, resource.app_name, resource.resource_name)
+      conn = get client(conn), api_client_resource_path(conn, :get_client_resource, resource.app_name, resource.resource_name)
       assert json_response(conn, 200)["data"] == %{"translations" => "test"}
     end
 
     test "renders errors when app or resource does not exist", %{conn: conn, resource: resource} do
-      conn = get client(conn), api_v1_client_resource_path(conn, :get_client_resource, "1", resource.resource_name)
+      conn = get client(conn), api_client_resource_path(conn, :get_client_resource, "1", resource.resource_name)
       assert json_response(conn, 404)["errors"] != %{}
     end
   end
 
   describe "update client resource" do
     test "renders error on unauthenticated request to update resource", %{conn: conn} do
-      conn = post client(conn), api_v1_client_resource_update_path(conn, :update_client_resource, "helio", "translations")
+      conn = post client(conn), api_client_resource_update_path(conn, :update_client_resource, "helio", "translations")
       assert response(conn, 401)
     end
 
     test "renders error on request to update unknown resource", %{conn: conn} do
-      conn = post authenticated(conn), api_v1_client_resource_update_path(conn, :update_client_resource, "1", "2")
+      conn = post authenticated(conn), api_client_resource_update_path(conn, :update_client_resource, "1", "2")
       assert response(conn, 404)
     end
   end

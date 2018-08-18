@@ -1,4 +1,4 @@
-defmodule Musehackers.Json.CamelCaseDecoder do
+defmodule Musehackers.Plugs.CamelCaseDecoder do
   @moduledoc """
   A plug to convert all the keys in a map from `camelCase` to `snake_case`.
   If the map is a struct with no `Enumerable` implementation,

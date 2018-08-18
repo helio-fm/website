@@ -1,4 +1,4 @@
-defmodule MusehackersWeb.Api.V1.RegistrationView do
+defmodule MusehackersWeb.Api.RegistrationView do
   use MusehackersWeb, :view
   @moduledoc false
 

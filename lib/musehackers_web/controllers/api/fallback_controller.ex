@@ -1,4 +1,4 @@
-defmodule MusehackersWeb.Api.V1.FallbackController do
+defmodule MusehackersWeb.Api.FallbackController do
   @moduledoc """
   Translates controller action results into valid `Plug.Conn` responses.
 

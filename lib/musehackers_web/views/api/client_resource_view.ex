@@ -1,4 +1,4 @@
-defmodule MusehackersWeb.Api.V1.ClientResourceView do
+defmodule MusehackersWeb.Api.ClientResourceView do
   use MusehackersWeb, :view
   @moduledoc false
 

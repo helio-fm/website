@@ -1,11 +1,11 @@
-defmodule MusehackersWeb.Api.V1.UserController do
+defmodule MusehackersWeb.Api.UserController do
   use MusehackersWeb, :controller
   @moduledoc false
 
   alias Musehackers.Accounts
   alias Musehackers.Accounts.User
 
-  action_fallback MusehackersWeb.Api.V1.FallbackController
+  action_fallback MusehackersWeb.Api.FallbackController
 
   plug Guardian.Plug.LoadResource, ensure: true
 

@@ -1,11 +1,11 @@
-defmodule MusehackersWeb.Api.V1.AuthSessionController do
+defmodule MusehackersWeb.Api.AuthSessionController do
   use MusehackersWeb, :controller
   @moduledoc false
 
   alias Musehackers.Clients
   alias Musehackers.Clients.AuthSession
 
-  action_fallback MusehackersWeb.Api.V1.FallbackController
+  action_fallback MusehackersWeb.Api.FallbackController
 
   def init_client_auth_session(conn, %{"app" => _app_name, "session" => session}) do
     Clients.delete_auth_session(session["provider"], session["device_id"])

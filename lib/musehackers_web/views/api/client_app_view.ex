@@ -1,6 +1,6 @@
-defmodule MusehackersWeb.Api.V1.ClientAppView do
+defmodule MusehackersWeb.Api.ClientAppView do
   use MusehackersWeb, :view
-  alias MusehackersWeb.Api.V1.ClientAppView
+  alias MusehackersWeb.Api.ClientAppView
   @moduledoc false
 
   def render("index.json", %{apps: apps}) do

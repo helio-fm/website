@@ -45,9 +45,14 @@ config :logger, :console,
 
 # Configure encoders
 config :phoenix, :format_encoders,
-  json: Musehackers.Json.CamelCaseEncoder
+  json: Musehackers.Plugs.CamelCaseEncoder
 
 config :ecto, json_library: Jason
+
+# Mime types for versioning
+config :mime, :types, %{
+  "application/helio.fm.v1+json" => [:v1]
+}
 
 # Locations
 config :musehackers, users_base_url: "https://helio.fm/"

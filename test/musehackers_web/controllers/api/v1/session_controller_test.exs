@@ -24,75 +24,75 @@ defmodule MusehackersWeb.Api.V1.SessionControllerTest do
   }
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    {:ok, conn: put_req_header(conn, "accept", "application/helio.fm.v1+json")}
   end
 
   describe "register and login" do
     test "registers and logs user in when data is valid", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: @sign_in_payload
+      conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
       assert %{"status" => "ok"} = json_response(conn, 200)
       assert json_response(conn, 200)["data"]["token"] != ""
     end
 
     test "registers and logs user in when data is valid but email case differs", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: %{@sign_in_payload | email: "email@helio.FM"}
+      conn = post conn, api_login_path(conn, :sign_in), session: %{@sign_in_payload | email: "email@helio.FM"}
       assert %{"status" => "ok"} = json_response(conn, 200)
       assert json_response(conn, 200)["data"]["token"] != ""
     end
 
     test "returns valid JWT token that successfully authorizes a protected resource request", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: @sign_in_payload
+      conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
       assert %{"status" => "ok"} = json_response(conn, 200)
       assert json_response(conn, 200)["data"]["email"] == "email@helio.fm"
 
       jwt = json_response(conn, 200)["data"]["token"]
-      conn = get authenticated(conn, jwt), api_v1_session_status_path(conn, :is_authenticated)
+      conn = get authenticated(conn, jwt), api_session_status_path(conn, :is_authenticated)
       assert json_response(conn, 200)["status"] == "ok"
     end
 
     test "renders login error when email is invalid", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: %{@sign_in_payload | email: "invalid"}
+      conn = post conn, api_login_path(conn, :sign_in), session: %{@sign_in_payload | email: "invalid"}
       assert %{"errors" => %{"status" => "unauthorized"}} = json_response(conn, 401)
     end
 
     test "renders login error when password is invalid", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: %{@sign_in_payload | password: "invalid"}
+      conn = post conn, api_login_path(conn, :sign_in), session: %{@sign_in_payload | password: "invalid"}
       assert %{"errors" => %{"status" => "unauthorized"}} = json_response(conn, 401)
     end
   end
 
   describe "register, login and update token" do
     test "refreshes token given a valid token and a new token becomes valid to refresh again", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: @sign_in_payload
+      conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
       assert %{"status" => "ok"} = json_response(conn, 200)
       token = json_response(conn, 200)["data"]["token"]
 
-      conn = post authenticated(conn, token), api_v1_relogin_path(conn, :refresh_token),
+      conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
 
       assert %{"status" => "ok"} = json_response(conn, 200)
       new_token_1 = json_response(conn, 200)["data"]["token"]
       assert token != new_token_1
 
-      conn = post authenticated(conn, new_token_1), api_v1_relogin_path(conn, :refresh_token),
+      conn = post authenticated(conn, new_token_1), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: new_token_1}
 
       assert %{"status" => "ok"} = json_response(conn, 200)
@@ -101,14 +101,14 @@ defmodule MusehackersWeb.Api.V1.SessionControllerTest do
     end
 
     test "fails to re-generate token twice based on the same token", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: @sign_in_payload
+      conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
       assert %{"status" => "ok"} = json_response(conn, 200)
       token = json_response(conn, 200)["data"]["token"]
 
-      conn = post authenticated(conn, token), api_v1_relogin_path(conn, :refresh_token),
+      conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
 
       assert %{"status" => "ok"} = json_response(conn, 200)
@@ -116,47 +116,47 @@ defmodule MusehackersWeb.Api.V1.SessionControllerTest do
 
       assert new_token != token
 
-      conn = post authenticated(conn, token), api_v1_relogin_path(conn, :refresh_token),
+      conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
 
       assert response(conn, 401)
     end
 
     test "authorizes a protected resource request with a refreshed token", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: @sign_in_payload
+      conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
       assert %{"status" => "ok"} = json_response(conn, 200)
       token = json_response(conn, 200)["data"]["token"]
 
-      conn = post authenticated(conn, token), api_v1_relogin_path(conn, :refresh_token),
+      conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
 
       assert %{"status" => "ok"} = json_response(conn, 200)
       new_token = json_response(conn, 200)["data"]["token"]
 
       assert new_token != token
-      conn = get authenticated(conn, new_token), api_v1_session_status_path(conn, :is_authenticated)
+      conn = get authenticated(conn, new_token), api_session_status_path(conn, :is_authenticated)
       assert json_response(conn, 200)["status"] == "ok"
     end
 
     test "fails to re-generate token given valid token but different device id", %{conn: conn} do
-      conn = post conn, api_v1_signup_path(conn, :sign_up), user: @sign_up_payload
+      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
       assert %{"status" => "ok"} = json_response(conn, 201)
 
-      conn = post conn, api_v1_login_path(conn, :sign_in), session: @sign_in_payload
+      conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
       assert %{"status" => "ok"} = json_response(conn, 200)
       token = json_response(conn, 200)["data"]["token"]
 
-      conn = post authenticated(conn, token), api_v1_relogin_path(conn, :refresh_token),
+      conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token, device_id: "other"}
 
       assert response(conn, 401)
     end
 
     test "fails to re-generate token given an unauthenticated request", %{conn: conn} do
-      conn = post conn, api_v1_relogin_path(conn, :refresh_token), session: @refresh_token_payload
+      conn = post conn, api_relogin_path(conn, :refresh_token), session: @refresh_token_payload
       assert response(conn, 401)
     end
   end

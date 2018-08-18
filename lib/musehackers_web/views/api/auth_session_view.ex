@@ -1,6 +1,6 @@
-defmodule MusehackersWeb.Api.V1.AuthSessionView do
+defmodule MusehackersWeb.Api.AuthSessionView do
   use MusehackersWeb, :view
-  alias MusehackersWeb.Api.V1.AuthSessionView
+  alias MusehackersWeb.Api.AuthSessionView
 
   def render("index.json", %{auth_sessions: auth_sessions}) do
     %{data: render_many(auth_sessions, AuthSessionView, "auth_session.json")}

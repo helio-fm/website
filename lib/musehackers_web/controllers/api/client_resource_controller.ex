@@ -1,11 +1,11 @@
-defmodule MusehackersWeb.Api.V1.ClientResourceController do
+defmodule MusehackersWeb.Api.ClientResourceController do
   use MusehackersWeb, :controller
   @moduledoc false
 
   alias Musehackers.Clients
   alias Musehackers.Clients.Resource
 
-  action_fallback MusehackersWeb.Api.V1.FallbackController
+  action_fallback MusehackersWeb.Api.FallbackController
 
   def get_client_resource(conn, %{"app" => app_name, "resource" => resource_name}) do
     with {:ok, %Resource{} = resource} <- Clients.get_resource_for_app(app_name, resource_name),
