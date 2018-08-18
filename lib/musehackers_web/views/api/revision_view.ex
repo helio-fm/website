@@ -2,19 +2,15 @@ defmodule MusehackersWeb.Api.RevisionView do
   use MusehackersWeb, :view
   alias MusehackersWeb.Api.RevisionView
 
-  def render("index.json", %{revisions: revisions}) do
-    %{data: render_many(revisions, RevisionView, "revision.json")}
+  def render("index.v1.json", %{revisions: revisions}) do
+    %{data: render_many(revisions, RevisionView, "revision.v1.json")}
   end
 
-  def render("show.json", %{revision: revision}) do
-    %{data: render_one(revision, RevisionView, "revision.json")}
+  def render("show.v1.json", %{revision: revision}) do
+    %{data: render_one(revision, RevisionView, "revision.v1.json")}
   end
 
-  def render("show_brief.json", %{revision: revision}) do
-    %{data: render_one(revision, RevisionView, "brief.json")}
-  end
-
-  def render("revision.json", %{revision: revision}) do
+  def render("revision.v1.json", %{revision: revision}) do
     %{id: revision.id,
       hash: revision.hash,
       message: revision.message,
@@ -22,7 +18,7 @@ defmodule MusehackersWeb.Api.RevisionView do
       data: revision.data}
   end
 
-  def render("brief.json", %{revision: revision}) do
+  def render("brief.v1.json", %{revision: revision}) do
     %{id: revision.id,
       hash: revision.hash,
       message: revision.message,

@@ -5,19 +5,19 @@ defmodule MusehackersWeb.Api.ProjectView do
   alias MusehackersWeb.Api.ProjectView
   alias MusehackersWeb.Api.RevisionView
 
-  def render("index.json", %{projects: projects}) do
-    %{data: render_many(projects, ProjectView, "project.json")}
+  def render("index.v1.json", %{projects: projects}) do
+    %{data: render_many(projects, ProjectView, "project.v1.json")}
   end
 
-  def render("show.json", %{project: project}) do
-    %{data: render_one(project, ProjectView, "project.json")}
+  def render("show.v1.json", %{project: project}) do
+    %{data: render_one(project, ProjectView, "project.v1.json")}
   end
 
-  def render("show_heads.json", %{heads: heads}) do
-    %{data: render_many(heads, RevisionView, "brief.json")}
+  def render("show.heads.v1.json", %{heads: heads}) do
+    %{data: render_many(heads, RevisionView, "brief.v1.json")}
   end
 
-  def render("project.json", %{project: project}) do
+  def render("project.v1.json", %{project: project}) do
     %{id: project.id,
       title: project.title,
       alias: project.alias,

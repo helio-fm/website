@@ -2,7 +2,7 @@ defmodule MusehackersWeb.Api.SessionView do
   use MusehackersWeb, :view
   @moduledoc false
 
-  def render("sign_in.json", %{user: user, jwt: jwt}) do
+  def render("sign.in.v1.json", %{user: user, jwt: jwt}) do
     %{
       status: :ok,
       data: %{
@@ -16,7 +16,7 @@ defmodule MusehackersWeb.Api.SessionView do
     }
   end
 
-  def render("refresh_token.json", %{user: user, jwt: jwt}) do
+  def render("refresh.token.v1.json", %{user: user, jwt: jwt}) do
     %{
       status: :ok,
       data: %{
@@ -29,7 +29,7 @@ defmodule MusehackersWeb.Api.SessionView do
     }
   end
 
-  def render("session_status.json", _params) do
+  def render("session.status.v1.json", _params) do
     %{
       status: :ok
     }

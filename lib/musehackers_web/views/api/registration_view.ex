@@ -2,7 +2,7 @@ defmodule MusehackersWeb.Api.RegistrationView do
   use MusehackersWeb, :view
   @moduledoc false
 
-  def render("success.json", %{user: _user}) do
+  def render("registration.success.v1.json", %{user: _user}) do
     %{
       status: :ok,
       message: """
