@@ -5,19 +5,16 @@ defmodule Api.Mixfile do
     [
       app: :api,
       version: "0.0.6",
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
       elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
-      deps: deps(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [
-        "coveralls": :test,
-        "coveralls.detail": :test,
-        "coveralls.post": :test,
-        "coveralls.html": :test
-      ]
+      deps: deps()
     ]
   end
 
@@ -27,9 +24,7 @@ defmodule Api.Mixfile do
   def application do
     [
       mod: {Api.Application, []},
-      extra_applications: [:logger,
-                           :runtime_tools,
-                           :edeliver]
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
@@ -44,6 +39,7 @@ defmodule Api.Mixfile do
     [
       # Internal
       {:db, in_umbrella: true},
+      {:jobs, in_umbrella: true},
 
       # Phoenix
       {:phoenix, "~> 1.3.4"},
@@ -54,15 +50,7 @@ defmodule Api.Mixfile do
       {:guardian, "~> 1.1.0"},
 
       # Faster json encoding
-      {:jason, "~> 1.1.1"},
-
-      # For deployment
-      {:distillery, "~> 1.5"},
-      {:edeliver, "~> 1.5.3"},
-
-      # For tests
-      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.8", only: :test}
+      {:jason, "~> 1.1.1"}
     ]
   end
 

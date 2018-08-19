@@ -5,19 +5,16 @@ defmodule Web.Mixfile do
     [
       app: :web,
       version: "0.0.6",
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
       elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
-      deps: deps(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [
-        "coveralls": :test,
-        "coveralls.detail": :test,
-        "coveralls.post": :test,
-        "coveralls.html": :test
-      ]
+      deps: deps()
     ]
   end
 
@@ -30,8 +27,7 @@ defmodule Web.Mixfile do
       extra_applications: [:logger,
                            :runtime_tools,
                            :ueberauth,
-                           :ueberauth_github,
-                           :edeliver]
+                           :ueberauth_github]
     ]
   end
 
@@ -47,7 +43,6 @@ defmodule Web.Mixfile do
       # Internal
       {:db, in_umbrella: true},
       {:api, in_umbrella: true},
-      {:jobs, in_umbrella: true},
 
       # Phoenix
       {:phoenix, "~> 1.3.4"},
@@ -58,15 +53,7 @@ defmodule Web.Mixfile do
 
       # For auth
       {:ueberauth, "~> 0.5"},
-      {:ueberauth_github, "~> 0.7.0"},
-
-      # For deployment
-      {:distillery, "~> 1.5"},
-      {:edeliver, "~> 1.5.3"},
-
-      # For tests
-      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.8", only: :test}
+      {:ueberauth_github, "~> 0.7.0"}
     ]
   end
 

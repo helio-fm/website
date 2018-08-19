@@ -4,7 +4,7 @@ addons:
   postgresql: '9.6'
   ssh_known_hosts: helio.fm
 elixir:
-- 1.5.0
+- 1.6.0
 services:
 - postgresql
 cache:

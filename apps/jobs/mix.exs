@@ -5,19 +5,15 @@ defmodule Jobs.Mixfile do
     [
       app: :jobs,
       version: "0.0.6",
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
       elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env),
-      compilers: [] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
-      deps: deps(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [
-        "coveralls": :test,
-        "coveralls.detail": :test,
-        "coveralls.post": :test,
-        "coveralls.html": :test
-      ]
+      deps: deps()
     ]
   end
 
@@ -28,8 +24,7 @@ defmodule Jobs.Mixfile do
     [
       mod: {Jobs.Application, []},
       extra_applications: [:logger,
-                           :runtime_tools,
-                           :edeliver]
+                           :runtime_tools]
     ]
   end
 
@@ -47,15 +42,7 @@ defmodule Jobs.Mixfile do
 
       # For jobs
       {:tesla, "~> 1.1"},
-      {:nimble_csv, "~> 0.4"},
-
-      # For deployment
-      {:distillery, "~> 1.5"},
-      {:edeliver, "~> 1.5.3"},
-
-      # For tests
-      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.8", only: :test}
+      {:nimble_csv, "~> 0.4"}
     ]
   end
 

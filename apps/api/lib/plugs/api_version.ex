@@ -1,4 +1,6 @@
 defmodule Api.Plugs.APIVersion do
+  @moduledoc false
+
   @versions Application.get_env(:mime, :types)
   import Plug.Conn
 

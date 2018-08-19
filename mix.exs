@@ -5,7 +5,14 @@ defmodule Musehackers.Umbrella.Mixfile do
     [
       apps_path: "apps",
       start_permanent: Mix.env == :prod,
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        "coveralls": :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -22,6 +29,14 @@ defmodule Musehackers.Umbrella.Mixfile do
   # Dependencies listed here are available only for this project
   # and cannot be accessed from applications inside the apps folder
   defp deps do
-    []
+    [
+      # For deployment
+      {:edeliver, ">= 1.6.0"},
+      {:distillery, "~> 2.0", warn_missing: false},
+
+      # For tests
+      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.8", only: :test}
+    ]
   end
 end
