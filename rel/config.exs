@@ -25,12 +25,14 @@ use Mix.Releases.Config,
 environment :dev do
   set dev_mode: true
   set include_erts: false
+  set cookie: :"bMLs+UU3UjsaC1lwGUTjzKFJvXEvpLeaOYgnOqoPYCIQ1JmDwDHorhJn6L6k0ZGU"
 end
 
 environment :prod do
   set include_erts: true
   set include_src: false
   set output_dir: "rel/musehackers"
+  set cookie: :"09X3mQLxEOLFQmdaOfBSuH5UAxN6gI2+RIXEvZvQSeJx4F9tFQSyvO+b/nSUtzpD"
 end
 
 # You may define one or more releases in this file.
@@ -39,8 +41,8 @@ end
 # will be used by default
 
 release :musehackers do
-  set version: current_version(:musehackers)
+  set version: current_version(:api)
   set applications: [
-    musehackers: :permanent
+    :edeliver, :db, :api, :jobs, :web
   ]
 end
