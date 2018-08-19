@@ -1,4 +1,4 @@
-defmodule Api.Auth.UserFromAuth do
+defmodule Web.Helpers.UserFromAuth do
   @moduledoc """
   Retrieve the user information from an auth request
   """
@@ -42,12 +42,9 @@ defmodule Api.Auth.UserFromAuth do
     }
 
   defp upload_avatar({:ok, %Tesla.Env{status: 200, body: body} = env}, login) do
-    dir_subpath = login
-    file_subpath = Path.join(dir_subpath, "avatar." <> get_file_extension(env))
-    dir_path = Path.join(@images_store_path, dir_subpath)
+    file_subpath = Path.join(login, "avatar." <> get_file_extension(env))
+    dir_path = Path.join(@images_store_path, login)
     file_path = Path.join(@images_store_path, file_subpath)
-    Logger.debug(file_path)
-    Logger.debug(file_subpath)
     File.mkdir_p(dir_path)
     File.write!(file_path, body)
     file_subpath
@@ -60,7 +57,9 @@ defmodule Api.Auth.UserFromAuth do
       {:ok, %Tesla.Env{} = env} <- Tesla.get(url) do
       {:ok, env}
     else
-      {:error, _err} -> auth.info |> Map.get(:email) |> get_gravatar()
+      {:error, _err} -> auth.info
+        |> Map.get(:email)
+        |> get_gravatar()
     end
   end
 
@@ -87,18 +86,11 @@ defmodule Api.Auth.UserFromAuth do
 
   defp uid_from_auth(auth), do: Kernel.inspect(auth.uid) # turn anything to string
   defp avatar_url_from_auth(%{info: %{urls: %{avatar_url: image}}}), do: image # github-specific
-  defp avatar_url_from_auth(%{info: %{image: image}}), do: image # facebook-specific 
-  defp avatar_url_from_auth(auth) do # default case if nothing matches
-    Logger.info("No avatar found for auth: #{inspect(auth)}")
-    nil
-  end
+  defp avatar_url_from_auth(_), do: nil # default case if nothing matches
 
   defp name_from_auth(auth) do
-    if auth.info.name do
-      auth.info.name
-    else
-      name = [auth.info.first_name, auth.info.last_name] |> Enum.filter(&(&1 != nil and &1 != ""))
-      if name.empty, do: auth.info.nickname, else: Enum.join(name, " ")
-    end
+    name = Map.get(auth.info, :name)
+    nickname = Map.get(auth.info, :nickname)
+    if name, do: name, else: nickname
   end
 end

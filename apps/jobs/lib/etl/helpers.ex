@@ -1,5 +1,4 @@
 defmodule Jobs.Etl.Helpers do
-  require Logger
   use Tesla
   @moduledoc false
 

@@ -28,9 +28,8 @@ defmodule Jobs.Etl.Translations do
       schedule_work()
       {:ok, nil}
     rescue
-      exception ->
-         Logger.error inspect exception
-         :ignore
+      exception -> Logger.error inspect exception
+      :ignore
     end
   end
 
@@ -69,8 +68,7 @@ defmodule Jobs.Etl.Translations do
   end
 
   defp schedule_work do
-    wait = 1000 * 60 * 60 * 12 # 12 hours
-    Process.send_after(self(), :process, wait)
+    Process.send_after(self(), :process, 1000 * 60 * 60 * 12) # 12 hours
   end
 
   defp parse_csv(body) do

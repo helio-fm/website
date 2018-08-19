@@ -9,7 +9,7 @@ defmodule Web.AuthPageController do
   alias Ueberauth.Strategy.Helpers
 
   alias Api.Auth.Token
-  alias Api.Auth.UserFromAuth
+  alias Web.Helpers.UserFromAuth
 
   alias Db.Clients
   alias Db.Clients.AuthSession

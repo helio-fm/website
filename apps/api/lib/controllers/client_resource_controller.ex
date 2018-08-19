@@ -18,12 +18,11 @@ defmodule Api.ClientResourceController do
   def update_client_resource(conn, %{"app" => app_name, "resource" => resource_name})
   when app_name == "helio" and resource_name == "translations" do
     children = Supervisor.which_children(Jobs.Supervisor)
-    worker_timeout = 1000 * 30
     pid = children
       |> Enum.filter(fn{name, _, _, _} -> name == Elixir.Jobs.Etl.Translations end)
       |> Enum.map(fn{_, pid, _, _} -> pid end)
       |> List.first
-    with {:ok, %Resource{} = resource} <- GenServer.call(pid, :process, worker_timeout),
+    with {:ok, %Resource{} = resource} <- GenServer.call(pid, :process, 1000 * 30), # 30 sec timeout
       do: render(conn, "resource.data.v1.json", resource: resource)
   end
 

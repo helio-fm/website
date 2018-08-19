@@ -10,10 +10,8 @@ defmodule Web.AuthPageControllerTest do
 
   setup do
     Tesla.Mock.mock fn
-      %{method: :get, url: nil} ->
-        %Tesla.Env{status: 404, body: ""}
-      %{method: :get, url: "https://www.gravatar.com/avatar/941776d1919efd91813ff21302692467?s=150&d=identicon"} ->
-        %Tesla.Env{status: 404, body: ""}
+      %{method: :get, url: nil} -> nil
+      %{method: :get} -> %Tesla.Env{status: 404, body: ""}
     end
     :ok
   end
@@ -50,7 +48,7 @@ defmodule Web.AuthPageControllerTest do
 
     @ueberauth_auth %Ueberauth.Auth{
       credentials: %{token: "fdsnoafhnoofh08h38h"}, uid: "rudenko",
-      info: %{email: "email@helio.fm", nickname: "rudenko", name: "Peter"},
+      info: %{email: "email@helio.fm", nickname: "rudenko"},
       provider: :github
     }
 

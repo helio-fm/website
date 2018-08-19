@@ -1,7 +1,16 @@
 defmodule Jobs.Etl.TranslationsTest do
-  use ExUnit.Case
+  use Jobs.DataCase
 
   alias Jobs.Etl.Translations
+  alias Db.Clients.Resource
+
+  setup do
+    Tesla.Mock.mock fn
+      _env -> %Tesla.Env{status: 200, headers: [{"content-type", "text/csv"}],
+        body: ",,\"test\",,,\nID,,en\n::locale,,English\n::plural,,({x}==1 ? 1 : 2)\na::b::c,test,abc\nPlural:,,,,,\n{x} a,,\"{x} a\n{x} a\""}
+    end
+    :ok
+  end
 
   describe "translations" do
 
@@ -80,6 +89,12 @@ Plural forms:,,,,,
       assert resource_map.app_name == "helio"
       assert resource_map.resource_name == "translations"
       assert resource_map.hash != ""
+    end
+
+    test "the resource is created after GenServer.call" do
+      {:reply, _resource, _state} = Translations.handle_call(:process, :from, :state)
+      users = Resource |> Repo.all
+      assert Enum.count(users) == 1
     end
   end
 end
