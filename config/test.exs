@@ -4,12 +4,12 @@ use Mix.Config
 # you can enable the server option below.
 config :musehackers, Web.Endpoint,
   http: [port: 4100],
-  secret_key_base: "TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE__",
+  secret_key_base: "TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST",
   server: false
 
 config :musehackers, Api.Endpoint,
   http: [port: 4101],
-  secret_key_base: "TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE__",
+  secret_key_base: "TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST",
   server: false
 
 # Print only warnings and errors during test

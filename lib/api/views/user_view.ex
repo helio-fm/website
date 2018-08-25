@@ -24,7 +24,7 @@ defmodule Api.UserView do
   end
 
   defp get_avatar_url(user) do
-    if user.avatar, do: @images_base_url <> Kernel.inspect(user.avatar), else: nil
+    if user.avatar, do: @images_base_url <> user.avatar, else: nil
   end
 
 end

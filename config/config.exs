@@ -33,7 +33,7 @@ config :musehackers, Api.Auth.Token,
 config :ueberauth, Ueberauth,
   providers: [
     github: {Ueberauth.Strategy.Github,
-      [default_scope: "read:user,user:email"]}
+      [default_scope: "read:user,user:email", send_redirect_uri: false]}
   ]
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,

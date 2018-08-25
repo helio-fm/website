@@ -6,7 +6,6 @@ defmodule Web.AuthPageController do
   use Web, :controller
 
   plug Ueberauth
-  alias Ueberauth.Strategy.Helpers
 
   alias Api.Auth.Token
   alias Api.Auth.UserFromAuth
@@ -40,10 +39,6 @@ defmodule Web.AuthPageController do
     conn |> redirect(to: "/")
   end
 
-  def request(conn, _params) do
-    render(conn, "request.html", callback_url: Helpers.callback_url(conn))
-  end
-
   def delete(conn, _params),
     do: delete_session_and_redirect(conn)
 
@@ -58,6 +53,8 @@ defmodule Web.AuthPageController do
   defp login_user_for_session_id(conn, _, nil), do: delete_session_and_redirect(conn)
   defp login_user_for_session_id(conn, nil, _), do: delete_session_and_redirect(conn)
   defp login_user_for_session_id(conn, auth, session_id) do
+    # In future, there should be better error handling
+    # Users without 2FA set up should be rejected maybe
     auth_session = Clients.get_auth_session!(session_id)
     with {:ok, user} <- UserFromAuth.find_or_create(auth),
          {:ok, permissions} <- Token.get_permissions_for(user),
