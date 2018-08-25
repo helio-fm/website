@@ -1,10 +1,18 @@
 defmodule Api.V1.ClientResourceControllerTest do
-  use Api.ConnCase
+  use Api.ConnCase, async: false
 
   alias Db.Clients
   alias Db.Clients.Resource
   alias Db.Accounts.User
   alias Api.Auth.Token
+
+  setup_all do
+    Tesla.Mock.mock_global fn
+      _env -> %Tesla.Env{status: 200, headers: [{"content-type", "text/csv"}],
+        body: ",,\"a\",,,\nID,,en\n::locale,,en\np,,1\na::b::c,test,abc"}
+    end
+    :ok
+  end
 
   @create_attrs %{
     app_name: "some app_name",
@@ -45,6 +53,11 @@ defmodule Api.V1.ClientResourceControllerTest do
     test "renders error on request to update unknown resource", %{conn: conn} do
       conn = post authenticated(conn), api_client_resource_update_path(conn, :update_client_resource, "1", "2")
       assert response(conn, 404)
+    end
+
+    test "updates translations resource", %{conn: conn} do
+      conn = post authenticated(conn), api_client_resource_update_path(conn, :update_client_resource, "helio", "translations")
+      assert json_response(conn, 200)["data"] == %{"translations" => %{"locale" => [%{"id" => "en", "literal" => [%{"name" => "a::b::c", "translation" => "abc"}], "name" => "en", "pluralEquation" => "1", "pluralLiteral" => []}]}}
     end
   end
 
