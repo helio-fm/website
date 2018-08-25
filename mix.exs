@@ -58,7 +58,7 @@ defmodule Musehackers.Mixfile do
       # For auth
       {:ueberauth, "~> 0.5"},
       {:ueberauth_github, "~> 0.7.0"},
-      {:guardian, "~> 1.1.0"},
+      {:guardian, "~> 1.1.1"},
       {:comeonin, "~> 4.1.1"},
       {:pbkdf2_elixir, "~> 0.12.3"},
 
@@ -71,10 +71,10 @@ defmodule Musehackers.Mixfile do
 
       # For deployment
       {:edeliver, ">= 1.6.0"},
-      {:distillery, "~> 2.0", warn_missing: false},
+      {:distillery, "~> 2.0"},
 
       # For tests
-      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 0.10", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.9", only: :test}
     ]
   end

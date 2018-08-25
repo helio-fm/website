@@ -3,6 +3,8 @@ defmodule Api.V1.AuthSessionControllerTest do
 
   alias Db.Clients
   alias Db.Clients.AuthSession
+  alias Db.Accounts.User
+  alias Api.Auth.Token
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/helio.fm.v1+json")}
@@ -25,6 +27,8 @@ defmodule Api.V1.AuthSessionControllerTest do
     secret_key: nil,
     token: nil
   }
+
+  @invalid_id "00000000-0000-0000-0000-000000000000"
 
   describe "init auth_session" do
     test "renders auth_session when data is valid", %{conn: conn} do
@@ -51,7 +55,7 @@ defmodule Api.V1.AuthSessionControllerTest do
 
     test "renders 404 when trying to finalise non-existent session", %{conn: conn} do
       assert_error_sent :not_found, fn ->
-        post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), %{session: %{id: UUID.uuid4()}}
+        post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), %{session: %{id: @invalid_id}}
       end
     end
   end
@@ -60,7 +64,7 @@ defmodule Api.V1.AuthSessionControllerTest do
     setup [:create_auth_session]
 
     test "renders token and deletes the finalised auth session", %{conn: conn, auth_session: %AuthSession{} = auth_session} do
-      token = UUID.uuid4()
+      {:ok, token, _claims} = Token.encode_and_sign(%User{id: @invalid_id, password: ""}, %{})
       Clients.finalise_auth_session(auth_session, token)
       session = %{session: Map.from_struct(auth_session)}
       conn = post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
