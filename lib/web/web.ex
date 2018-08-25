@@ -50,13 +50,6 @@ defmodule Web do
     end
   end
 
-  def channel do
-    quote do
-      use Phoenix.Channel
-      import Web.Gettext
-    end
-  end
-
   def assign_custom_css(conn, opts) do
     Plug.Conn.assign(conn, :custom_css, Keyword.get(opts, :custom_css))
   end

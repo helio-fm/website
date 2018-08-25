@@ -8,13 +8,16 @@ use Mix.Config
 # with brunch.io to recompile .js and .css sources.
 config :musehackers, Web.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4000],
+  secret_key_base: "DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET",
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
   watchers: []
 
+
 config :musehackers, Api.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4001],
+  secret_key_base: "DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET",
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -34,9 +37,7 @@ config :musehackers, Web.Endpoint,
 config :musehackers, Api.Endpoint,
   live_reload: [
     patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{priv/gettext/.*(po)$},
-      ~r{lib/api/views/.*(ex)$},
+      ~r{lib/api/views/.*(ex)$}
     ]
   ]
 
@@ -49,12 +50,6 @@ config :phoenix, :stacktrace_depth, 20
 
 config :musehackers, Api.Auth.Token,
   secret_key: "DEV_SECRET_KEY_GUARDIAN"
-
-config :musehackers, Web.Endpoint,
-  secret_key_base: "DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET"
-
-config :musehackers, Api.Endpoint,
-  secret_key_base: "DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET"
 
 # Configure your database
 config :musehackers, Db.Repo,

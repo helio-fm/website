@@ -2,6 +2,10 @@ defmodule Api.ErrorView do
   use Api, :view
   @moduledoc false
 
+  def render("400.html", _assigns) do 
+    "Bad request" 
+  end 
+
   def render("404.html", _assigns) do
     "Page not found"
   end
