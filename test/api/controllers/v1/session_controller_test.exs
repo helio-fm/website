@@ -85,6 +85,8 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 200)
       token = json_response(conn, 200)["data"]["token"]
 
+      :timer.sleep(1000); # to make sure new tokens will have different expiry 
+
       conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
 
@@ -92,12 +94,21 @@ defmodule Api.V1.SessionControllerTest do
       new_token_1 = json_response(conn, 200)["data"]["token"]
       assert token != new_token_1
 
+      # authorizes the protected resource request with a refreshed token
+      conn = get authenticated(conn, new_token_1), api_session_status_path(conn, :is_authenticated)
+      assert json_response(conn, 200)["status"] == "ok"
+
+      :timer.sleep(1000); # to make sure new tokens will have different expiry 
+
       conn = post authenticated(conn, new_token_1), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: new_token_1}
 
       assert %{"status" => "ok"} = json_response(conn, 200)
       new_token_2 = json_response(conn, 200)["data"]["token"]
       assert new_token_1 != new_token_2
+
+      conn = get authenticated(conn, new_token_2), api_session_status_path(conn, :is_authenticated)
+      assert json_response(conn, 200)["status"] == "ok"
     end
 
     test "fails to re-generate token twice based on the same token", %{conn: conn} do
@@ -107,6 +118,8 @@ defmodule Api.V1.SessionControllerTest do
       conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
       assert %{"status" => "ok"} = json_response(conn, 200)
       token = json_response(conn, 200)["data"]["token"]
+
+      :timer.sleep(1000); # to make sure new tokens will have different expiry 
 
       conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
@@ -120,25 +133,6 @@ defmodule Api.V1.SessionControllerTest do
         session: %{@refresh_token_payload | bearer: token}
 
       assert response(conn, 401)
-    end
-
-    test "authorizes a protected resource request with a refreshed token", %{conn: conn} do
-      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
-      assert %{"status" => "ok"} = json_response(conn, 201)
-
-      conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      token = json_response(conn, 200)["data"]["token"]
-
-      conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
-        session: %{@refresh_token_payload | bearer: token}
-
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      new_token = json_response(conn, 200)["data"]["token"]
-
-      assert new_token != token
-      conn = get authenticated(conn, new_token), api_session_status_path(conn, :is_authenticated)
-      assert json_response(conn, 200)["status"] == "ok"
     end
 
     test "fails to re-generate token given valid token but different device id", %{conn: conn} do

@@ -21,7 +21,7 @@ config :musehackers, Api.Endpoint,
 
 # Configure Guardian for JWT authentication
 config :musehackers, Api.Auth.Token,
-  issuer: "musehackers",
+  issuer: "hfm",
   secret_key: System.get_env("SECRET_KEY_GUARDIAN"),
   token_verify_module: Guardian.Token.Jwt.Verify,
   allowed_algos: ["HS512"],

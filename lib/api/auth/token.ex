@@ -22,7 +22,7 @@ defmodule Api.Auth.Token do
     if user.email == "peter.rudenko@gmail.com" do
       {:ok, %{admin: [:read, :write]}}
     else
-      {:ok, %{default: [:read]}}
+      {:ok, %{}}
     end
   end
 
@@ -42,9 +42,9 @@ defmodule Api.Auth.Token do
   end
 
   def build_claims(claims, _resource, opts) do
-    claims =
-      claims
+    claims = claims
       |> encode_permissions_into_claims!(Keyword.get(opts, :permissions))
+      |> Map.drop(["jti", "aud", "iat", "nbf"]) # at the moment, these fields are not used anywhere
     {:ok, claims}
   end
 end
