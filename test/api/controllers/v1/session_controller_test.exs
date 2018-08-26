@@ -85,7 +85,7 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 200)
       token = json_response(conn, 200)["data"]["token"]
 
-      :timer.sleep(1000); # to make sure new tokens will have different expiry 
+      :timer.sleep(1000) # to make sure new tokens will have different expiry 
 
       conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
@@ -98,7 +98,7 @@ defmodule Api.V1.SessionControllerTest do
       conn = get authenticated(conn, new_token_1), api_session_status_path(conn, :is_authenticated)
       assert json_response(conn, 200)["status"] == "ok"
 
-      :timer.sleep(1000); # to make sure new tokens will have different expiry 
+      :timer.sleep(1000) # to make sure new tokens will have different expiry 
 
       conn = post authenticated(conn, new_token_1), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: new_token_1}
@@ -119,7 +119,7 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 200)
       token = json_response(conn, 200)["data"]["token"]
 
-      :timer.sleep(1000); # to make sure new tokens will have different expiry 
+      :timer.sleep(1000) # to make sure new tokens will have different expiry 
 
       conn = post authenticated(conn, token), api_relogin_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
