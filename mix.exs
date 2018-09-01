@@ -50,7 +50,6 @@ defmodule Musehackers.Mixfile do
       {:phoenix_ecto, "~> 3.3.0"},
       {:postgrex, "~> 0.13.3"},
       {:phoenix_html, "~> 2.10"},
-      {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:slugify, "~> 1.1"},

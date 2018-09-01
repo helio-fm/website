@@ -14,7 +14,6 @@ config :musehackers, Web.Endpoint,
   check_origin: false,
   watchers: []
 
-
 config :musehackers, Api.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4001],
   secret_key_base: "DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET_KEY_BASE_DEV_SECRET",
@@ -22,24 +21,6 @@ config :musehackers, Api.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: []
-
-# Watch static and templates for browser reloading.
-config :musehackers, Web.Endpoint,
-  live_reload: [
-    patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{priv/gettext/.*(po)$},
-      ~r{lib/web/views/.*(ex)$},
-      ~r{lib/web/templates/.*(eex)$}
-    ]
-  ]
-
-config :musehackers, Api.Endpoint,
-  live_reload: [
-    patterns: [
-      ~r{lib/api/views/.*(ex)$}
-    ]
-  ]
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
