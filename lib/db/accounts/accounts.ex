@@ -128,16 +128,14 @@ defmodule Db.Accounts do
   alias Db.Accounts.Session
 
   @doc """
-  Returns the list of sessions.
-
-  ## Examples
-
-      iex> list_sessions()
-      [%Session{}, ...]
-
+  Returns the list of sessions info for a given user.
+  Tokens are not included.
   """
-  def list_sessions do
-    Repo.all(Session)
+  def get_sessions_for_user(%User{} = user) do
+    query = from s in Session,
+      where: s.user_id == ^user.id,
+      select: struct(s, [:platform_id, :inserted_at, :updated_at])
+    {:ok, Repo.all(query)}
   end
 
   @doc """

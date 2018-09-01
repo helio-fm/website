@@ -32,6 +32,7 @@ defmodule Api.V1.UserControllerTest do
       assert json_response(conn, 200)["data"]["email"] == user.email
       assert json_response(conn, 200)["data"]["login"] == user.login
       assert json_response(conn, 200)["data"]["name"] == user.name
+      assert json_response(conn, 200)["data"]["sessions"] == []
     end
 
     test "renders errors when not authenticated", %{conn: conn} do

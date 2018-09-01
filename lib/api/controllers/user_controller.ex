@@ -4,6 +4,7 @@ defmodule Api.UserController do
 
   alias Db.Accounts
   alias Db.Accounts.User
+  alias Db.Accounts.Session
 
   action_fallback Api.FallbackController
 
@@ -11,7 +12,8 @@ defmodule Api.UserController do
 
   def get_current_user(conn, _params) do
     with user <- Guardian.Plug.current_resource(conn),
-      do: render(conn, "show.v1.json", user: user)
+      {:ok, sessions} <- Accounts.get_sessions_for_user(user),
+      do: render(conn, "show.v1.json", user: user, sessions: sessions)
   end
 
   plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:read]}] when action in [:index, :show]

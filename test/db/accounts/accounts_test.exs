@@ -110,9 +110,15 @@ defmodule Db.AccountsTest do
       session
     end
 
-    test "list_sessions/0 returns all sessions" do
-      session = session_fixture()
-      assert Accounts.list_sessions() == [session]
+    test "get_sessions_for_user returns brief sessions info for a given user" do
+      user = user_fixture()
+      session = session_fixture(%{user_id: user.id})
+      {:ok, sessions_brief} = Accounts.get_sessions_for_user(user)
+      assert Enum.count(sessions_brief) == 1
+      session_brief = sessions_brief |> Enum.at(0)
+      assert session_brief.platform_id == session.platform_id
+      assert session_brief.inserted_at != nil
+      assert session_brief.updated_at != nil
     end
 
     test "get_session!/1 returns the session with given id" do
