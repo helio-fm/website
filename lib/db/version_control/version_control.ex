@@ -6,20 +6,18 @@ defmodule Db.VersionControl do
   import Ecto.Query, warn: false
   alias Db.Repo
 
+  alias Db.Accounts.User
   alias Db.VersionControl.Project
   alias Db.VersionControl.Revision
 
   @doc """
-  Returns the list of projects.
-
-  ## Examples
-
-      iex> list_projects()
-      [%Project{}, ...]
-
+  Returns the list of projects for a given user.
   """
-  def list_projects do
-    Repo.all(Project)
+  def get_projects_for_user(%User{} = user) do
+    query = from p in Project,
+      where: p.author_id == ^user.id,
+      select: struct(p, [:id, :author_id, :title, :alias, :head, :inserted_at, :updated_at])
+    {:ok, Repo.all(query)}
   end
 
   @doc """

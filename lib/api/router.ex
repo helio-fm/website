@@ -76,6 +76,7 @@ defmodule Api.Router do
 
     scope "/vcs", as: :vcs do
       scope "/projects" do
+        get "/", ProjectController, :index
         get "/:id", ProjectController, :summary
         get "/:id/heads", ProjectController, :heads
         put "/:id", ProjectController, :create_or_update

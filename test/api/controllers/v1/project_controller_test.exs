@@ -13,7 +13,7 @@ defmodule Api.V1.ProjectControllerTest do
   @id "some id"
 
   @project_attrs %{
-    id: "some id",
+    id: @id,
     alias: "some-alias",
     title: "some title",
     author_id: "11111111-1111-1111-1111-111111111111"
@@ -35,19 +35,18 @@ defmodule Api.V1.ProjectControllerTest do
 
     test "renders project when data is valid", %{conn: conn, user: user} do
       conn = put authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, @id), project: @project_attrs
-      assert %{"id" => id} = json_response(conn, :ok)["data"]
-      assert json_response(conn, :ok)["data"] == %{
-        "id" => @id,
+      assert %{"id" => id,
         "alias" => "some-alias",
+        "title" => "some title",
         "head" => nil,
-        "title" => "some title"}
+        "updatedAt" => _} = json_response(conn, :ok)["data"]
 
       conn = get authenticated(conn, user), api_vcs_project_path(conn, :summary, id)
-      assert json_response(conn, :ok)["data"] == %{
-        "id" => @id,
+      assert %{"id" => @id,
         "alias" => "some-alias",
+        "title" => "some title",
         "head" => nil,
-        "title" => "some title"}
+        "updatedAt" => _} = json_response(conn, :ok)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
@@ -57,6 +56,33 @@ defmodule Api.V1.ProjectControllerTest do
 
     test "renders unauthorized when not authenticated", %{conn: conn, user: _} do
       conn = put conn, api_vcs_project_path(conn, :create_or_update, @id), project: @project_attrs
+      assert response(conn, :unauthorized)
+    end
+  end
+
+  describe "list user's projects" do
+    setup [:create_user]
+
+    test "renders all projects for a given user", %{conn: conn, user: user} do
+      project1 = @project_attrs
+      conn = put authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, project1.id), project: project1
+      assert %{"id" => _} = json_response(conn, :ok)["data"]
+
+      project2 = %{@project_attrs | id: "another id", alias: "another-alias"}
+      conn = put authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, project2.id), project: project2
+      assert %{"id" => _} = json_response(conn, :ok)["data"]
+
+      conn = get authenticated(conn, user), api_vcs_project_path(conn, :index)
+      assert [%{"id" => _}, %{"id" => _}] = json_response(conn, :ok)["data"]
+    end
+
+    test "renders empty list when no projects available", %{conn: conn, user: user} do
+      conn = get authenticated(conn, user), api_vcs_project_path(conn, :index)
+      assert [] = json_response(conn, :ok)["data"]
+    end
+
+    test "renders unauthorized when not authenticated", %{conn: conn, user: _} do
+      conn = get conn, api_vcs_project_path(conn, :index)
       assert response(conn, :unauthorized)
     end
   end

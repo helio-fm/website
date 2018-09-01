@@ -30,13 +30,13 @@ defmodule Db.VersionControlTest do
 
     @invalid_attrs %{alias: nil, id: nil, title: nil}
 
-    test "list_projects/0 returns all projects" do
-      project = project_fixture()
-      assert VersionControl.list_projects() == [project]
+    test "get_projects_for_user/0 returns all projects for a given user" do
+      {project, user} = project_fixture()
+      assert VersionControl.get_projects_for_user(user) == {:ok, [project]}
     end
 
     test "get_project!/1 returns the project with given id" do
-      project = project_fixture()
+      {project, _user} = project_fixture()
       assert VersionControl.get_project!(project.id) == project
     end
 
@@ -45,14 +45,14 @@ defmodule Db.VersionControlTest do
     end
 
     test "create_or_update_project/2 with new aliaa updates the project" do
-      project = project_fixture()
+      {project, _user} = project_fixture()
       attrs = %{@update_attrs | author_id: project.author_id, id: project.id, alias: project.alias}
       assert {:ok, project} = VersionControl.create_or_update_project(attrs)
       assert project.alias == "some-alias"
     end
 
     test "create_or_update_project/2 with empty alias updates the project with generated one" do
-      project = project_fixture()
+      {project, _user} = project_fixture()
       attrs = %{@update_attrs | author_id: project.author_id, id: project.id}
       assert {:ok, project} = VersionControl.create_or_update_project(attrs)
       assert project.title == "Тестовая симфония ;%:"
@@ -60,15 +60,16 @@ defmodule Db.VersionControlTest do
     end
 
     test "create_or_update_project/2 with invalid data returns error changeset" do
-      project = project_fixture()
+      {project, _user} = project_fixture()
       assert {:error, %Ecto.Changeset{}} = VersionControl.create_or_update_project(%{@invalid_attrs | id: project.id})
       assert project == VersionControl.get_project!(project.id)
     end
 
     test "delete_project/1 deletes the project" do
-      project = project_fixture()
+      {project, user} = project_fixture()
       assert {:ok, %Project{}} = VersionControl.delete_project(project)
       assert_raise Ecto.NoResultsError, fn -> VersionControl.get_project!(project.id) end
+      assert VersionControl.get_projects_for_user(user) == {:ok, []}
     end
   end
 
@@ -87,7 +88,7 @@ defmodule Db.VersionControlTest do
     @invalid_attrs %{data: nil, hash: nil, id: nil, message: nil}
 
     def revision_fixture(attrs \\ %{}) do
-      project = project_fixture()
+      {project, _user} = project_fixture()
 
       {:ok, revision} =
         attrs
@@ -112,7 +113,7 @@ defmodule Db.VersionControlTest do
     end
 
     test "create_revision/2 with valid data creates the revision" do
-      project = project_fixture()
+      {project, _user} = project_fixture()
       assert {:ok, revision} = VersionControl.create_revision(%{@valid_attrs | project_id: project.id})
       assert %Revision{} = revision
       assert revision.data == %{}
@@ -146,6 +147,6 @@ defmodule Db.VersionControlTest do
       |> Enum.into(%{@project_attrs | author_id: user.id})
       |> VersionControl.create_or_update_project()
 
-    project
+    {project, user}
   end
 end

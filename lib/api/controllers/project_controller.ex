@@ -24,11 +24,20 @@ defmodule Api.ProjectController do
   def create_or_update(conn, %{"id" => id, "project" => project_params}) do
     project_params = Map.put(project_params, "id", id)
     with user <- Guardian.Plug.current_resource(conn),
-        attrs <- Map.put(project_params, "author_id", user.id),
-        {:ok, %Project{} = project} <- VersionControl.create_or_update_project(attrs) do
+         attrs <- Map.put(project_params, "author_id", user.id),
+         {:ok, %Project{} = project} <- VersionControl.create_or_update_project(attrs) do
       conn
       |> put_status(:ok)
       |> render("show.v1.json", project: project)
+    end
+  end
+
+  def index(conn, %{}) do
+    with user <- Guardian.Plug.current_resource(conn),
+         {:ok, projects} <- VersionControl.get_projects_for_user(user) do
+      conn
+      |> put_status(:ok)
+      |> render("index.v1.json", projects: projects)
     end
   end
 end

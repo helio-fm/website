@@ -21,6 +21,7 @@ defmodule Api.ProjectView do
     %{id: project.id,
       title: project.title,
       alias: project.alias,
-      head: project.head}
+      head: project.head,
+      updated_at: project.updated_at}
   end
 end
