@@ -27,6 +27,6 @@ defmodule Web.Router do
     get "/", HelioClientPageController, :index, as: :root
     get "/translations", TranslationsRedirectController, :index
 
-    # get "/:user", UserPageController, :index
+    get "/:user", UserPageController, :show
   end
 end

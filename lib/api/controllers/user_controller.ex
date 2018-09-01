@@ -4,7 +4,6 @@ defmodule Api.UserController do
 
   alias Db.Accounts
   alias Db.Accounts.User
-  alias Db.Accounts.Session
 
   action_fallback Api.FallbackController
 

@@ -3,7 +3,7 @@ defmodule Web.ErrorView do
   @moduledoc false
 
   def render("404.html", _assigns) do
-    "Page not found"
+    "Not found"
   end
 
   def render("500.html", _assigns) do

@@ -1,0 +1,20 @@
+    <div class="container">
+      <header class="header">
+        <span class="logo"></span>
+      </header>
+      <div class="jumbotron">
+        <center>
+        <%= if @user do %>
+          <%= if @user.avatar do %>
+            <img src="<%= Application.get_env(:musehackers, :images_base_url) <> @user.avatar %>" class="avatar"/>
+          <% end %>
+          <h2>Not implemented</h2>
+          <hr />
+          <p class="lead">Feel free to <a href="https://github.com/helio-fm/muse-hackers">share your ideas</a> on what you'd like to see here.</p>
+        <% else %>
+          <h2>Not today</h2>
+          <p class="lead">If you believe this is an error, <br/>feel free to <a href="https://github.com/helio-fm/muse-hackers/issues/new">report</a>.</p>
+        <% end %>
+        </center>
+      </div>
+    </div>
