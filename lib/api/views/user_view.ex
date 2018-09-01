@@ -6,6 +6,7 @@ defmodule Api.UserView do
 
   use Api, :view
   alias Api.UserView
+  alias Api.SessionView
 
   def render("index.v1.json", %{users: users}) do
     %{data: render_many(users, UserView, "user.v1.json", %{sessions: []})}

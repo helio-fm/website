@@ -3,8 +3,9 @@ defmodule Api.V1.UserControllerTest do
 
   alias Api.Auth.Token
   alias Db.Accounts
+  alias Db.Accounts.Session
 
-  @create_attrs %{
+  @user_attrs %{
     login: "test",
     email: "peter.rudenko@gmail.com",
     name: "name",
@@ -35,6 +36,12 @@ defmodule Api.V1.UserControllerTest do
       assert json_response(conn, 200)["data"]["sessions"] == []
     end
 
+    test "renders active sessions within valid profile", %{conn: conn, user: user} do
+      {:ok, _jwt} = Session.update_token_for_device(user.id, "device", "platform", "token")
+      conn = get authenticated(conn, user), api_user_path(conn, :get_current_user)
+      assert [%{"platformId" => _, "createdAt" => _, "updatedAt" => _}] = json_response(conn, 200)["data"]["sessions"]
+    end
+
     test "renders errors when not authenticated", %{conn: conn} do
       conn = get conn, api_user_path(conn, :get_current_user)
       assert response(conn, 401) =~ "unauthenticated"
@@ -59,7 +66,7 @@ defmodule Api.V1.UserControllerTest do
   end
 
   defp create_user(_) do
-    {:ok, user} = Accounts.create_user(@create_attrs)
+    {:ok, user} = Accounts.create_user(@user_attrs)
     {:ok, user: user}
   end
 
