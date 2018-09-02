@@ -1,4 +1,4 @@
-defmodule Api.ClientResourceView do
+defmodule Api.ClientAppResourceView do
   use Api, :view
   @moduledoc false
 

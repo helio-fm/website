@@ -4,7 +4,7 @@ defmodule Db.Clients.Resource do
   alias Db.Clients.Resource
   @moduledoc false
 
-  schema "resources" do
+  schema "app_resources" do
     field :app_name, :string
     field :data, :map
     field :hash, :string

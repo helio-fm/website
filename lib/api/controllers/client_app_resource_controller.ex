@@ -1,4 +1,4 @@
-defmodule Api.ClientResourceController do
+defmodule Api.ClientAppResourceController do
   use Api, :controller
   @moduledoc false
 

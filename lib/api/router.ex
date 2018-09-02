@@ -47,7 +47,7 @@ defmodule Api.Router do
       post "/:app/auth/check", AuthSessionController, :finalise_client_auth_session, as: :auth_finalise
 
       pipe_through :authenticated
-      post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
+      post "/:app/:resource/update", ClientAppResourceController, :update_client_resource, as: :resource_update
       post "/", ClientAppController, :create_or_update, as: :app
       get "/", ClientAppController, :index, as: :app
     end
@@ -58,6 +58,8 @@ defmodule Api.Router do
     # my profile and some users admin endpoints
     get "/me", UserController, :get_current_user, as: :user
     resources "/users", UserController, only: [:index, :delete], as: :user
+
+    #resources "/user_resources", UserResourceController, except: [:new, :edit]
 
     # this endpoint provides a kind of a sliding session:
     # first, it checks for a token, that is
