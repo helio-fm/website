@@ -56,14 +56,15 @@ defmodule Jobs.Etl.Translations do
     with {:ok, parsed_csv} <- parse_csv(body),
          {:ok, cleaned_up_csv} <- remove_draft_translations(parsed_csv),
          {:ok, locales_list} <- transform_translations_map(cleaned_up_csv),
-    do: {:ok, to_resource(%{"translations": %{"locale": locales_list}})}
+    do: {:ok, to_resource(%{translations: %{locale: locales_list}})}
   end
 
-  defp to_resource(translations) do
-    %{"app_name": "helio",
-    "data": translations,
-    "type": "translations"}
-  end
+  defp to_resource(translations),
+    do: %{
+      app_name: "helio",
+      data: translations,
+      type: "translations"
+    }
 
   defp schedule_work do
     Process.send_after(self(), :process, 1000 * 60 * 60 * 12) # 12 hours
@@ -116,12 +117,12 @@ defmodule Jobs.Etl.Translations do
       |> Enum.flat_map(fn{x, i} ->
         case x != "ID"  && x != "" do
           true -> [%{
-              "id": x,
-              "name": Enum.at(names, i),
-              "pluralEquation": Enum.at(formulas, i),
-              "literal": extract_singulars(indexed_data, i),
-              "pluralLiteral": extract_plurals(indexed_data, i)
-            }]
+            id: x,
+            name: Enum.at(names, i),
+            pluralEquation: Enum.at(formulas, i),
+            literal: extract_singulars(indexed_data, i),
+            pluralLiteral: extract_plurals(indexed_data, i)
+          }]
           false -> []
         end
       end)
@@ -135,8 +136,8 @@ defmodule Jobs.Etl.Translations do
         translation = x |> Enum.at(locale_index) |> elem(0)
         case translation == "" || name =~ "{x}" do
           false -> [%{
-            "name": name,
-            "translation": translation
+            name: name,
+            translation: translation
           }]
           true -> []
         end
@@ -150,8 +151,8 @@ defmodule Jobs.Etl.Translations do
         translations = x |> Enum.at(locale_index) |> elem(0)
         case translations != "" && name =~ "{x}" do
           true -> [%{
-            "name": name,
-            "translation": split_plural_forms(translations)
+            name: name,
+            translation: split_plural_forms(translations)
           }]
           false -> []
         end
@@ -162,11 +163,10 @@ defmodule Jobs.Etl.Translations do
     string
       |> String.split(["\n", "\r"])
       |> Enum.with_index(1)
-      |> Enum.map(fn{x, i} -> 
-        %{
-          "name": x,
-          "pluralForm": Integer.to_string(i)
-        }
+      |> Enum.map(fn{x, i} -> %{
+        name: x,
+        pluralForm: Integer.to_string(i)
+      }
       end)
   end
 
