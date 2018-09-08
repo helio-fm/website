@@ -87,7 +87,7 @@ Plural forms:,,,,,
       {:ok, resource_map} = Translations.transform(@valid_imported_csv)
       assert resource_map.data == @valid_translations_map
       assert resource_map.app_name == "helio"
-      assert resource_map.resource_name == "translations"
+      assert resource_map.type == "translations"
       assert resource_map.hash != ""
     end
 

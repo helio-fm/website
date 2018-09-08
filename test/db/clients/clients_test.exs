@@ -10,10 +10,10 @@ defmodule Db.ClientsTest do
       app_name: "some app_name",
       data: %{},
       hash: "some hash",
-      resource_name: "some resource_name"
+      type: "some type"
     }
 
-    @invalid_attrs %{app_name: nil, data: nil, hash: nil, resource_name: nil}
+    @invalid_attrs %{app_name: nil, data: nil, hash: nil, type: nil}
 
     def resource_fixture(attrs \\ %{}) do
       {:ok, resource} =
@@ -26,14 +26,14 @@ defmodule Db.ClientsTest do
 
     test "get_resource_for_app!/2 returns the resource for given app and name" do
       resource = resource_fixture()
-      {:ok, %Resource{} = resource2} = Clients.get_resource_for_app(resource.app_name, resource.resource_name)
+      {:ok, %Resource{} = resource2} = Clients.get_resource_for_app(resource.app_name, resource.type)
       assert resource2.data == resource.data
-      assert resource2.resource_name == resource.resource_name
+      assert resource2.type == resource.type
     end
 
     test "get_resource_for_app!/2 returns error for invalid app" do
       resource = resource_fixture()
-      assert {:error, :resource_not_found} = Clients.get_resource_for_app("invalid", resource.resource_name)
+      assert {:error, :resource_not_found} = Clients.get_resource_for_app("invalid", resource.type)
     end
 
     test "create_or_update_resource/1 with valid data creates and updates a resource" do
@@ -41,13 +41,13 @@ defmodule Db.ClientsTest do
       assert resource.app_name == "some app_name"
       assert resource.data == %{}
       assert resource.hash == "some hash"
-      assert resource.resource_name == "some resource_name"
+      assert resource.type == "some type"
 
       conflict_attrs = %{@valid_attrs | hash: "some updated hash", data: %{translations: ""}}
 
       assert {:ok, %Resource{} = resource2} = Clients.create_or_update_resource(conflict_attrs)
       assert resource2.app_name == resource.app_name
-      assert resource2.resource_name == resource.resource_name
+      assert resource2.type == resource.type
       assert resource2.data == %{translations: ""}
       assert resource2.hash == "some updated hash"
     end
@@ -59,7 +59,7 @@ defmodule Db.ClientsTest do
     test "delete_resource/1 deletes the resource" do
       resource = resource_fixture()
       assert {:ok, %Resource{}} = Clients.delete_resource(resource)
-      assert {:error, :resource_not_found} = Clients.get_resource_for_app(resource.app_name, resource.resource_name)
+      assert {:error, :resource_not_found} = Clients.get_resource_for_app(resource.app_name, resource.type)
     end
   end
 

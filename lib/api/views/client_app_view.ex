@@ -1,7 +1,9 @@
 defmodule Api.ClientAppView do
+  @moduledoc false
+
   use Api, :view
   alias Api.ClientAppView
-  @moduledoc false
+  alias Api.ClientAppResourceView
 
   def render("index.v1.json", %{apps: apps}) do
     %{data: render_many(apps, ClientAppView, "app.v1.json", as: :app)}
@@ -19,18 +21,13 @@ defmodule Api.ClientAppView do
 
   def render("clients.info.v1.json", %{clients: clients, resources: resources}) do
     %{data: %{
-      version_info: render_many(clients, ClientAppView, "client.info.v1.json", as: :client),
-      resource_info: render_many(resources, ClientAppView, "resource.info.v1.json", as: :resource)}}
+      versions: render_many(clients, ClientAppView, "client.info.v1.json", as: :client),
+      resources: render_many(resources, ClientAppResourceView, "resource.info.v1.json", as: :resource)}}
   end
 
   def render("client.info.v1.json", %{client: client}) do
     %{platform_id: client.platform_id,
       version: client.version,
       link: client.link}
-  end
-
-  def render("resource.info.v1.json", %{resource: resource}) do
-    %{resource_name: resource.resource_name,
-      hash: resource.hash}
   end
 end

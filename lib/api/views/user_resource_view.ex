@@ -11,9 +11,15 @@ defmodule Api.UserResourceView do
   end
 
   def render("resource.v1.json", %{resource: resource}) do
-    %{id: resource.id,
-      resource_name: resource.resource_name,
+    %{type: resource.type,
+      name: resource.name,
       hash: resource.hash,
       data: resource.data}
+  end
+
+  def render("resource.info.v1.json", %{resource: resource}) do
+    %{type: resource.type,
+      name: resource.name,
+      hash: resource.hash}
   end
 end

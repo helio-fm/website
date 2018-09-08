@@ -22,7 +22,7 @@ defmodule Api.Router do
     pipe_through :api
 
     # username/password registration and login;
-    # I wonder if there should be the only way to signup via Github
+    # I wonder if the only available way to sign up should be via Github
     if Mix.env == :test do
       post "/join", RegistrationController, :sign_up, as: :signup
       post "/login", SessionController, :sign_in, as: :login
@@ -33,7 +33,7 @@ defmodule Api.Router do
     scope "/clients", as: :client do
       pipe_through :clients
       get "/:app/info", ClientAppController, :get_client_info, as: :app_info
-      get "/:app/:resource", ClientResourceController, :get_client_resource, as: :resource
+      get "/:app/:resource", ClientAppResourceController, :get_client_resource, as: :resource
 
       # initialize web authentication via, say, Github:
       # creates a new Clients.AuthSession and returns its id, secret key and browser url
@@ -55,17 +55,26 @@ defmodule Api.Router do
     # restrict unauthenticated access for routes below
     pipe_through :authenticated
 
-    # my profile and some users admin endpoints
+    # returns the logged in user's profile, including all active sessions
+    # and the summary of available resources (similar to client app info);
+    # note that user's project are not returned here, instead use get /vcs/projects
     get "/me", UserController, :get_current_user, as: :user
-    resources "/users", UserController, only: [:index, :delete], as: :user
 
-    #resources "/user_resources", UserResourceController, except: [:new, :edit]
+    # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
+    # client app work as follows:
+    # - receive a user profile containing resource hashes and update time millis
+    # - check for local user's resource timestamps
+    get "/my/:resource_type/:resource_name", UserResourceController, :get_user_resource, as: :user_resource
+    put "/my/:resource_type/:resource_name", UserResourceController, :update_user_resource, as: :user_resource
+
+    # some users admin endpoints
+    resources "/users", UserController, only: [:index, :delete], as: :user
 
     # this endpoint provides a kind of a sliding session:
     # first, it checks for a token, that is
     #   1) valid and unexpired,
     #   2) present in active_sessions for a given device id;
-    # if passed, it issues a new token and saves it a related active session
+    # if passed, it issues a new token and saves it in the related active session
     # (there can be only one session per user and device id),
     # so that if user runs the app, say, at least once a week, his session won't expire
     # (and if the token is compromised/stolen, the user's session won't be prolonged,
@@ -76,6 +85,7 @@ defmodule Api.Router do
     # a simple authentication check (mainly used in tests)
     get "/session-status", SessionController, :is_authenticated, as: :session_status
 
+    # version control stuff
     scope "/vcs", as: :vcs do
       scope "/projects" do
         get "/", ProjectController, :index

@@ -6,9 +6,9 @@ defmodule Db.Clients.Resource do
 
   schema "app_resources" do
     field :app_name, :string
-    field :data, :map
+    field :type, :string
     field :hash, :string
-    field :resource_name, :string
+    field :data, :map
 
     timestamps(type: :utc_datetime)
   end
@@ -16,10 +16,10 @@ defmodule Db.Clients.Resource do
   @doc false
   def changeset(%Resource{} = resource, attrs) do
     resource
-    |> cast(attrs, [:resource_name, :app_name, :hash, :data])
-    |> validate_required([:resource_name, :app_name, :hash, :data])
-    |> unique_constraint(:resource_name)
-    |> unique_constraint(:resource_name, name: :resources_one_resource_per_app)
+    |> cast(attrs, [:type, :app_name, :hash, :data])
+    |> validate_required([:type, :app_name, :hash, :data])
+    |> unique_constraint(:type)
+    |> unique_constraint(:type, name: :app_resources_one_type_per_app)
   end
 
   def hash(attrs \\ %{}) do

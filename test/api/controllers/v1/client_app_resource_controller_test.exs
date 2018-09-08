@@ -1,4 +1,4 @@
-defmodule Api.V1.ClientResourceControllerTest do
+defmodule Api.V1.ClientAppResourceControllerTest do
   use Api.ConnCase, async: false
 
   alias Db.Clients
@@ -18,7 +18,7 @@ defmodule Api.V1.ClientResourceControllerTest do
     app_name: "some app_name",
     data: %{"translations": "test"},
     hash: "some hash",
-    resource_name: "some resource_name"
+    type: "some type"
   }
 
   def fixture(:resource) do
@@ -34,12 +34,12 @@ defmodule Api.V1.ClientResourceControllerTest do
     setup [:create_resource]
 
     test "renders resource when data is valid", %{conn: conn, resource: %Resource{} = resource} do
-      conn = get client(conn), api_client_resource_path(conn, :get_client_resource, resource.app_name, resource.resource_name)
+      conn = get client(conn), api_client_resource_path(conn, :get_client_resource, resource.app_name, resource.type)
       assert json_response(conn, 200)["data"] == %{"translations" => "test"}
     end
 
     test "renders errors when app or resource does not exist", %{conn: conn, resource: resource} do
-      conn = get client(conn), api_client_resource_path(conn, :get_client_resource, "1", resource.resource_name)
+      conn = get client(conn), api_client_resource_path(conn, :get_client_resource, "1", resource.type)
       assert json_response(conn, 404)["errors"] != %{}
     end
   end

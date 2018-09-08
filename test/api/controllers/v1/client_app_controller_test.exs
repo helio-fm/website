@@ -56,8 +56,8 @@ defmodule Api.V1.ClientAppControllerTest do
 
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert json_response(conn, 200)["data"] == %{
-        "resourceInfo" => [],
-        "versionInfo" => [%{"link" => "some link",
+        "resources" => [],
+        "versions" => [%{"link" => "some link",
           "platformId" => "some platform_id",
           "version" => "some version"},
           %{"link" => "some link",
@@ -81,8 +81,8 @@ defmodule Api.V1.ClientAppControllerTest do
 
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert json_response(conn, 200)["data"] == %{
-        "resourceInfo" => [],
-        "versionInfo" => [%{
+        "resources" => [],
+        "versions" => [%{
           "link" => "some updated link",
           "platformId" => "some platform_id",
           "version" => "some updated version"}]}

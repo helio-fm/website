@@ -161,13 +161,26 @@ defmodule Db.AccountsTest do
   describe "user_resources" do
     alias Db.Accounts.Resource
 
-    @valid_attrs %{data: %{}, hash: "some hash", resource_name: "some resource_name"}
-    @update_attrs %{data: %{}, hash: "some updated hash", resource_name: "some updated resource_name"}
-    @invalid_attrs %{data: nil, hash: nil, resource_name: nil}
+    @valid_attrs %{owner_id: nil,
+      data: %{},
+      hash: "some hash",
+      type: "some type",
+      name: "some name"}
+
+    @update_attrs %{owner_id: nil,
+      data: %{},
+      hash: "some updated hash",
+      type: "some updated type",
+      name: "some updated name"}
+
+    @invalid_attrs %{owner_id: nil, data: nil, hash: nil, type: nil, name: nil}
 
     def resource_fixture(attrs \\ %{}) do
+      user = user_fixture()
+
       {:ok, resource} =
-        attrs
+        %{owner_id: user.id}
+        |> Enum.into(attrs)
         |> Enum.into(@valid_attrs)
         |> Accounts.create_resource()
 
@@ -185,10 +198,12 @@ defmodule Db.AccountsTest do
     end
 
     test "create_resource/1 with valid data creates a resource" do
-      assert {:ok, %Resource{} = resource} = Accounts.create_resource(@valid_attrs)
+      user = user_fixture()
+      assert {:ok, %Resource{} = resource} = Accounts.create_resource(%{@valid_attrs | owner_id: user.id})
       assert resource.data == %{}
       assert resource.hash == "some hash"
-      assert resource.resource_name == "some resource_name"
+      assert resource.type == "some type"
+      assert resource.name == "some name"
     end
 
     test "create_resource/1 with invalid data returns error changeset" do
@@ -197,11 +212,13 @@ defmodule Db.AccountsTest do
 
     test "update_resource/2 with valid data updates the resource" do
       resource = resource_fixture()
-      assert {:ok, resource} = Accounts.update_resource(resource, @update_attrs)
+      new_user = user_fixture(%{email: "new@helio.fm", login: "new"})
+      assert {:ok, resource} = Accounts.update_resource(resource, %{@update_attrs | owner_id: new_user.id})
       assert %Resource{} = resource
       assert resource.data == %{}
       assert resource.hash == "some updated hash"
-      assert resource.resource_name == "some updated resource_name"
+      assert resource.type == "some updated type"
+      assert resource.name == "some updated name"
     end
 
     test "update_resource/2 with invalid data returns error changeset" do

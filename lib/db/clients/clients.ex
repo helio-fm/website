@@ -21,10 +21,10 @@ defmodule Db.Clients do
 
   """
 
-  def get_resource_for_app(app_name, resource_name) do
+  def get_resource_for_app(app_name, resource_type) do
     query = from r in Resource,
-      where: r.app_name == ^app_name and r.resource_name == ^resource_name,
-      select: struct(r, [:data, :resource_name])
+      where: r.app_name == ^app_name and r.type == ^resource_type,
+      select: struct(r, [:data, :type])
     case Repo.one(query) do
       nil -> {:error, :resource_not_found}
       resource -> {:ok, resource}
@@ -45,7 +45,7 @@ defmodule Db.Clients do
   """
   def create_or_update_resource(attrs \\ %{}) do
     on_conflict = [set: [data: attrs.data, hash: attrs.hash]]
-    conflict_target = [:app_name, :resource_name]
+    conflict_target = [:app_name, :type]
     %Resource{}
     |> Resource.changeset(attrs)
     |> Repo.insert(on_conflict: on_conflict, conflict_target: conflict_target)
@@ -94,9 +94,9 @@ defmodule Db.Clients do
       {:error, :client_not_found}
 
   """
-  def get_clients_by_name(name) do
+  def get_clients_by_name(app_name) do
     query = from a in App,
-          where: a.app_name == ^name,
+          where: a.app_name == ^app_name,
           select: struct(a, [:platform_id, :version, :link])
     case Repo.all(query) do
       [] -> {:error, :client_not_found}
@@ -104,10 +104,10 @@ defmodule Db.Clients do
     end
   end
 
-  def get_clients_resources_info(name) do
+  def get_clients_resources_info(app_name) do
     query = from r in Resource,
-      where: r.app_name == ^name,
-      select: struct(r, [:hash, :resource_name])
+      where: r.app_name == ^app_name,
+      select: struct(r, [:hash, :type])
     {:ok, Repo.all(query)}
   end
 

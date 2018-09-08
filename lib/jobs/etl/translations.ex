@@ -64,7 +64,7 @@ defmodule Jobs.Etl.Translations do
     %{"app_name": "helio",
     "data": translations,
     "hash": Resource.hash(translations),
-    "resource_name": "translations"}
+    "type": "translations"}
   end
 
   defp schedule_work do

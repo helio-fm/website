@@ -10,9 +10,11 @@ defmodule Api.UserController do
   plug Guardian.Plug.LoadResource, ensure: true
 
   def get_current_user(conn, _params) do
+    resources = []
     with user <- Guardian.Plug.current_resource(conn),
       {:ok, sessions} <- Accounts.get_sessions_for_user(user),
-      do: render(conn, "show.v1.json", user: user, sessions: sessions)
+      # {:ok, resources} <- Accounts.get_resources_info_for_user(user),
+      do: render(conn, "show.v1.json", user: user, sessions: sessions, resources: resources)
   end
 
   plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:read]}] when action in [:index, :show]

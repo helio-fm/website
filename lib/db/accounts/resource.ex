@@ -5,10 +5,11 @@ defmodule Db.Accounts.Resource do
   @moduledoc false
 
   schema "user_resources" do
-    field :resource_name, :string
+    field :owner_id, :binary_id
+    field :type, :string
+    field :name, :string
     field :hash, :string
     field :data, :map
-    field :owner_id, :binary_id
 
     timestamps(type: :utc_datetime)
   end
@@ -16,10 +17,9 @@ defmodule Db.Accounts.Resource do
   @doc false
   def changeset(%Resource{} = resource, attrs) do
     resource
-    |> cast(attrs, [:resource_name, :hash, :data, :owner_id])
-    |> validate_required([:resource_name, :hash, :data, :owner_id])
-    |> unique_constraint(:resource_name)
-    |> unique_constraint(:resource_name, name: :resources_one_resource_per_user)
+    |> cast(attrs, [:type, :name, :hash, :data, :owner_id])
+    |> validate_required([:type, :name, :hash, :data, :owner_id])
+    |> unique_constraint(:name, name: :user_resources_one_name_per_user)
     # TODO hashing automatically only by data
   end
 
