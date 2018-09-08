@@ -163,17 +163,15 @@ defmodule Db.AccountsTest do
 
     @valid_attrs %{owner_id: nil,
       data: %{},
-      hash: "some hash",
       type: "some type",
       name: "some name"}
 
     @update_attrs %{owner_id: nil,
       data: %{},
-      hash: "some updated hash",
       type: "some updated type",
       name: "some updated name"}
 
-    @invalid_attrs %{owner_id: nil, data: nil, hash: nil, type: nil, name: nil}
+    @invalid_attrs %{owner_id: nil, data: nil, type: nil, name: nil}
 
     def resource_fixture(attrs \\ %{}) do
       user = user_fixture()
@@ -201,9 +199,9 @@ defmodule Db.AccountsTest do
       user = user_fixture()
       assert {:ok, %Resource{} = resource} = Accounts.create_resource(%{@valid_attrs | owner_id: user.id})
       assert resource.data == %{}
-      assert resource.hash == "some hash"
       assert resource.type == "some type"
       assert resource.name == "some name"
+      assert resource.hash != nil
     end
 
     test "create_resource/1 with invalid data returns error changeset" do
@@ -216,9 +214,9 @@ defmodule Db.AccountsTest do
       assert {:ok, resource} = Accounts.update_resource(resource, %{@update_attrs | owner_id: new_user.id})
       assert %Resource{} = resource
       assert resource.data == %{}
-      assert resource.hash == "some updated hash"
       assert resource.type == "some updated type"
       assert resource.name == "some updated name"
+      assert resource.hash != nil
     end
 
     test "update_resource/2 with invalid data returns error changeset" do

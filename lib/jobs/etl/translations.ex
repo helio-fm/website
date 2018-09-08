@@ -8,7 +8,6 @@ defmodule Jobs.Etl.Translations do
   import Jobs.Etl.Helpers
 
   alias Db.Clients
-  alias Db.Clients.Resource
 
   alias NimbleCSV.RFC4180, as: CSV
   alias NimbleCSV.ParseError
@@ -63,7 +62,6 @@ defmodule Jobs.Etl.Translations do
   defp to_resource(translations) do
     %{"app_name": "helio",
     "data": translations,
-    "hash": Resource.hash(translations),
     "type": "translations"}
   end
 

@@ -17,10 +17,19 @@ defmodule Db.Accounts.Resource do
   @doc false
   def changeset(%Resource{} = resource, attrs) do
     resource
-    |> cast(attrs, [:type, :name, :hash, :data, :owner_id])
-    |> validate_required([:type, :name, :hash, :data, :owner_id])
+    |> cast(attrs, [:type, :name, :data, :owner_id])
+    |> validate_required([:type, :name, :data, :owner_id])
     |> unique_constraint(:name, name: :user_resources_one_name_per_user)
-    # TODO hashing automatically only by data
+    |> generate_hash_by_data
+  end
+
+  defp generate_hash_by_data(changeset) do
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{data: data}} ->
+        put_change(changeset, :hash, hash(data))
+      _ ->
+        changeset
+    end
   end
 
   def hash(attrs \\ %{}) do

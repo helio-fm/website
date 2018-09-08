@@ -44,11 +44,15 @@ defmodule Db.Clients do
 
   """
   def create_or_update_resource(attrs \\ %{}) do
-    on_conflict = [set: [data: attrs.data, hash: attrs.hash]]
-    conflict_target = [:app_name, :type]
-    %Resource{}
-    |> Resource.changeset(attrs)
-    |> Repo.insert(on_conflict: on_conflict, conflict_target: conflict_target)
+    changeset = Resource.changeset(%Resource{}, attrs)
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{data: data, hash: hash}} ->
+        Repo.insert(changeset,
+          on_conflict: [set: [data: data, hash: hash]],
+          conflict_target: [:app_name, :type])
+      _ ->
+        {:error, changeset}
+    end
   end
 
   @doc """

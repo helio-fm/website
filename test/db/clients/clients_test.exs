@@ -9,11 +9,10 @@ defmodule Db.ClientsTest do
     @valid_attrs %{
       app_name: "some app_name",
       data: %{},
-      hash: "some hash",
       type: "some type"
     }
 
-    @invalid_attrs %{app_name: nil, data: nil, hash: nil, type: nil}
+    @invalid_attrs %{app_name: nil, data: nil, type: nil}
 
     def resource_fixture(attrs \\ %{}) do
       {:ok, resource} =
@@ -40,16 +39,17 @@ defmodule Db.ClientsTest do
       assert {:ok, %Resource{} = resource} = Clients.create_or_update_resource(@valid_attrs)
       assert resource.app_name == "some app_name"
       assert resource.data == %{}
-      assert resource.hash == "some hash"
       assert resource.type == "some type"
+      assert resource.hash != nil
 
-      conflict_attrs = %{@valid_attrs | hash: "some updated hash", data: %{translations: ""}}
+      conflict_attrs = %{@valid_attrs | data: %{translations: ""}}
 
       assert {:ok, %Resource{} = resource2} = Clients.create_or_update_resource(conflict_attrs)
       assert resource2.app_name == resource.app_name
       assert resource2.type == resource.type
       assert resource2.data == %{translations: ""}
-      assert resource2.hash == "some updated hash"
+      assert resource2.hash != resource.hash
+      assert resource2.hash != nil
     end
 
     test "create_or_update_resource/1 with invalid data returns error changeset" do

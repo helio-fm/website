@@ -16,10 +16,20 @@ defmodule Db.Clients.Resource do
   @doc false
   def changeset(%Resource{} = resource, attrs) do
     resource
-    |> cast(attrs, [:type, :app_name, :hash, :data])
-    |> validate_required([:type, :app_name, :hash, :data])
+    |> cast(attrs, [:type, :app_name, :data])
+    |> validate_required([:type, :app_name, :data])
     |> unique_constraint(:type)
     |> unique_constraint(:type, name: :app_resources_one_type_per_app)
+    |> generate_hash_by_data
+  end
+
+  defp generate_hash_by_data(changeset) do
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{data: data}} ->
+        put_change(changeset, :hash, hash(data))
+      _ ->
+        changeset
+    end
   end
 
   def hash(attrs \\ %{}) do
