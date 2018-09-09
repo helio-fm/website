@@ -55,35 +55,41 @@ defmodule Api.Router do
     # restrict unauthenticated access for routes below
     pipe_through :authenticated
 
-    # returns the logged in user's profile, including all active sessions
-    # and the summary of available resources (similar to client app info);
-    # note that user's project are not returned here, instead use get /vcs/projects
-    get "/me", UserController, :get_current_user, as: :user
+    scope "/my", as: :user do
+      # returns the logged in user's profile, including all active sessions
+      # and the summary of available resources (similar to client app info);
+      # note that user's project are not returned here, instead use get /vcs/projects
+      get "/profile", UserController, :get_current_user, as: :profile
 
-    # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
-    # client app work as follows:
-    # - receive a user profile containing resource hashes and update time millis
-    # - check for local user's resource timestamps
-    get "/my/:resource_type/:resource_name", UserResourceController, :get_user_resource, as: :user_resource
-    put "/my/:resource_type/:resource_name", UserResourceController, :update_user_resource, as: :user_resource
+      # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
+      # client app work as follows:
+      # - receive a user profile containing resource hashes and update time millis
+      # - check for local user's resource timestamps
+      get "/resources/:type/:name", UserResourceController, :get_user_resource, as: :resource
+      put "/resources/:type/:name", UserResourceController, :update_user_resource, as: :resource
+    end
 
-    # some users admin endpoints
-    resources "/users", UserController, only: [:index, :delete], as: :user
+    if Mix.env == :test do
+      # some users admin endpoints
+      resources "/users", UserController, only: [:index, :delete], as: :user
+    end
 
-    # this endpoint provides a kind of a sliding session:
-    # first, it checks for a token, that is
-    #   1) valid and unexpired,
-    #   2) present in active_sessions for a given device id;
-    # if passed, it issues a new token and saves it in the related active session
-    # (there can be only one session per user and device id),
-    # so that if user runs the app, say, at least once a week, his session won't expire
-    # (and if the token is compromised/stolen, the user's session won't be prolonged,
-    # eventually forcing him to re-login, and thus invalidating attacker's session);
-    # and, although re-issuing a token is stateful, authentication is still stateless and fast
-    post "/reauth", SessionController, :refresh_token, as: :relogin
+    scope "/session", as: :session do
+      # this endpoint provides a kind of a sliding session:
+      # first, it checks for a token, that is
+      #   1) valid and unexpired,
+      #   2) present in active_sessions for a given device id;
+      # if passed, it issues a new token and saves it in the related active session
+      # (there can be only one session per user and device id),
+      # so that if user runs the app, say, at least once a week, his session won't expire
+      # (and if the token is compromised/stolen, the user's session won't be prolonged,
+      # eventually forcing him to re-login, and thus invalidating attacker's session);
+      # and, although re-issuing a token is stateful, authentication is still stateless and fast
+      post "/update", SessionController, :refresh_token, as: :update
 
-    # a simple authentication check (mainly used in tests)
-    get "/session-status", SessionController, :is_authenticated, as: :session_status
+      # a simple authentication check (mainly used in tests)
+      get "/status", SessionController, :is_authenticated, as: :status
+    end
 
     # version control stuff
     scope "/vcs", as: :vcs do

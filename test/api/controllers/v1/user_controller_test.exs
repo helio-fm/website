@@ -29,7 +29,7 @@ defmodule Api.V1.UserControllerTest do
     setup [:create_user]
 
     test "renders profile when data is valid", %{conn: conn, user: user} do
-      conn = get authenticated(conn, user), api_user_path(conn, :get_current_user)
+      conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
       assert json_response(conn, 200)["data"]["email"] == user.email
       assert json_response(conn, 200)["data"]["login"] == user.login
       assert json_response(conn, 200)["data"]["name"] == user.name
@@ -38,12 +38,12 @@ defmodule Api.V1.UserControllerTest do
 
     test "renders active sessions within valid profile", %{conn: conn, user: user} do
       {:ok, _jwt} = Session.update_token_for_device(user.id, "device", "platform", "token")
-      conn = get authenticated(conn, user), api_user_path(conn, :get_current_user)
+      conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
       assert [%{"platformId" => _, "createdAt" => _, "updatedAt" => _}] = json_response(conn, 200)["data"]["sessions"]
     end
 
     test "renders errors when not authenticated", %{conn: conn} do
-      conn = get conn, api_user_path(conn, :get_current_user)
+      conn = get conn, api_user_profile_path(conn, :get_current_user)
       assert response(conn, 401) =~ "unauthenticated"
     end
   end
@@ -55,7 +55,7 @@ defmodule Api.V1.UserControllerTest do
       conn = delete authenticated(conn, user), api_user_path(conn, :delete, user)
       assert response(conn, 204)
 
-      conn = get authenticated(conn, user), api_user_path(conn, :get_current_user)
+      conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
       assert response(conn, 401) =~ "no_resource_found"
     end
 

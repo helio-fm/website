@@ -11,7 +11,6 @@ defmodule Api.RegistrationController do
     with {:ok, %User{} = user} <- Accounts.register_user(user_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", api_user_path(conn, :get_current_user))
       |> render("registration.success.v1.json", user: user)
     end
   end
