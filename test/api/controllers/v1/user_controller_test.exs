@@ -4,6 +4,7 @@ defmodule Api.V1.UserControllerTest do
   alias Api.Auth.Token
   alias Db.Accounts
   alias Db.Accounts.Session
+  alias Db.VersionControl
 
   @user_attrs %{
     login: "test",
@@ -33,6 +34,7 @@ defmodule Api.V1.UserControllerTest do
       assert json_response(conn, 200)["data"]["email"] == user.email
       assert json_response(conn, 200)["data"]["login"] == user.login
       assert json_response(conn, 200)["data"]["name"] == user.name
+      assert json_response(conn, 200)["data"]["projects"] == []
       assert json_response(conn, 200)["data"]["sessions"] == []
       assert json_response(conn, 200)["data"]["resources"] == []
     end
@@ -54,6 +56,17 @@ defmodule Api.V1.UserControllerTest do
       assert [%{"type" => "arp", "name" => "test 1", "hash" => _, "updatedAt" => _},
         %{"type" => "arp", "name" => "test 2", "hash" => _, "updatedAt" => _},
         %{"type" => "script", "name" => "test 3", "hash" => _, "updatedAt" => _}] = json_response(conn, 200)["data"]["resources"]
+    end
+
+    test "renders existing projects within valid profile", %{conn: conn, user: user} do
+      project_attrs = %{author_id: user.id, id: "some-id", alias: "some-alias", title: "some-title"}
+      {:ok, _project} = VersionControl.create_or_update_project(project_attrs)
+      conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
+      assert [%{"id" => "some-id",
+        "title" => "some-title",
+        "alias" => "some-alias",
+        "head" => nil,
+        "updatedAt" => _}] = json_response(conn, 200)["data"]["projects"]
     end
 
     test "renders errors when not authenticated", %{conn: conn} do
