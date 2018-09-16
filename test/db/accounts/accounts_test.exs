@@ -166,11 +166,6 @@ defmodule Db.AccountsTest do
       type: "some type",
       name: "some name"}
 
-    @update_attrs %{owner_id: nil,
-      data: %{},
-      type: "some updated type",
-      name: "some updated name"}
-
     @invalid_attrs %{owner_id: nil, data: nil, type: nil, name: nil}
 
     def resource_fixture(attrs \\ %{}) do
@@ -180,60 +175,58 @@ defmodule Db.AccountsTest do
         %{owner_id: user.id}
         |> Enum.into(attrs)
         |> Enum.into(@valid_attrs)
-        |> Accounts.create_resource()
+        |> Accounts.create_or_update_resource()
 
-      resource
+      {resource, user}
     end
 
-    test "list_user_resources/0 returns all user_resources" do
-      resource = resource_fixture()
-      assert Accounts.list_user_resources() == [resource]
+    test "get_resource_for_user/3 returns the resource for a given user and type/name" do
+      {resource, user} = resource_fixture()
+      {:ok, %Resource{} = resource2} = Accounts.get_resource_for_user(user, resource.type, resource.name)
+      assert resource2.data == resource.data
+      assert resource2.type == resource.type
+      assert resource2.name == resource.name
+      assert resource2.hash != nil
     end
 
-    test "get_resource!/1 returns the resource with given id" do
-      resource = resource_fixture()
-      assert Accounts.get_resource!(resource.id) == resource
+    test "get_resource_for_user/3 returns error for non-existing name" do
+      {resource, user} = resource_fixture()
+      assert {:error, :resource_not_found} = Accounts.get_resource_for_user(user, resource.type, "invalid")
     end
 
-    test "create_resource/1 with valid data creates a resource" do
-      user = user_fixture()
-      assert {:ok, %Resource{} = resource} = Accounts.create_resource(%{@valid_attrs | owner_id: user.id})
-      assert resource.data == %{}
-      assert resource.type == "some type"
-      assert resource.name == "some name"
-      assert resource.hash != nil
+    test "get_resources_brief_for_user/2 returns the resource brief for a given user and type" do
+      {resource, user} = resource_fixture()
+      {:ok, resources} = Accounts.get_resources_brief_for_user(user)
+      assert Enum.count(resources) == 1
+      resource2 = List.first(resources)
+      assert resource2.type == resource.type
+      assert resource2.name == resource.name
+      assert resource2.hash != nil
+      assert resource2.data == nil
     end
 
-    test "create_resource/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_resource(@invalid_attrs)
+    test "create_or_update_resource/1 with valid data updates a resource" do
+      {resource, user} = resource_fixture()
+      updated_data = %{hotkeyScheme: "test"}
+      conflict_attrs = %{owner_id: user.id, data: updated_data} |> Enum.into(@valid_attrs)
+
+      assert {:ok, %Resource{} = resource2} = Accounts.create_or_update_resource(conflict_attrs)
+      assert resource2.owner_id == resource.owner_id
+      assert resource2.type == resource.type
+      assert resource2.name == resource.name
+      assert resource2.data == updated_data
+      assert resource2.hash != resource.hash
+      assert resource2.hash != nil
     end
 
-    test "update_resource/2 with valid data updates the resource" do
-      resource = resource_fixture()
-      new_user = user_fixture(%{email: "new@helio.fm", login: "new"})
-      assert {:ok, resource} = Accounts.update_resource(resource, %{@update_attrs | owner_id: new_user.id})
-      assert %Resource{} = resource
-      assert resource.data == %{}
-      assert resource.type == "some updated type"
-      assert resource.name == "some updated name"
-      assert resource.hash != nil
-    end
-
-    test "update_resource/2 with invalid data returns error changeset" do
-      resource = resource_fixture()
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_resource(resource, @invalid_attrs)
-      assert resource == Accounts.get_resource!(resource.id)
+    test "create_or_update_resource/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_or_update_resource(@invalid_attrs)
     end
 
     test "delete_resource/1 deletes the resource" do
-      resource = resource_fixture()
+      {resource, user} = resource_fixture()
       assert {:ok, %Resource{}} = Accounts.delete_resource(resource)
-      assert_raise Ecto.NoResultsError, fn -> Accounts.get_resource!(resource.id) end
-    end
-
-    test "change_resource/1 returns a resource changeset" do
-      resource = resource_fixture()
-      assert %Ecto.Changeset{} = Accounts.change_resource(resource)
+      assert {:error, :resource_not_found} = Accounts.get_resource_for_user(user, resource.type, resource.name)
     end
   end
 end

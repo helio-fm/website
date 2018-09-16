@@ -198,68 +198,53 @@ defmodule Db.Accounts do
   alias Db.Accounts.Resource
 
   @doc """
-  Returns the list of user_resources.
-
-  ## Examples
-
-      iex> list_user_resources()
-      [%Resource{}, ...]
-
+  Gets all resources of a given type for a user, data is not included.
   """
-  def list_user_resources do
-    Repo.all(Resource)
+
+  def get_resources_brief_for_user(%User{} = user) do
+    query = from r in Resource,
+      where: r.owner_id == ^user.id,
+      select: struct(r, [:type, :name, :hash]),
+      order_by: [:type, :name]
+    {:ok, Repo.all(query)}
   end
 
   @doc """
-  Gets a single resource.
-
-  Raises `Ecto.NoResultsError` if the Resource does not exist.
-
-  ## Examples
-
-      iex> get_resource!(123)
-      %Resource{}
-
-      iex> get_resource!(456)
-      ** (Ecto.NoResultsError)
-
+  Gets full info of a single resource for a given user.
   """
-  def get_resource!(id), do: Repo.get!(Resource, id)
 
-  @doc """
-  Creates a resource.
-
-  ## Examples
-
-      iex> create_resource(%{field: value})
-      {:ok, %Resource{}}
-
-      iex> create_resource(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_resource(attrs \\ %{}) do
-    %Resource{}
-    |> Resource.changeset(attrs)
-    |> Repo.insert()
+  def get_resource_for_user(%User{} = user, resource_type, resource_name) do
+    query = from r in Resource,
+      where: r.owner_id == ^user.id and r.type == ^resource_type and r.name == ^resource_name,
+      select: struct(r, [:data, :type, :name, :hash])
+    case Repo.one(query) do
+      nil -> {:error, :resource_not_found}
+      resource -> {:ok, resource}
+    end
   end
 
   @doc """
-  Updates a resource.
+  Creates or updates a resource.
 
   ## Examples
 
-      iex> update_resource(resource, %{field: new_value})
+      iex> create_or_update_resource(%{field: value})
       {:ok, %Resource{}}
 
-      iex> update_resource(resource, %{field: bad_value})
+      iex> create_or_update_resource(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_resource(%Resource{} = resource, attrs) do
-    resource
-    |> Resource.changeset(attrs)
-    |> Repo.update()
+  def create_or_update_resource(attrs \\ %{}) do
+    changeset = Resource.changeset(%Resource{}, attrs)
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{data: data, hash: hash}} ->
+        Repo.insert(changeset,
+          on_conflict: [set: [data: data, hash: hash]],
+          conflict_target: [:owner_id, :type, :name])
+      _ ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -276,18 +261,5 @@ defmodule Db.Accounts do
   """
   def delete_resource(%Resource{} = resource) do
     Repo.delete(resource)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking resource changes.
-
-  ## Examples
-
-      iex> change_resource(resource)
-      %Ecto.Changeset{source: %Resource{}}
-
-  """
-  def change_resource(%Resource{} = resource) do
-    Resource.changeset(resource, %{})
   end
 end
