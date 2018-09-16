@@ -13,7 +13,7 @@ defmodule Api.UserController do
     resources = []
     with user <- Guardian.Plug.current_resource(conn),
       {:ok, sessions} <- Accounts.get_sessions_for_user(user),
-      # {:ok, resources} <- Accounts.get_resources_info_for_user(user),
+      {:ok, resources} <- Accounts.get_resources_brief_for_user(user),
       do: render(conn, "show.v1.json", user: user, sessions: sessions, resources: resources)
   end
 

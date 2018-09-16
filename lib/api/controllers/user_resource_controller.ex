@@ -6,11 +6,6 @@ defmodule Api.UserResourceController do
 
   action_fallback Api.FallbackController
 
-  def index(conn, _params) do
-    user_resources = Accounts.list_user_resources()
-    render(conn, "index.v1.json", user_resources: user_resources)
-  end
-
   def create(conn, %{"resource" => resource_params}) do
     with {:ok, %Resource{} = resource} <- Accounts.create_resource(resource_params) do
       conn

@@ -34,12 +34,26 @@ defmodule Api.V1.UserControllerTest do
       assert json_response(conn, 200)["data"]["login"] == user.login
       assert json_response(conn, 200)["data"]["name"] == user.name
       assert json_response(conn, 200)["data"]["sessions"] == []
+      assert json_response(conn, 200)["data"]["resources"] == []
     end
 
     test "renders active sessions within valid profile", %{conn: conn, user: user} do
       {:ok, _jwt} = Session.update_token_for_device(user.id, "device", "platform", "token")
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
       assert [%{"platformId" => _, "createdAt" => _, "updatedAt" => _}] = json_response(conn, 200)["data"]["sessions"]
+    end
+
+    test "renders existing resources within valid profile", %{conn: conn, user: user} do
+      resource1_attrs = %{owner_id: user.id, data: %{}, type: "script", name: "test 3"}
+      resource2_attrs = %{owner_id: user.id, data: %{}, type: "arp", name: "test 1"}
+      resource3_attrs = %{owner_id: user.id, data: %{}, type: "arp", name: "test 2"}
+      {:ok, _resource1} = Accounts.create_or_update_resource(resource1_attrs)
+      {:ok, _resource2} = Accounts.create_or_update_resource(resource2_attrs)
+      {:ok, _resource3} = Accounts.create_or_update_resource(resource3_attrs)
+      conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
+      assert [%{"type" => "arp", "name" => "test 1", "hash" => _, "updatedAt" => _},
+        %{"type" => "arp", "name" => "test 2", "hash" => _, "updatedAt" => _},
+        %{"type" => "script", "name" => "test 3", "hash" => _, "updatedAt" => _}] = json_response(conn, 200)["data"]["resources"]
     end
 
     test "renders errors when not authenticated", %{conn: conn} do
