@@ -34,7 +34,7 @@ defmodule Api.V1.ProjectControllerTest do
     setup [:create_user]
 
     test "renders project when data is valid", %{conn: conn, user: user} do
-      conn = put authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, @id), project: @project_attrs
+      conn = post authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, @id), project: @project_attrs
       assert %{"id" => id,
         "alias" => "some-alias",
         "title" => "some title",
@@ -50,12 +50,12 @@ defmodule Api.V1.ProjectControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, @id), project: @invalid_attrs
+      conn = post authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, @id), project: @invalid_attrs
       assert json_response(conn, :unprocessable_entity)["errors"] != %{}
     end
 
     test "renders unauthorized when not authenticated", %{conn: conn, user: _} do
-      conn = put conn, api_vcs_project_path(conn, :create_or_update, @id), project: @project_attrs
+      conn = post conn, api_vcs_project_path(conn, :create_or_update, @id), project: @project_attrs
       assert response(conn, :unauthorized)
     end
   end
@@ -65,11 +65,11 @@ defmodule Api.V1.ProjectControllerTest do
 
     test "renders all projects for a given user", %{conn: conn, user: user} do
       project1 = @project_attrs
-      conn = put authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, project1.id), project: project1
+      conn = post authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, project1.id), project: project1
       assert %{"id" => _} = json_response(conn, :ok)["data"]
 
       project2 = %{@project_attrs | id: "another id", alias: "another-alias"}
-      conn = put authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, project2.id), project: project2
+      conn = post authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, project2.id), project: project2
       assert %{"id" => _} = json_response(conn, :ok)["data"]
 
       conn = get authenticated(conn, user), api_vcs_project_path(conn, :index)
@@ -118,7 +118,7 @@ defmodule Api.V1.ProjectControllerTest do
 
     test "renders revision when created one with valid data", %{conn: conn, project: %Project{id: id}, user: user} do
       attrs = %{@revision_attrs | project_id: id}
-      conn = put authenticated(conn, user), api_vcs_revision_path(conn, :create, attrs.id), revision: attrs
+      conn = post authenticated(conn, user), api_vcs_revision_path(conn, :create, attrs.id), revision: attrs
       assert response(conn, :created)
 
       conn = get authenticated(conn, user), api_vcs_revision_path(conn, :show, id)
@@ -132,10 +132,10 @@ defmodule Api.V1.ProjectControllerTest do
 
     test "renders error when trying to create revision with existing id", %{conn: conn, project: %Project{id: id}, user: user} do
       attrs = %{@revision_attrs | project_id: id}
-      conn = put authenticated(conn, user), api_vcs_revision_path(conn, :create, attrs.id), revision: attrs
+      conn = post authenticated(conn, user), api_vcs_revision_path(conn, :create, attrs.id), revision: attrs
       assert response(conn, :created)
 
-      conn = put authenticated(conn, user), api_vcs_revision_path(conn, :create, attrs.id), revision: attrs
+      conn = post authenticated(conn, user), api_vcs_revision_path(conn, :create, attrs.id), revision: attrs
       assert response(conn, :unprocessable_entity)
     end
 
