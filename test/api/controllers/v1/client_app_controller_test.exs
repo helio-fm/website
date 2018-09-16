@@ -1,6 +1,7 @@
 defmodule Api.V1.ClientAppControllerTest do
   use Api.ConnCase
 
+  alias Db.Clients
   alias Db.Accounts.User
   alias Api.Auth.Token
 
@@ -54,15 +55,18 @@ defmodule Api.V1.ClientAppControllerTest do
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
       assert json_response(conn, 200)["data"] != %{}
 
+      conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
+
+      Clients.create_or_update_resource(%{app_name: @create_attrs.app_name, data: %{}, type: "some type"})
+
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
-      assert json_response(conn, 200)["data"] == %{
-        "resources" => [],
+      assert %{"resources" => [%{"type" => "some type", "hash" => _}],
         "versions" => [%{"link" => "some link",
           "platformId" => "some platform_id",
           "version" => "some version"},
           %{"link" => "some link",
           "platformId" => "some platform_id 2",
-          "version" => "some version"}]}
+          "version" => "some version"}]} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
