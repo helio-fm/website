@@ -22,7 +22,6 @@ defmodule Api.UserView do
 
   def render("user.v1.json", %{user: user, sessions: sessions, resources: user_resources, projects: projects}) do
     %{login: user.login,
-      email: user.email,
       name: user.name,
       profile_url: @users_base_url <> user.login,
       avatar: get_avatar_url(user),

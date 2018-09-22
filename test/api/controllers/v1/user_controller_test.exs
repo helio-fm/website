@@ -31,12 +31,12 @@ defmodule Api.V1.UserControllerTest do
 
     test "renders profile when data is valid", %{conn: conn, user: user} do
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
-      assert json_response(conn, 200)["userProfile"]["email"] == user.email
       assert json_response(conn, 200)["userProfile"]["login"] == user.login
       assert json_response(conn, 200)["userProfile"]["name"] == user.name
       assert json_response(conn, 200)["userProfile"]["projects"] == []
       assert json_response(conn, 200)["userProfile"]["sessions"] == []
       assert json_response(conn, 200)["userProfile"]["resources"] == []
+      assert json_response(conn, 200)["userProfile"]["email"] == nil # hide email
     end
 
     test "renders active sessions within valid profile", %{conn: conn, user: user} do
