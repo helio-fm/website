@@ -6,15 +6,15 @@ defmodule Api.ProjectView do
   alias Api.RevisionView
 
   def render("index.v1.json", %{projects: projects}) do
-    %{data: render_many(projects, ProjectView, "project.v1.json")}
+    %{project: render_many(projects, ProjectView, "project.v1.json")}
   end
 
   def render("show.v1.json", %{project: project}) do
-    %{data: render_one(project, ProjectView, "project.v1.json")}
+    %{project: render_one(project, ProjectView, "project.v1.json")}
   end
 
   def render("show.heads.v1.json", %{heads: heads}) do
-    %{data: render_many(heads, RevisionView, "brief.v1.json")}
+    %{revision: render_many(heads, RevisionView, "brief.v1.json")}
   end
 
   def render("project.v1.json", %{project: project}) do

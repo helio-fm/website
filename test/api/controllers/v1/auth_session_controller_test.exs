@@ -33,14 +33,14 @@ defmodule Api.V1.AuthSessionControllerTest do
   describe "init auth_session" do
     test "renders auth_session when data is valid", %{conn: conn} do
       conn = post client(conn), api_client_auth_init_path(conn, :init_client_auth_session, "helio"), %{session: @create_attrs}
-      assert json_response(conn, :created)["data"]["provider"] == "Github"
-      assert json_response(conn, :created)["data"]["appName"] == "helio"
-      assert json_response(conn, :created)["data"]["appPlatform"] == "some app_platform"
-      assert json_response(conn, :created)["data"]["appVersion"] == "some app_version"
-      assert json_response(conn, :created)["data"]["deviceId"] == "some device_id"
-      assert json_response(conn, :created)["data"]["token"] == ""
-      assert json_response(conn, :created)["data"]["id"] != ""
-      assert json_response(conn, :created)["data"]["secretKey"] != ""
+      assert json_response(conn, :created)["session"]["provider"] == "Github"
+      assert json_response(conn, :created)["session"]["appName"] == "helio"
+      assert json_response(conn, :created)["session"]["appPlatform"] == "some app_platform"
+      assert json_response(conn, :created)["session"]["appVersion"] == "some app_version"
+      assert json_response(conn, :created)["session"]["deviceId"] == "some device_id"
+      assert json_response(conn, :created)["session"]["token"] == ""
+      assert json_response(conn, :created)["session"]["id"] != ""
+      assert json_response(conn, :created)["session"]["secretKey"] != ""
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -68,7 +68,7 @@ defmodule Api.V1.AuthSessionControllerTest do
       Clients.finalise_auth_session(auth_session, token)
       session = %{session: Map.from_struct(auth_session)}
       conn = post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session
-      assert json_response(conn, :ok)["data"]["token"] == token
+      assert json_response(conn, :ok)["session"]["token"] == token
 
       assert_error_sent :not_found, fn ->
         post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session

@@ -4,7 +4,7 @@ defmodule Api.SessionView do
 
   def render("sign.in.v1.json", %{user: user, jwt: jwt}) do
     %{status: :ok,
-      data: %{
+      session: %{
         token: jwt,
         email: user.email
       }, message: """
@@ -15,7 +15,7 @@ defmodule Api.SessionView do
 
   def render("refresh.token.v1.json", %{user: user, jwt: jwt}) do
     %{status: :ok,
-      data: %{
+      session: %{
         token: jwt,
         email: user.email
       }, message: """

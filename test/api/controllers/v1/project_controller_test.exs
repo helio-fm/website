@@ -39,14 +39,14 @@ defmodule Api.V1.ProjectControllerTest do
         "alias" => "some-alias",
         "title" => "some title",
         "head" => nil,
-        "updatedAt" => _} = json_response(conn, :ok)["data"]
+        "updatedAt" => _} = json_response(conn, :ok)["project"]
 
       conn = get authenticated(conn, user), api_vcs_project_path(conn, :summary, id)
       assert %{"id" => @id,
         "alias" => "some-alias",
         "title" => "some title",
         "head" => nil,
-        "updatedAt" => _} = json_response(conn, :ok)["data"]
+        "updatedAt" => _} = json_response(conn, :ok)["project"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
@@ -66,19 +66,19 @@ defmodule Api.V1.ProjectControllerTest do
     test "renders all projects for a given user", %{conn: conn, user: user} do
       project1 = @project_attrs
       conn = post authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, project1.id), project: project1
-      assert %{"id" => _} = json_response(conn, :ok)["data"]
+      assert %{"id" => _} = json_response(conn, :ok)["project"]
 
       project2 = %{@project_attrs | id: "another id", alias: "another-alias"}
       conn = post authenticated(conn, user), api_vcs_project_path(conn, :create_or_update, project2.id), project: project2
-      assert %{"id" => _} = json_response(conn, :ok)["data"]
+      assert %{"id" => _} = json_response(conn, :ok)["project"]
 
       conn = get authenticated(conn, user), api_vcs_project_path(conn, :index)
-      assert [%{"id" => _}, %{"id" => _}] = json_response(conn, :ok)["data"]
+      assert [%{"id" => _}, %{"id" => _}] = json_response(conn, :ok)["project"]
     end
 
     test "renders empty list when no projects available", %{conn: conn, user: user} do
       conn = get authenticated(conn, user), api_vcs_project_path(conn, :index)
-      assert [] = json_response(conn, :ok)["data"]
+      assert [] = json_response(conn, :ok)["project"]
     end
 
     test "renders unauthorized when not authenticated", %{conn: conn, user: _} do
@@ -92,7 +92,7 @@ defmodule Api.V1.ProjectControllerTest do
 
     test "renders head list when data is valid", %{conn: conn, project: %Project{id: id}, user: user, tree: _} do
       conn = get authenticated(conn, user), api_vcs_project_path(conn, :heads, id)
-      assert json_response(conn, 200)["data"] == [%{
+      assert json_response(conn, 200)["revision"] == [%{
         "id" => "5",
         "hash" => "some hash",
         "message" => "some message",
@@ -122,7 +122,7 @@ defmodule Api.V1.ProjectControllerTest do
       assert response(conn, :created)
 
       conn = get authenticated(conn, user), api_vcs_revision_path(conn, :show, id)
-      assert json_response(conn, :ok)["data"] == %{
+      assert json_response(conn, :ok)["revision"] == %{
         "id" => "some id",
         "message" => "some message",
         "hash" => "some hash",

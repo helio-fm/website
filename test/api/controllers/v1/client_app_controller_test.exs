@@ -28,7 +28,7 @@ defmodule Api.V1.ClientAppControllerTest do
   describe "get client info" do
     test "lists all apps", %{conn: conn} do
       conn = get authenticated(conn), api_client_app_path(conn, :index)
-      assert json_response(conn, 200)["data"] == []
+      assert json_response(conn, 200)["clientApp"] == []
     end
 
     test "renders error on unauthenticated request to lists all apps", %{conn: conn} do
@@ -50,10 +50,10 @@ defmodule Api.V1.ClientAppControllerTest do
   describe "create app versions" do
     test "renders client info when data is valid", %{conn: conn} do
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @create_attrs
-      assert json_response(conn, 200)["data"] != %{}
+      assert json_response(conn, 200)["clientApp"] != %{}
 
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
-      assert json_response(conn, 200)["data"] != %{}
+      assert json_response(conn, 200)["clientApp"] != %{}
 
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
 
@@ -66,7 +66,7 @@ defmodule Api.V1.ClientAppControllerTest do
           "version" => "some version"},
           %{"link" => "some link",
           "platformId" => "some platform_id 2",
-          "version" => "some version"}]} = json_response(conn, 200)["data"]
+          "version" => "some version"}]} = json_response(conn, 200)["clientApp"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -78,13 +78,13 @@ defmodule Api.V1.ClientAppControllerTest do
   describe "update exisitng app version" do
     test "renders client info when data is valid", %{conn: conn} do
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @create_attrs
-      assert json_response(conn, 200)["data"] != %{}
+      assert json_response(conn, 200)["clientApp"] != %{}
 
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @update_attrs
-      assert json_response(conn, 200)["data"] != %{}
+      assert json_response(conn, 200)["clientApp"] != %{}
 
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
-      assert json_response(conn, 200)["data"] == %{
+      assert json_response(conn, 200)["clientApp"] == %{
         "resources" => [],
         "versions" => [%{
           "link" => "some updated link",

@@ -2,16 +2,12 @@ defmodule Api.AuthSessionView do
   use Api, :view
   alias Api.AuthSessionView
 
-  def render("index.v1.json", %{auth_sessions: auth_sessions}) do
-    %{data: render_many(auth_sessions, AuthSessionView, "auth.session.v1.json")}
-  end
-
   def render("show.v1.json", %{auth_session: auth_session}) do
-    %{data: render_one(auth_session, AuthSessionView, "auth.session.v1.json")}
+    %{session: render_one(auth_session, AuthSessionView, "auth.session.v1.json")}
   end
 
   def render("finalise.v1.json", %{auth_session: auth_session}) do
-    %{data: render_one(auth_session, AuthSessionView, "auth.token.v1.json")}
+    %{session: render_one(auth_session, AuthSessionView, "auth.token.v1.json")}
   end
 
   def render("auth.session.v1.json", %{auth_session: auth_session}) do

@@ -22,7 +22,7 @@ defmodule Api.V1.UserControllerTest do
 
     test "lists all users", %{conn: conn, user: user} do
       conn = get authenticated(conn, user), api_user_path(conn, :index)
-      assert json_response(conn, 200)["data"] != []
+      assert json_response(conn, 200)["userProfile"] != []
     end
   end
 
@@ -31,18 +31,18 @@ defmodule Api.V1.UserControllerTest do
 
     test "renders profile when data is valid", %{conn: conn, user: user} do
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
-      assert json_response(conn, 200)["data"]["email"] == user.email
-      assert json_response(conn, 200)["data"]["login"] == user.login
-      assert json_response(conn, 200)["data"]["name"] == user.name
-      assert json_response(conn, 200)["data"]["projects"] == []
-      assert json_response(conn, 200)["data"]["sessions"] == []
-      assert json_response(conn, 200)["data"]["resources"] == []
+      assert json_response(conn, 200)["userProfile"]["email"] == user.email
+      assert json_response(conn, 200)["userProfile"]["login"] == user.login
+      assert json_response(conn, 200)["userProfile"]["name"] == user.name
+      assert json_response(conn, 200)["userProfile"]["projects"] == []
+      assert json_response(conn, 200)["userProfile"]["sessions"] == []
+      assert json_response(conn, 200)["userProfile"]["resources"] == []
     end
 
     test "renders active sessions within valid profile", %{conn: conn, user: user} do
       {:ok, _jwt} = Session.update_token_for_device(user.id, "device", "platform", "token")
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
-      assert [%{"platformId" => _, "createdAt" => _, "updatedAt" => _}] = json_response(conn, 200)["data"]["sessions"]
+      assert [%{"platformId" => _, "createdAt" => _, "updatedAt" => _}] = json_response(conn, 200)["userProfile"]["sessions"]
     end
 
     test "renders existing resources within valid profile", %{conn: conn, user: user} do
@@ -55,7 +55,7 @@ defmodule Api.V1.UserControllerTest do
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
       assert [%{"type" => "arp", "name" => "test 1", "hash" => _, "updatedAt" => _},
         %{"type" => "arp", "name" => "test 2", "hash" => _, "updatedAt" => _},
-        %{"type" => "script", "name" => "test 3", "hash" => _, "updatedAt" => _}] = json_response(conn, 200)["data"]["resources"]
+        %{"type" => "script", "name" => "test 3", "hash" => _, "updatedAt" => _}] = json_response(conn, 200)["userProfile"]["resources"]
     end
 
     test "renders existing projects within valid profile", %{conn: conn, user: user} do
@@ -66,7 +66,7 @@ defmodule Api.V1.UserControllerTest do
         "title" => "some-title",
         "alias" => "some-alias",
         "head" => nil,
-        "updatedAt" => _}] = json_response(conn, 200)["data"]["projects"]
+        "updatedAt" => _}] = json_response(conn, 200)["userProfile"]["projects"]
     end
 
     test "renders errors when not authenticated", %{conn: conn} do
