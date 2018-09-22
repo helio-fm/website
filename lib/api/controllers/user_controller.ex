@@ -8,10 +8,9 @@ defmodule Api.UserController do
 
   action_fallback Api.FallbackController
 
-  plug Guardian.Plug.LoadResource, ensure: true
+  plug Guardian.Plug.LoadResource
 
   def get_current_user(conn, _params) do
-    resources = []
     with user <- Guardian.Plug.current_resource(conn),
       {:ok, projects} <- VersionControl.get_projects_for_user(user),
       {:ok, sessions} <- Accounts.get_sessions_for_user(user),

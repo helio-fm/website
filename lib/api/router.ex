@@ -57,8 +57,8 @@ defmodule Api.Router do
 
     scope "/my", as: :user do
       # returns the logged in user's profile, including all active sessions
-      # and the summary of available resources (similar to client app info);
-      # note that user's project are not returned here, instead use get /vcs/projects
+      # the summary of available resources (similar to client app info, not including resource data),
+      # and the summary of existing projects (identical to get /vcs/projects)
       get "/profile", UserController, :get_current_user, as: :profile
 
       # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
@@ -66,7 +66,7 @@ defmodule Api.Router do
       # - receive a user profile containing resource hashes and update time millis
       # - check for local user's resource timestamps
       get "/resources/:type/:name", UserResourceController, :get_user_resource, as: :resource
-      put "/resources/:type/:name", UserResourceController, :update_user_resource, as: :resource
+      post "/resources", UserResourceController, :update_user_resource, as: :resource
     end
 
     if Mix.env == :test do

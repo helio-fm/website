@@ -19,7 +19,7 @@ defmodule Api.ProjectController do
     end
   end
 
-  plug Guardian.Plug.LoadResource, ensure: true
+  plug Guardian.Plug.LoadResource
 
   def create_or_update(conn, %{"id" => id, "project" => project_params}) do
     project_params = Map.put(project_params, "id", id)
