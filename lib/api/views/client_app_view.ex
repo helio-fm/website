@@ -5,12 +5,8 @@ defmodule Api.ClientAppView do
   alias Api.ClientAppView
   alias Api.ClientAppResourceView
 
-  def render("index.v1.json", %{apps: apps}) do
-    %{clientApp: render_many(apps, ClientAppView, "app.v1.json", as: :app)}
-  end
-
   def render("show.v1.json", %{app: app}) do
-    %{clientApp: render_one(app, ClientAppView, "app.v1.json", as: :app)}
+    %{client_app: render_one(app, ClientAppView, "app.v1.json", as: :app)}
   end
 
   def render("app.v1.json", %{app: app}) do

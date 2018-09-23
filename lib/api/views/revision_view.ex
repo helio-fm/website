@@ -2,10 +2,6 @@ defmodule Api.RevisionView do
   use Api, :view
   alias Api.RevisionView
 
-  def render("index.v1.json", %{revisions: revisions}) do
-    %{revision: render_many(revisions, RevisionView, "revision.v1.json")}
-  end
-
   def render("show.v1.json", %{revision: revision}) do
     %{revision: render_one(revision, RevisionView, "revision.v1.json")}
   end

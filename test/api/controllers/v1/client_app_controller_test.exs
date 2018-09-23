@@ -26,16 +26,6 @@ defmodule Api.V1.ClientAppControllerTest do
   @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
 
   describe "get client info" do
-    test "lists all apps", %{conn: conn} do
-      conn = get authenticated(conn), api_client_app_path(conn, :index)
-      assert json_response(conn, 200)["clientApp"] == []
-    end
-
-    test "renders error on unauthenticated request to lists all apps", %{conn: conn} do
-      conn = get conn, api_client_app_path(conn, :index)
-      assert response(conn, 401)
-    end
-
     test "renders error on unauthenticated request to get client info", %{conn: conn} do
       conn = get conn, api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert response(conn, 401)

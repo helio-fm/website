@@ -10,13 +10,8 @@ defmodule Api.UserView do
   alias Api.SessionView
   alias Api.UserResourceView
 
-  def render("index.v1.json", %{users: users}) do
-    %{userProfile: render_many(users, UserView, "user.v1.json",
-      %{sessions: [], resources: [], projects: []})}
-  end
-
   def render("show.v1.json", %{user: user, sessions: sessions, resources: resources, projects: projects}) do
-    %{userProfile: render_one(user, UserView, "user.v1.json",
+    %{user_profile: render_one(user, UserView, "user.v1.json",
       %{sessions: sessions, resources: resources, projects: projects})}
   end
 

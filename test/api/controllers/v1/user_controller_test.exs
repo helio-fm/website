@@ -17,15 +17,6 @@ defmodule Api.V1.UserControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/helio.fm.v1+json")}
   end
 
-  describe "index" do
-    setup [:create_user]
-
-    test "lists all users", %{conn: conn, user: user} do
-      conn = get authenticated(conn, user), api_user_path(conn, :index)
-      assert json_response(conn, 200)["userProfile"] != []
-    end
-  end
-
   describe "show current user profile" do
     setup [:create_user]
 
@@ -71,23 +62,6 @@ defmodule Api.V1.UserControllerTest do
 
     test "renders errors when not authenticated", %{conn: conn} do
       conn = get conn, api_user_profile_path(conn, :get_current_user)
-      assert response(conn, 401) =~ "unauthenticated"
-    end
-  end
-
-  describe "delete user" do
-    setup [:create_user]
-
-    test "deletes chosen user and renders error when requested current profile for deleted user", %{conn: conn, user: user} do
-      conn = delete authenticated(conn, user), api_user_path(conn, :delete, user)
-      assert response(conn, 204)
-
-      conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
-      assert response(conn, 401) =~ "no_resource_found"
-    end
-
-    test "renders errors when not authenticated", %{conn: conn, user: user} do
-      conn = delete conn, api_user_path(conn, :delete, user)
       assert response(conn, 401) =~ "unauthenticated"
     end
   end

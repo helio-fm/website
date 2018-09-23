@@ -49,7 +49,6 @@ defmodule Api.Router do
       pipe_through :authenticated
       post "/:app/:resource/update", ClientAppResourceController, :update_client_resource, as: :resource_update
       post "/", ClientAppController, :create_or_update, as: :app
-      get "/", ClientAppController, :index, as: :app
     end
 
     # restrict unauthenticated access for routes below
@@ -67,11 +66,6 @@ defmodule Api.Router do
       # - check for local user's resource timestamps
       get "/resources/:type/:name", UserResourceController, :get_user_resource, as: :resource
       post "/resources", UserResourceController, :update_user_resource, as: :resource
-    end
-
-    if Mix.env == :test do
-      # some users admin endpoints
-      resources "/users", UserController, only: [:index, :delete], as: :user
     end
 
     scope "/session", as: :session do

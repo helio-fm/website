@@ -13,13 +13,7 @@ defmodule Api.ClientAppController do
      do: render(conn, "clients.info.v1.json", clients: clients, resources: resources)
   end
 
-  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:read]}] when action in [:index]
   plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:write]}] when action in [:create_or_update]
-
-  def index(conn, _params) do
-    apps = Clients.list_apps()
-    render(conn, "index.v1.json", apps: apps)
-  end
 
   def create_or_update(conn, %{"app" => app_params}) do
     with {:ok, %App{} = app} <- Clients.create_or_update_app(app_params) do
