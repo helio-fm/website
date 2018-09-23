@@ -91,12 +91,12 @@ defmodule Api.Router do
         get "/", ProjectController, :index
         get "/:id", ProjectController, :summary
         get "/:id/heads", ProjectController, :heads
-        post "/:id", ProjectController, :create_or_update
+        put "/:id", ProjectController, :create_or_update
       end
 
       scope "/revisions" do
         get "/:id", RevisionController, :show
-        post "/:id", RevisionController, :create
+        put "/:id", RevisionController, :create
       end
     end
   end
