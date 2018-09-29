@@ -32,7 +32,7 @@ defmodule Db.VersionControlTest do
 
     test "get_projects_for_user/0 returns all projects for a given user" do
       {project, user} = project_fixture()
-      assert VersionControl.get_projects_for_user(user) == {:ok, [project]}
+      assert VersionControl.get_projects_for_user(user.id) == {:ok, [project]}
     end
 
     test "get_project!/1 returns the project with given id" do
@@ -69,7 +69,7 @@ defmodule Db.VersionControlTest do
       {project, user} = project_fixture()
       assert {:ok, %Project{}} = VersionControl.delete_project(project)
       assert_raise Ecto.NoResultsError, fn -> VersionControl.get_project!(project.id) end
-      assert VersionControl.get_projects_for_user(user) == {:ok, []}
+      assert VersionControl.get_projects_for_user(user.id) == {:ok, []}
     end
   end
 

@@ -11,11 +11,11 @@ defmodule Db.VersionControl do
   alias Db.VersionControl.Revision
 
   @doc """
-  Returns the list of projects for a given user.
+  Returns the list of projects for a given user id.
   """
-  def get_projects_for_user(%User{} = user) do
+  def get_projects_for_user(user_id) do
     query = from p in Project,
-      where: p.author_id == ^user.id,
+      where: p.author_id == ^user_id,
       select: struct(p, [:id, :author_id, :title, :alias, :head, :inserted_at, :updated_at])
     {:ok, Repo.all(query)}
   end

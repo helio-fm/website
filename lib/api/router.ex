@@ -60,14 +60,12 @@ defmodule Api.Router do
       # and the summary of existing projects (identical to get /vcs/projects)
       get "/profile", UserController, :get_current_user, as: :profile
 
-      delete "/sessions/:device_id", UserController, :delete_user_session, as: :session
+      delete "/sessions/:device_id", SessionController, :delete_session, as: :session
 
       # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
-      # client app work as follows:
-      # - receive a user profile containing resource hashes and update time millis
-      # - check for local user's resource timestamps
       get "/resources/:type/:name", UserResourceController, :get_user_resource, as: :resource
-      post "/resources", UserResourceController, :update_user_resource, as: :resource
+      put "/resources/:type/:name", UserResourceController, :update_user_resource, as: :resource
+      delete "/resources/:type/:name", UserResourceController, :delete_user_resource, as: :resource
     end
 
     scope "/session", as: :session do
@@ -94,6 +92,7 @@ defmodule Api.Router do
         get "/:id", ProjectController, :summary
         get "/:id/heads", ProjectController, :heads
         put "/:id", ProjectController, :create_or_update
+        delete "/:id", ProjectController, :delete
       end
 
       scope "/revisions" do

@@ -3,6 +3,7 @@ defmodule Api.ProjectController do
 
   alias Db.VersionControl
   alias Db.VersionControl.Project
+  alias Api.Auth.Token
 
   action_fallback Api.FallbackController
 
@@ -19,12 +20,10 @@ defmodule Api.ProjectController do
     end
   end
 
-  plug Guardian.Plug.LoadResource
-
   def create_or_update(conn, %{"id" => id, "project" => project_params}) do
     project_params = Map.put(project_params, "id", id)
-    with user <- Guardian.Plug.current_resource(conn),
-         attrs <- Map.put(project_params, "author_id", user.id),
+    with user_id <- Token.current_subject(conn),
+         attrs <- Map.put(project_params, "author_id", user_id),
          {:ok, %Project{} = project} <- VersionControl.create_or_update_project(attrs) do
       conn
       |> put_status(:ok)
@@ -32,9 +31,17 @@ defmodule Api.ProjectController do
     end
   end
 
+  def delete(conn, %{"id" => id}) do
+    with user_id <- Token.current_subject(conn),
+         {:ok, project} = VersionControl.get_project(id, user_id),
+         {:ok, %Project{}} <- VersionControl.delete_project(project) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
   def index(conn, %{}) do
-    with user <- Guardian.Plug.current_resource(conn),
-         {:ok, projects} <- VersionControl.get_projects_for_user(user) do
+    with user_id <- Token.current_subject(conn),
+         {:ok, projects} <- VersionControl.get_projects_for_user(user_id) do
       conn
       |> put_status(:ok)
       |> render("index.v1.json", projects: projects)

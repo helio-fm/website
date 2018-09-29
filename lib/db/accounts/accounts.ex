@@ -131,9 +131,9 @@ defmodule Db.Accounts do
   Returns the list of sessions info for a given user.
   Tokens are not included.
   """
-  def get_sessions_for_user(%User{} = user) do
+  def get_sessions_for_user(user_id) do
     query = from s in Session,
-      where: s.user_id == ^user.id,
+      where: s.user_id == ^user_id,
       select: struct(s, [:platform_id, :device_id, :inserted_at, :updated_at])
     {:ok, Repo.all(query)}
   end
@@ -141,9 +141,9 @@ defmodule Db.Accounts do
   @doc """
   Gets a single session id for a given user and device.
   """
-  def get_user_session_for_device(%User{} = user, device_id) do
+  def get_user_session_for_device(user_id, device_id) do
     query = from s in Session,
-      where: s.user_id == ^user.id and s.device_id == ^device_id,
+      where: s.user_id == ^user_id and s.device_id == ^device_id,
       select: struct(s, [:id])
     case Repo.one(query) do
       nil -> {:error, :session_not_found}
@@ -198,9 +198,9 @@ defmodule Db.Accounts do
   Gets all resources of a given type for a user, data is not included.
   """
 
-  def get_resources_brief_for_user(%User{} = user) do
+  def get_resources_brief_for_user(user_id) do
     query = from r in Resource,
-      where: r.owner_id == ^user.id,
+      where: r.owner_id == ^user_id,
       select: struct(r, [:type, :name, :hash]),
       order_by: [:type, :name]
     {:ok, Repo.all(query)}
@@ -210,9 +210,9 @@ defmodule Db.Accounts do
   Gets full info of a single resource for a given user.
   """
 
-  def get_resource_for_user(%User{} = user, resource_type, resource_name) do
+  def get_resource_for_user(user_id, resource_type, resource_name) do
     query = from r in Resource,
-      where: r.owner_id == ^user.id and r.type == ^resource_type and r.name == ^resource_name,
+      where: r.owner_id == ^user_id and r.type == ^resource_type and r.name == ^resource_name,
       select: struct(r, [:data, :type, :name, :hash])
     case Repo.one(query) do
       nil -> {:error, :resource_not_found}
