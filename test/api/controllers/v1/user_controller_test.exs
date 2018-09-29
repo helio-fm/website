@@ -33,7 +33,8 @@ defmodule Api.V1.UserControllerTest do
     test "renders active sessions within valid profile", %{conn: conn, user: user} do
       {:ok, _jwt} = Session.update_token_for_device(user.id, "device", "platform", "token")
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
-      assert [%{"platformId" => _, "createdAt" => _, "updatedAt" => _}] = json_response(conn, 200)["userProfile"]["sessions"]
+      assert [%{"platformId" => _, "deviceId" => _, "createdAt" => _,
+        "updatedAt" => _}] = json_response(conn, 200)["userProfile"]["sessions"]
     end
 
     test "renders existing resources within valid profile", %{conn: conn, user: user} do
@@ -65,6 +66,30 @@ defmodule Api.V1.UserControllerTest do
       assert response(conn, 401) =~ "unauthenticated"
     end
   end
+
+  describe "delete active session for a user" do
+    setup [:create_user]
+
+    test "renders only existing sessions after deleting one", %{conn: conn, user: user} do
+      {:ok, _jwt1} = Session.update_token_for_device(user.id, "device1", "platform", "token")
+      {:ok, _jwt2} = Session.update_token_for_device(user.id, "device2", "platform", "token")
+
+      conn = delete authenticated(conn, user), api_user_session_path(conn, :delete_user_session, "device1")
+      conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
+      assert [%{"deviceId" => "device2"}] = json_response(conn, 200)["userProfile"]["sessions"]
+    end
+
+    test "renders errors when requested to delete unexisting session", %{conn: conn, user: user} do
+      conn = delete authenticated(conn, user), api_user_session_path(conn, :delete_user_session, "device1")
+      assert response(conn, 404)
+    end
+
+    test "renders errors when not authenticated", %{conn: conn} do
+      conn = delete conn, api_user_session_path(conn, :delete_user_session, "device1")
+      assert response(conn, 401) =~ "unauthenticated"
+    end
+  end
+
 
   defp create_user(_) do
     {:ok, user} = Accounts.create_user(@user_attrs)

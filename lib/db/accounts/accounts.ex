@@ -134,25 +134,22 @@ defmodule Db.Accounts do
   def get_sessions_for_user(%User{} = user) do
     query = from s in Session,
       where: s.user_id == ^user.id,
-      select: struct(s, [:platform_id, :inserted_at, :updated_at])
+      select: struct(s, [:platform_id, :device_id, :inserted_at, :updated_at])
     {:ok, Repo.all(query)}
   end
 
   @doc """
-  Gets a single session.
-
-  Raises `Ecto.NoResultsError` if the Session does not exist.
-
-  ## Examples
-
-      iex> get_session!(123)
-      %Session{}
-
-      iex> get_session!(456)
-      ** (Ecto.NoResultsError)
-
+  Gets a single session id for a given user and device.
   """
-  def get_session!(id), do: Repo.get!(Session, id)
+  def get_user_session_for_device(%User{} = user, device_id) do
+    query = from s in Session,
+      where: s.user_id == ^user.id and s.device_id == ^device_id,
+      select: struct(s, [:id])
+    case Repo.one(query) do
+      nil -> {:error, :session_not_found}
+      session -> {:ok, session}
+    end
+  end
 
   @doc """
   Creates or updates a session.

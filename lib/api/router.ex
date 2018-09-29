@@ -60,6 +60,8 @@ defmodule Api.Router do
       # and the summary of existing projects (identical to get /vcs/projects)
       get "/profile", UserController, :get_current_user, as: :profile
 
+      delete "/sessions/:device_id", UserController, :delete_user_session, as: :session
+
       # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
       # client app work as follows:
       # - receive a user profile containing resource hashes and update time millis
@@ -72,7 +74,7 @@ defmodule Api.Router do
       # this endpoint provides a kind of a sliding session:
       # first, it checks for a token, that is
       #   1) valid and unexpired,
-      #   2) present in active_sessions for a given device id;
+      #   2) present in active sessions for a given device id;
       # if passed, it issues a new token and saves it in the related active session
       # (there can be only one session per user and device id),
       # so that if user runs the app, say, at least once a week, his session won't expire

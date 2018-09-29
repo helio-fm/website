@@ -17,4 +17,12 @@ defmodule Api.UserController do
         render(conn, "show.v1.json", user: user, sessions: sessions, resources: resources, projects: projects)
     end
   end
+
+  def delete_user_session(conn, %{"device_id" => device_id}) do
+    with user <- Guardian.Plug.current_resource(conn),
+      {:ok, session} <- Accounts.get_user_session_for_device(user, device_id) do
+        Accounts.delete_session(session)
+        conn |> send_resp(:ok, "") |> halt()
+    end
+  end 
 end

@@ -121,9 +121,11 @@ defmodule Db.AccountsTest do
       assert session_brief.updated_at != nil
     end
 
-    test "get_session!/1 returns the session with given id" do
-      session = session_fixture()
-      assert Accounts.get_session!(session.id) == session
+    test "get_user_session_for_device returns the session with given id" do
+      user = user_fixture()
+      session = session_fixture(%{user_id: user.id})
+      {:ok, response} = Accounts.get_user_session_for_device(user, session.device_id)
+      assert response.id == session.id
     end
 
     test "create_or_update_session/1 with valid data creates and updates a session" do
@@ -146,15 +148,14 @@ defmodule Db.AccountsTest do
     end
 
     test "create_or_update_session/2 with invalid data returns error changeset" do
-      session = session_fixture()
       assert {:error, %Ecto.Changeset{}} = Accounts.create_or_update_session(@invalid_attrs)
-      assert session == Accounts.get_session!(session.id)
     end
 
     test "delete_session/1 deletes the session" do
-      session = session_fixture()
+      user = user_fixture()
+      session = session_fixture(%{user_id: user.id})
       assert {:ok, %Session{}} = Accounts.delete_session(session)
-      assert_raise Ecto.NoResultsError, fn -> Accounts.get_session!(session.id) end
+      assert {:ok, []} == Accounts.get_sessions_for_user(user)
     end
   end
 
