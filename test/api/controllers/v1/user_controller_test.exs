@@ -74,18 +74,18 @@ defmodule Api.V1.UserControllerTest do
       {:ok, _jwt1} = Session.update_token_for_device(user.id, "device1", "platform", "token")
       {:ok, _jwt2} = Session.update_token_for_device(user.id, "device2", "platform", "token")
 
-      conn = delete authenticated(conn, user), api_user_session_path(conn, :delete_session, "device1")
+      conn = delete authenticated(conn, user), api_user_session_path(conn, :delete, "device1")
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
       assert [%{"deviceId" => "device2"}] = json_response(conn, 200)["userProfile"]["sessions"]
     end
 
     test "renders errors when requested to delete unexisting session", %{conn: conn, user: user} do
-      conn = delete authenticated(conn, user), api_user_session_path(conn, :delete_session, "device1")
+      conn = delete authenticated(conn, user), api_user_session_path(conn, :delete, "device1")
       assert response(conn, 404)
     end
 
     test "renders errors when not authenticated", %{conn: conn} do
-      conn = delete conn, api_user_session_path(conn, :delete_session, "device1")
+      conn = delete conn, api_user_session_path(conn, :delete, "device1")
       assert response(conn, 401) =~ "unauthenticated"
     end
   end

@@ -60,12 +60,12 @@ defmodule Api.Router do
       # and the summary of existing projects (identical to get /vcs/projects)
       get "/profile", UserController, :get_current_user, as: :profile
 
-      delete "/sessions/:device_id", SessionController, :delete_session, as: :session
+      delete "/sessions/:device_id", SessionController, :delete, as: :session
 
       # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
-      get "/resources/:type/:name", UserResourceController, :get_user_resource, as: :resource
-      put "/resources/:type/:name", UserResourceController, :update_user_resource, as: :resource
-      delete "/resources/:type/:name", UserResourceController, :delete_user_resource, as: :resource
+      get "/resources/:type/:name", UserResourceController, :show, as: :resource
+      put "/resources/:type/:name", UserResourceController, :create_or_update, as: :resource
+      delete "/resources/:type/:name", UserResourceController, :delete, as: :resource
     end
 
     scope "/session", as: :session do

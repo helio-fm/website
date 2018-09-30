@@ -213,7 +213,7 @@ defmodule Db.Accounts do
   def get_resource_for_user(user_id, resource_type, resource_name) do
     query = from r in Resource,
       where: r.owner_id == ^user_id and r.type == ^resource_type and r.name == ^resource_name,
-      select: struct(r, [:data, :type, :name, :hash])
+      select: r
     case Repo.one(query) do
       nil -> {:error, :resource_not_found}
       resource -> {:ok, resource}

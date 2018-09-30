@@ -35,17 +35,17 @@ defmodule Db.VersionControl.Project do
   defp generate_alias_if_needed(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{title: title, alias: nil}} ->
-        generate_alias(changeset, title)
+        generate_slug(changeset, title)
       %Ecto.Changeset{valid?: true, changes: %{title: _, alias: _}} ->
         changeset
       %Ecto.Changeset{valid?: true, changes: %{title: title}} ->
-        generate_alias(changeset, title)
+        generate_slug(changeset, title)
       _ ->
         changeset
     end
   end
 
-  defp generate_alias(changeset, title) do
+  defp generate_slug(changeset, title) do
     put_change(changeset, :alias, Slug.slugify(title, separator: "-", lowercase: true))
   end
 end

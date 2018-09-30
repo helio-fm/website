@@ -37,9 +37,10 @@ defmodule Db.VersionControl do
   """
   def get_project_heads(%Project{} = project) do
     query = from r in Revision,
-          left_join: child in Revision, on: r.id == child.parent_id,
-          where: r.project_id == ^project.id and is_nil(child.parent_id),
-          select: struct(r, [:id, :hash, :message, :parent_id])
+      left_join: child in Revision, on: r.id == child.parent_id,
+      where: r.project_id == ^project.id and is_nil(child.parent_id),
+      select: struct(r, [:id, :hash, :message, :parent_id]),
+      order_by: [:id]
     {:ok, Repo.all(query)}
   end
 

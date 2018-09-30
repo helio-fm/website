@@ -25,7 +25,7 @@ defmodule Api.SessionController do
       do: render(conn, "refresh.token.v1.json", user: user, jwt: jwt)
   end
 
-  def delete_session(conn, %{"device_id" => device_id}) do
+  def delete(conn, %{"device_id" => device_id}) do
     with user_id <- Token.current_subject(conn),
          {:ok, session} <- Accounts.get_user_session_for_device(user_id, device_id),
          {:ok, %Session{}} <- Accounts.delete_session(session),

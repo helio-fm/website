@@ -7,13 +7,13 @@ defmodule Api.UserResourceController do
 
   action_fallback Api.FallbackController
 
-  def get_user_resource(conn, %{"type" => type, "name" => name}) do
+  def show(conn, %{"type" => type, "name" => name}) do
     with user_id <- Token.current_subject(conn),
          {:ok, resource} <- Accounts.get_resource_for_user(user_id, type, name),
       do: conn |> render("resource.v1.json", user_resource: resource)
   end
 
-  def update_user_resource(conn, %{"type" => type, "name" => name, "resource" => params}) do
+  def create_or_update(conn, %{"type" => type, "name" => name, "resource" => params}) do
     params = params |> Map.put("type", type) |> Map.put("name", name)
     with user_id <- Token.current_subject(conn),
          attrs <- Map.put(params, "owner_id", user_id),
