@@ -1,85 +1,129 @@
 defmodule Api.V1.UserResourceControllerTest do
   use Api.ConnCase
 
-  # TODO permissions tests
+  alias Db.Accounts
+  alias Api.Auth.Token
 
-  # alias Db.Accounts
-  # alias Db.Accounts.Resource
+  @create_attrs %{
+    data: %{ test: "test" },
+    name: "some name",
+    type: "some type",
+    owner_id: nil}
 
-  # @create_attrs %{data: %{}, hash: "some hash", type: "some type"}
-  # @update_attrs %{data: %{}, hash: "some updated hash", type: "some updated type"}
-  # @invalid_attrs %{data: nil, hash: nil, type: nil}
+  @update_attrs %{
+    data: %{ test2: "test2" },
+    name: "some name",
+    type: "some type",
+    owner_id: nil}
 
-  # def fixture(:resource) do
-  #   {:ok, resource} = Accounts.create_resource(@create_attrs)
-  #   resource
-  # end
+  @invalid_attrs %{data: nil, name: nil, type: nil, owner_id: nil}
 
-  # setup %{conn: conn} do
-  #   {:ok, conn: put_req_header(conn, "accept", "application/json")}
-  # end
+  setup %{conn: conn} do
+    {:ok, conn: put_req_header(conn, "accept", "application/helio.fm.v1+json")}
+  end
 
-  # describe "index" do
-  #   test "lists all user_resources", %{conn: conn} do
-  #     conn = get conn, resource_path(conn, :index)
-  #     assert json_response(conn, 200)["data"] == []
-  #   end
-  # end
+  describe "create resource" do
+    setup [:create_user]
 
-  # describe "create resource" do
-  #   test "renders resource when data is valid", %{conn: conn} do
-  #     conn = post conn, resource_path(conn, :create), resource: @create_attrs
-  #     assert %{"id" => id} = json_response(conn, 201)["data"]
+    test "renders created resource when data is valid", %{conn: conn, user: user} do
+      attrs = %{@create_attrs | owner_id: user.id}
+      conn = put authenticated(conn, user), api_user_resource_path(conn, :create_or_update, attrs.type, attrs.name), resource: attrs
+      assert %{"test" => "test"} = json_response(conn, :ok)["data"]
 
-  #     conn = get conn, resource_path(conn, :show, id)
-  #     assert json_response(conn, 200)["data"] == %{
-  #       "id" => id,
-  #       "data" => %{},
-  #       "hash" => "some hash",
-  #       "type" => "some type"}
-  #   end
+      conn = get authenticated(conn, user), api_user_resource_path(conn, :show, @create_attrs.type, @create_attrs.name)
+      assert %{"test" => "test"} = json_response(conn, :ok)["data"]
+    end
 
-  #   test "renders errors when data is invalid", %{conn: conn} do
-  #     conn = post conn, resource_path(conn, :create), resource: @invalid_attrs
-  #     assert json_response(conn, 422)["errors"] != %{}
-  #   end
-  # end
+    test "renders errors when data is invalid", %{conn: conn, user: user} do
+      conn = put authenticated(conn, user), api_user_resource_path(conn,
+        :create_or_update, @create_attrs.type, @create_attrs.name), resource: @invalid_attrs
+      assert json_response(conn, :unprocessable_entity)["errors"] != %{}
+    end
+  end
 
-  # describe "update resource" do
-  #   setup [:create_resource]
+  describe "update resource" do
+    setup [:create_user_and_resource]
 
-  #   test "renders resource when data is valid", %{conn: conn, resource: %Resource{id: id} = resource} do
-  #     conn = put conn, resource_path(conn, :update, resource), resource: @update_attrs
-  #     assert %{"id" => ^id} = json_response(conn, 200)["data"]
+    test "renders updated resource when data is valid", %{conn: conn, resource: _, user: user} do
+      conn = put authenticated(conn, user), api_user_resource_path(conn, :create_or_update, @update_attrs.type, @update_attrs.name), resource: @update_attrs
+      assert %{"test2" => "test2"} = json_response(conn, :ok)["data"]
 
-  #     conn = get conn, resource_path(conn, :show, id)
-  #     assert json_response(conn, 200)["data"] == %{
-  #       "id" => id,
-  #       "data" => %{},
-  #       "hash" => "some updated hash",
-  #       "type" => "some updated type"}
-  #   end
+      conn = get authenticated(conn, user), api_user_resource_path(conn, :show, @create_attrs.type, @create_attrs.name)
+      assert %{"test2" => "test2"} = json_response(conn, :ok)["data"]
+    end
 
-  #   test "renders errors when data is invalid", %{conn: conn, resource: resource} do
-  #     conn = put conn, resource_path(conn, :update, resource), resource: @invalid_attrs
-  #     assert json_response(conn, 422)["errors"] != %{}
-  #   end
-  # end
+    test "renders not found when fetching existing resource as another user", %{conn: conn, resource: resource, user: _} do
+      {:ok, user} = second_user_fixture()
+      conn = get authenticated(conn, user), api_user_resource_path(conn, :show, resource.type, resource.name)
+      assert response(conn, :not_found)
+    end
 
-  # describe "delete resource" do
-  #   setup [:create_resource]
+    test "renders different data for different users when type and name are the same", %{conn: conn, resource: resource, user: user} do
+      {:ok, user2} = second_user_fixture()
+      conn = put authenticated(conn, user2), api_user_resource_path(conn, :create_or_update, resource.type, resource.name), resource: @update_attrs
+      assert %{"test2" => "test2"} = json_response(conn, :ok)["data"]
 
-  #   test "deletes chosen resource", %{conn: conn, resource: resource} do
-  #     conn = delete conn, resource_path(conn, :delete, resource)
-  #     assert response(conn, 204)
-  #     assert_error_sent 404, fn ->
-  #       get conn, resource_path(conn, :show, resource)
-  #     end
-  #   end
-  # end
+      conn = get authenticated(conn, user), api_user_resource_path(conn, :show, resource.type, resource.name)
+      assert %{"test" => "test"} = json_response(conn, :ok)["data"]
+    end
+  end
 
-  # defp create_resource(_) do
-  #   resource = fixture(:resource)
-  #   {:ok, resource: resource}
-  # end
+  describe "delete resource" do
+    setup [:create_user_and_resource]
+
+    test "deletes chosen resource", %{conn: conn, resource: resource, user: user} do
+      conn = delete authenticated(conn, user), api_user_resource_path(conn, :delete, resource.type, resource.name)
+      assert response(conn, :no_content)
+
+      conn = get authenticated(conn, user), api_user_resource_path(conn, :show, resource.type, resource.name)
+      assert response(conn, :not_found)
+    end
+
+    test "renders unauthorized when not authenticated", %{conn: conn, resource: resource, user: _} do
+      conn = get conn, api_user_resource_path(conn, :show, resource.type, resource.name)
+      assert response(conn, :unauthorized)
+    end
+
+    test "renders not found when authenticated as another user", %{conn: conn, resource: resource, user: _} do
+      {:ok, user} = second_user_fixture()
+      conn = delete authenticated(conn, user), api_user_resource_path(conn, :delete, resource.type, resource.name)
+      assert response(conn, :not_found)
+    end
+  end
+
+  @user_attrs %{
+    login: "test",
+    email: "peter.rudenko@gmail.com",
+    name: "name",
+    password: "some password"
+  }
+
+  @second_user_attrs %{
+    login: "second.test",
+    email: "second_test@gmail.com",
+    name: "name",
+    password: "some password"
+  }
+
+  defp create_user(_) do
+    {:ok, user} = Accounts.create_user(@user_attrs)
+    {:ok, user: user}
+  end
+
+  defp create_user_and_resource(_) do
+    {:ok, user} = Accounts.create_user(@user_attrs)
+    {:ok, resource} = Accounts.create_resource(%{@create_attrs | owner_id: user.id})
+    {:ok, resource: resource, user: user}
+  end
+
+  defp second_user_fixture() do
+    Accounts.create_user(@second_user_attrs)
+  end
+
+  defp authenticated(conn, user) do
+    {:ok, permissions} = Token.get_permissions_for(user)
+    {:ok, jwt, _claims} = Token.encode_and_sign(user, %{},
+      token_ttl: {1, :minute}, permissions: permissions)
+    conn |> recycle |> put_req_header("authorization", "Bearer #{jwt}")
+  end
 end
