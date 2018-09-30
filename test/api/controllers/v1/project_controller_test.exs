@@ -159,13 +159,13 @@ defmodule Api.V1.ProjectControllerTest do
 
   defp create_user_and_project(_) do
     {:ok, user} = Accounts.create_user(@user_attrs)
-    {:ok, project} = VersionControl.create_or_update_project(%{@project_attrs | author_id: user.id})
+    {:ok, project} = VersionControl.create_project(%{@project_attrs | author_id: user.id})
     {:ok, project: project, user: user}
   end
 
   defp create_revisions_tree(_) do
     {:ok, user} = Accounts.create_user(@user_attrs)
-    {:ok, project} = VersionControl.create_or_update_project(%{@project_attrs | author_id: user.id})
+    {:ok, project} = VersionControl.create_project(%{@project_attrs | author_id: user.id})
     {:ok, r1} = VersionControl.create_revision(%{@revision_attrs | id: "1", project_id: project.id})
     {:ok, r2} = VersionControl.create_revision(%{@revision_attrs | id: "2", project_id: project.id, parent_id: r1.id})
     {:ok, r3} = VersionControl.create_revision(%{@revision_attrs | id: "3", project_id: project.id, parent_id: r1.id})

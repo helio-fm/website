@@ -6,7 +6,6 @@ defmodule Db.VersionControl do
   import Ecto.Query, warn: false
   alias Db.Repo
 
-  alias Db.Accounts.User
   alias Db.VersionControl.Project
   alias Db.VersionControl.Revision
 
@@ -16,30 +15,30 @@ defmodule Db.VersionControl do
   def get_projects_for_user(user_id) do
     query = from p in Project,
       where: p.author_id == ^user_id,
-      select: struct(p, [:id, :author_id, :title, :alias, :head, :inserted_at, :updated_at])
+      select: p
     {:ok, Repo.all(query)}
   end
 
   @doc """
-  Gets a single project.
-
-  Raises `Ecto.NoResultsError` if the Project does not exist.
-
-  ## Examples
-
-      iex> get_project!(123)
-      %Project{}
-
-      iex> get_project!(456)
-      ** (Ecto.NoResultsError)
-
+  Gets a single project for a given user.
   """
-  def get_project!(id), do: Repo.get!(Project, id)
+  def get_project(id, user_id) do
+    query = from p in Project,
+      where: p.id == ^id and p.author_id == ^user_id,
+      select: p
+    case Repo.one(query) do
+      nil -> {:error, :project_not_found}
+      project -> {:ok, project}
+    end
+  end
 
-  def get_project_heads(id) do
+  @doc """
+  Gets all leaf revision for a given project.
+  """
+  def get_project_heads(%Project{} = project) do
     query = from r in Revision,
           left_join: child in Revision, on: r.id == child.parent_id,
-          where: r.project_id == ^id and is_nil(child.parent_id),
+          where: r.project_id == ^project.id and is_nil(child.parent_id),
           select: struct(r, [:id, :hash, :message, :parent_id])
     {:ok, Repo.all(query)}
   end
@@ -49,22 +48,27 @@ defmodule Db.VersionControl do
 
   ## Examples
 
-      iex> create_or_update_project(%{field: value})
+      iex> update_project(%{field: value})
       {:ok, %Project{}}
 
-      iex> create_or_update_project(%{field: bad_value})
+      iex> update_project(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_or_update_project(attrs \\ %{}) do
+  def update_project(attrs \\ %{}) do
     project = %Project{}
     cs = Project.changeset(project, attrs)
     title = Map.get(cs.changes, :title)
     slug = Map.get(cs.changes, :alias)
     head = Map.get(cs.changes, :head)
-    author_id = Map.get(cs.changes, :author_id)
-    on_conflict = [set: [title: title, alias: slug, head: head, author_id: author_id]]
+    on_conflict = [set: [title: title, alias: slug, head: head]]
     Repo.insert(cs, on_conflict: on_conflict, conflict_target: [:id])
+  end
+
+  def create_project(attrs \\ %{}) do
+    %Project{}
+    |> Project.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -99,20 +103,18 @@ defmodule Db.VersionControl do
   end
 
   @doc """
-  Gets a single revision.
-
-  Raises `Ecto.NoResultsError` if the Revision does not exist.
-
-  ## Examples
-
-      iex> get_revision!(123)
-      %Revision{}
-
-      iex> get_revision!(456)
-      ** (Ecto.NoResultsError)
-
+  Gets a single revision which belongs to the project of a given user.
   """
-  def get_revision!(id), do: Repo.get!(Revision, id)
+  def get_revision(id, user_id) do
+    query = from r in Revision,
+      left_join: p in Project, on: p.id == r.project_id,
+      where: r.id == ^id and p.author_id == ^user_id,
+      select: r
+    case Repo.one(query) do
+      nil -> {:error, :revision_not_found}
+      revision -> {:ok, revision}
+    end
+  end
 
   @doc """
   Creates a revision.

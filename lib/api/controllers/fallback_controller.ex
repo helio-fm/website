@@ -25,6 +25,8 @@ defmodule Api.FallbackController do
   def call(conn, {:error, :session_not_found}), do: not_found(conn, "session not found")
   def call(conn, {:error, :client_not_found}), do: not_found(conn, "client not found")
   def call(conn, {:error, :resource_not_found}), do: not_found(conn, "resource not found")
+  def call(conn, {:error, :project_not_found}), do: not_found(conn, "project not found")
+  def call(conn, {:error, :revision_not_found}), do: not_found(conn, "revision not found")
 
   defp login_failed(conn, message) do
     conn

@@ -176,7 +176,7 @@ defmodule Db.AccountsTest do
         %{owner_id: user.id}
         |> Enum.into(attrs)
         |> Enum.into(@valid_attrs)
-        |> Accounts.create_or_update_resource()
+        |> Accounts.create_resource()
 
       {resource, user}
     end
@@ -206,12 +206,12 @@ defmodule Db.AccountsTest do
       assert resource2.data == nil
     end
 
-    test "create_or_update_resource/1 with valid data updates a resource" do
+    test "update_resource/1 with valid data updates a resource" do
       {resource, user} = resource_fixture()
       updated_data = %{hotkeyScheme: "test"}
       conflict_attrs = %{owner_id: user.id, data: updated_data} |> Enum.into(@valid_attrs)
 
-      assert {:ok, %Resource{} = resource2} = Accounts.create_or_update_resource(conflict_attrs)
+      assert {:ok, %Resource{} = resource2} = Accounts.update_resource(conflict_attrs)
       assert resource2.owner_id == resource.owner_id
       assert resource2.type == resource.type
       assert resource2.name == resource.name
@@ -220,8 +220,8 @@ defmodule Db.AccountsTest do
       assert resource2.hash != nil
     end
 
-    test "create_or_update_resource/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_or_update_resource(@invalid_attrs)
+    test "update_resource/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_resource(@invalid_attrs)
     end
 
     test "delete_resource/1 deletes the resource" do

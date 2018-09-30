@@ -1,6 +1,8 @@
 defmodule Api.V1.UserResourceControllerTest do
   use Api.ConnCase
 
+  # TODO permissions tests
+
   # alias Db.Accounts
   # alias Db.Accounts.Resource
 

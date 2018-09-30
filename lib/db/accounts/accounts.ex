@@ -221,18 +221,9 @@ defmodule Db.Accounts do
   end
 
   @doc """
-  Creates or updates a resource.
-
-  ## Examples
-
-      iex> create_or_update_resource(%{field: value})
-      {:ok, %Resource{}}
-
-      iex> create_or_update_resource(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
+  Updates a resource.
   """
-  def create_or_update_resource(attrs \\ %{}) do
+  def update_resource(attrs \\ %{}) do
     changeset = Resource.changeset(%Resource{}, attrs)
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{data: data, hash: hash}} ->
@@ -242,6 +233,12 @@ defmodule Db.Accounts do
       _ ->
         {:error, changeset}
     end
+  end
+
+  def create_resource(attrs \\ %{}) do
+    %Resource{}
+    |> Resource.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """

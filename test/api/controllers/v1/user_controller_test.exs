@@ -41,9 +41,9 @@ defmodule Api.V1.UserControllerTest do
       resource1_attrs = %{owner_id: user.id, data: %{}, type: "script", name: "test 3"}
       resource2_attrs = %{owner_id: user.id, data: %{}, type: "arp", name: "test 1"}
       resource3_attrs = %{owner_id: user.id, data: %{}, type: "arp", name: "test 2"}
-      {:ok, _resource1} = Accounts.create_or_update_resource(resource1_attrs)
-      {:ok, _resource2} = Accounts.create_or_update_resource(resource2_attrs)
-      {:ok, _resource3} = Accounts.create_or_update_resource(resource3_attrs)
+      {:ok, _resource1} = Accounts.create_resource(resource1_attrs)
+      {:ok, _resource2} = Accounts.create_resource(resource2_attrs)
+      {:ok, _resource3} = Accounts.create_resource(resource3_attrs)
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
       assert [%{"type" => "arp", "name" => "test 1", "hash" => _, "updatedAt" => _},
         %{"type" => "arp", "name" => "test 2", "hash" => _, "updatedAt" => _},
@@ -52,7 +52,7 @@ defmodule Api.V1.UserControllerTest do
 
     test "renders existing projects within valid profile", %{conn: conn, user: user} do
       project_attrs = %{author_id: user.id, id: "some-id", alias: "some-alias", title: "some-title"}
-      {:ok, _project} = VersionControl.create_or_update_project(project_attrs)
+      {:ok, _project} = VersionControl.create_project(project_attrs)
       conn = get authenticated(conn, user), api_user_profile_path(conn, :get_current_user)
       assert [%{"id" => "some-id",
         "title" => "some-title",
