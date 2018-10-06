@@ -5,13 +5,13 @@ defmodule Api.V1.UserResourceControllerTest do
   alias Api.Auth.Token
 
   @create_attrs %{
-    data: %{ test: "test" },
+    data: %{test: "test"},
     name: "some name",
     type: "some type",
     owner_id: nil}
 
   @update_attrs %{
-    data: %{ test2: "test2" },
+    data: %{test2: "test2"},
     name: "some name",
     type: "some type",
     owner_id: nil}
