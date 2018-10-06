@@ -3,41 +3,50 @@ defmodule Api.ProjectController do
 
   alias Db.VersionControl
   alias Db.VersionControl.Project
+  alias Api.Auth.Token
 
   action_fallback Api.FallbackController
 
   def summary(conn, %{"id" => id}) do
-    project = VersionControl.get_project!(id)
-    conn |> put_status(:ok) |> render("show.v1.json", project: project)
+    with user_id <- Token.current_subject(conn),
+         {:ok, project} <- VersionControl.get_project(id, user_id),
+      do: conn |> put_status(:ok) |> render("show.v1.json", project: project)
   end
 
   def heads(conn, %{"id" => id}) do
-    with {:ok, heads} <- VersionControl.get_project_heads(id) do
-      conn
-      |> put_status(:ok)
-      |> render("show.heads.v1.json", heads: heads)
+    with user_id <- Token.current_subject(conn),
+         {:ok, project} <- VersionControl.get_project(id, user_id),
+         {:ok, heads} <- VersionControl.get_project_heads(project),
+      do: conn |> put_status(:ok) |> render("show.heads.v1.json", heads: heads)
+  end
+
+  def create_or_update(conn, %{"id" => id, "project" => params}) do
+    params = params |> Map.put("id", id)
+    with user_id <- Token.current_subject(conn),
+         attrs <- Map.put(params, "author_id", user_id),
+         {:ok, %Project{} = project} <- create_or_update_project(id, user_id, attrs),
+      do: conn |> put_status(:ok) |> render("show.v1.json", project: project)
+  end
+
+  defp create_or_update_project(id, user_id, attrs) do
+    with {:ok, %Project{}} <- VersionControl.get_project(id, user_id) do
+      VersionControl.update_project(attrs)
+    else
+      {:error, :project_not_found} ->
+        VersionControl.create_project(attrs)
     end
   end
 
-  plug Guardian.Plug.LoadResource, ensure: true
-
-  def create_or_update(conn, %{"id" => id, "project" => project_params}) do
-    project_params = Map.put(project_params, "id", id)
-    with user <- Guardian.Plug.current_resource(conn),
-         attrs <- Map.put(project_params, "author_id", user.id),
-         {:ok, %Project{} = project} <- VersionControl.create_or_update_project(attrs) do
-      conn
-      |> put_status(:ok)
-      |> render("show.v1.json", project: project)
-    end
+  def delete(conn, %{"id" => id}) do
+    with user_id <- Token.current_subject(conn),
+         {:ok, project} <- VersionControl.get_project(id, user_id),
+         {:ok, %Project{}} <- VersionControl.delete_project(project),
+      do: conn |> send_resp(:no_content, "")
   end
 
   def index(conn, %{}) do
-    with user <- Guardian.Plug.current_resource(conn),
-         {:ok, projects} <- VersionControl.get_projects_for_user(user) do
-      conn
-      |> put_status(:ok)
-      |> render("index.v1.json", projects: projects)
-    end
+    with user_id <- Token.current_subject(conn),
+         {:ok, projects} <- VersionControl.get_projects_for_user(user_id),
+      do: conn |> put_status(:ok) |> render("index.v1.json", projects: projects)
   end
 end

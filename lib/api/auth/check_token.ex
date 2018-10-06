@@ -12,5 +12,5 @@ defmodule Api.Auth.CheckToken do
 
   # We want stateless authentication, so no user is loaded from DB at this point.
   # Any controller that needs current_resource(conn) should LoadResource explicitly.
-  # plug Guardian.Plug.LoadResource, ensure: true
+  # plug Guardian.Plug.LoadResource
 end

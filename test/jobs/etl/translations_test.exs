@@ -87,14 +87,15 @@ Plural forms:,,,,,
       {:ok, resource_map} = Translations.transform(@valid_imported_csv)
       assert resource_map.data == @valid_translations_map
       assert resource_map.app_name == "helio"
-      assert resource_map.resource_name == "translations"
-      assert resource_map.hash != ""
+      assert resource_map.type == "translations"
     end
 
     test "the resource is created after GenServer.call" do
       {:reply, _resource, _state} = Translations.handle_call(:process, :from, :state)
-      users = Resource |> Repo.all
-      assert Enum.count(users) == 1
+      resources = Resource |> Repo.all
+      assert Enum.count(resources) == 1
+      resource = List.first(resources)
+      assert resource.hash != nil
     end
   end
 end

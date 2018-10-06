@@ -1,6 +1,7 @@
 defmodule Api.V1.ClientAppControllerTest do
   use Api.ConnCase
 
+  alias Db.Clients
   alias Db.Accounts.User
   alias Api.Auth.Token
 
@@ -25,16 +26,6 @@ defmodule Api.V1.ClientAppControllerTest do
   @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
 
   describe "get client info" do
-    test "lists all apps", %{conn: conn} do
-      conn = get authenticated(conn), api_client_app_path(conn, :index)
-      assert json_response(conn, 200)["data"] == []
-    end
-
-    test "renders error on unauthenticated request to lists all apps", %{conn: conn} do
-      conn = get conn, api_client_app_path(conn, :index)
-      assert response(conn, 401)
-    end
-
     test "renders error on unauthenticated request to get client info", %{conn: conn} do
       conn = get conn, api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert response(conn, 401)
@@ -49,20 +40,23 @@ defmodule Api.V1.ClientAppControllerTest do
   describe "create app versions" do
     test "renders client info when data is valid", %{conn: conn} do
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @create_attrs
-      assert json_response(conn, 200)["data"] != %{}
+      assert json_response(conn, 200)["clientApp"] != %{}
 
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
-      assert json_response(conn, 200)["data"] != %{}
+      assert json_response(conn, 200)["clientApp"] != %{}
+
+      conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
+
+      Clients.create_or_update_resource(%{app_name: @create_attrs.app_name, data: %{}, type: "some type"})
 
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
-      assert json_response(conn, 200)["data"] == %{
-        "resourceInfo" => [],
-        "versionInfo" => [%{"link" => "some link",
+      assert %{"resources" => [%{"type" => "some type", "hash" => _}],
+        "versions" => [%{"link" => "some link",
           "platformId" => "some platform_id",
           "version" => "some version"},
           %{"link" => "some link",
           "platformId" => "some platform_id 2",
-          "version" => "some version"}]}
+          "version" => "some version"}]} = json_response(conn, 200)["clientApp"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -74,15 +68,15 @@ defmodule Api.V1.ClientAppControllerTest do
   describe "update exisitng app version" do
     test "renders client info when data is valid", %{conn: conn} do
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @create_attrs
-      assert json_response(conn, 200)["data"] != %{}
+      assert json_response(conn, 200)["clientApp"] != %{}
 
       conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @update_attrs
-      assert json_response(conn, 200)["data"] != %{}
+      assert json_response(conn, 200)["clientApp"] != %{}
 
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
-      assert json_response(conn, 200)["data"] == %{
-        "resourceInfo" => [],
-        "versionInfo" => [%{
+      assert json_response(conn, 200)["clientApp"] == %{
+        "resources" => [],
+        "versions" => [%{
           "link" => "some updated link",
           "platformId" => "some platform_id",
           "version" => "some updated version"}]}

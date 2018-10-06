@@ -47,4 +47,9 @@ defmodule Api.Auth.Token do
       |> Map.drop(["jti", "aud", "iat", "nbf"]) # at the moment, these fields are not used anywhere
     {:ok, claims}
   end
+
+  def current_subject(conn) do
+    claims = Guardian.Plug.current_claims(conn)
+    claims["sub"]
+  end
 end

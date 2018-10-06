@@ -22,7 +22,7 @@ defmodule Api.Router do
     pipe_through :api
 
     # username/password registration and login;
-    # I wonder if there should be the only way to signup via Github
+    # I wonder if the only available way to sign up should be via Github
     if Mix.env == :test do
       post "/join", RegistrationController, :sign_up, as: :signup
       post "/login", SessionController, :sign_in, as: :login
@@ -33,7 +33,7 @@ defmodule Api.Router do
     scope "/clients", as: :client do
       pipe_through :clients
       get "/:app/info", ClientAppController, :get_client_info, as: :app_info
-      get "/:app/:resource", ClientResourceController, :get_client_resource, as: :resource
+      get "/:app/:resource", ClientAppResourceController, :get_client_resource, as: :resource
 
       # initialize web authentication via, say, Github:
       # creates a new Clients.AuthSession and returns its id, secret key and browser url
@@ -47,39 +47,52 @@ defmodule Api.Router do
       post "/:app/auth/check", AuthSessionController, :finalise_client_auth_session, as: :auth_finalise
 
       pipe_through :authenticated
-      post "/:app/:resource/update", ClientResourceController, :update_client_resource, as: :resource_update
+      post "/:app/:resource/update", ClientAppResourceController, :update_client_resource, as: :resource_update
       post "/", ClientAppController, :create_or_update, as: :app
-      get "/", ClientAppController, :index, as: :app
     end
 
     # restrict unauthenticated access for routes below
     pipe_through :authenticated
 
-    # my profile and some users admin endpoints
-    get "/me", UserController, :get_current_user, as: :user
-    resources "/users", UserController, only: [:index, :delete], as: :user
+    scope "/my", as: :user do
+      # returns the logged in user's profile, including all active sessions
+      # the summary of available resources (similar to client app info, not including resource data),
+      # and the summary of existing projects (identical to get /vcs/projects)
+      get "/profile", UserController, :get_current_user, as: :profile
 
-    # this endpoint provides a kind of a sliding session:
-    # first, it checks for a token, that is
-    #   1) valid and unexpired,
-    #   2) present in active_sessions for a given device id;
-    # if passed, it issues a new token and saves it a related active session
-    # (there can be only one session per user and device id),
-    # so that if user runs the app, say, at least once a week, his session won't expire
-    # (and if the token is compromised/stolen, the user's session won't be prolonged,
-    # eventually forcing him to re-login, and thus invalidating attacker's session);
-    # and, although re-issuing a token is stateful, authentication is still stateless and fast
-    post "/reauth", SessionController, :refresh_token, as: :relogin
+      delete "/sessions/:device_id", SessionController, :delete, as: :session
 
-    # a simple authentication check (mainly used in tests)
-    get "/session-status", SessionController, :is_authenticated, as: :session_status
+      # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
+      get "/resources/:type/:name", UserResourceController, :show, as: :resource
+      put "/resources/:type/:name", UserResourceController, :create_or_update, as: :resource
+      delete "/resources/:type/:name", UserResourceController, :delete, as: :resource
+    end
 
+    scope "/session", as: :session do
+      # this endpoint provides a kind of a sliding session:
+      # first, it checks for a token, that is
+      #   1) valid and unexpired,
+      #   2) present in active sessions for a given device id;
+      # if passed, it issues a new token and saves it in the related active session
+      # (there can be only one session per user and device id),
+      # so that if user runs the app, say, at least once a week, his session won't expire
+      # (and if the token is compromised/stolen, the user's session won't be prolonged,
+      # eventually forcing him to re-login, and thus invalidating attacker's session);
+      # and, although re-issuing a token is stateful, authentication is still stateless and fast
+      post "/update", SessionController, :refresh_token, as: :update
+
+      # a simple authentication check (mainly used in tests)
+      get "/status", SessionController, :is_authenticated, as: :status
+    end
+
+    # version control stuff
     scope "/vcs", as: :vcs do
       scope "/projects" do
         get "/", ProjectController, :index
         get "/:id", ProjectController, :summary
         get "/:id/heads", ProjectController, :heads
         put "/:id", ProjectController, :create_or_update
+        delete "/:id", ProjectController, :delete
       end
 
       scope "/revisions" do

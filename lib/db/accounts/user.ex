@@ -24,8 +24,6 @@ defmodule Db.Accounts.User do
     field :location, :string
     field :github_uid, :string
 
-    has_many :active_sessions, Session
-
     timestamps(type: :utc_datetime)
   end
 
@@ -105,7 +103,7 @@ defmodule Db.Accounts.User do
           where: s.device_id == ^device_id and s.token == ^token,
           select: struct(u, [:id, :login, :email])
     case Repo.one(query) do
-      nil -> {:error, :session_not_found}
+      nil -> {:error, :invalid_session}
       user -> {:ok, user}
     end
   end

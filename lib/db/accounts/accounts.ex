@@ -131,28 +131,25 @@ defmodule Db.Accounts do
   Returns the list of sessions info for a given user.
   Tokens are not included.
   """
-  def get_sessions_for_user(%User{} = user) do
+  def get_sessions_for_user(user_id) do
     query = from s in Session,
-      where: s.user_id == ^user.id,
-      select: struct(s, [:platform_id, :inserted_at, :updated_at])
+      where: s.user_id == ^user_id,
+      select: struct(s, [:platform_id, :device_id, :inserted_at, :updated_at])
     {:ok, Repo.all(query)}
   end
 
   @doc """
-  Gets a single session.
-
-  Raises `Ecto.NoResultsError` if the Session does not exist.
-
-  ## Examples
-
-      iex> get_session!(123)
-      %Session{}
-
-      iex> get_session!(456)
-      ** (Ecto.NoResultsError)
-
+  Gets a single session id for a given user and device.
   """
-  def get_session!(id), do: Repo.get!(Session, id)
+  def get_user_session_for_device(user_id, device_id) do
+    query = from s in Session,
+      where: s.user_id == ^user_id and s.device_id == ^device_id,
+      select: struct(s, [:id])
+    case Repo.one(query) do
+      nil -> {:error, :session_not_found}
+      session -> {:ok, session}
+    end
+  end
 
   @doc """
   Creates or updates a session.
@@ -192,5 +189,71 @@ defmodule Db.Accounts do
   """
   def delete_session(%Session{} = session) do
     Repo.delete(session)
+  end
+
+
+  alias Db.Accounts.Resource
+
+  @doc """
+  Gets all resources of a given type for a user, data is not included.
+  """
+
+  def get_resources_brief_for_user(user_id) do
+    query = from r in Resource,
+      where: r.owner_id == ^user_id,
+      select: struct(r, [:type, :name, :hash]),
+      order_by: [:type, :name]
+    {:ok, Repo.all(query)}
+  end
+
+  @doc """
+  Gets full info of a single resource for a given user.
+  """
+
+  def get_resource_for_user(user_id, resource_type, resource_name) do
+    query = from r in Resource,
+      where: r.owner_id == ^user_id and r.type == ^resource_type and r.name == ^resource_name,
+      select: r
+    case Repo.one(query) do
+      nil -> {:error, :resource_not_found}
+      resource -> {:ok, resource}
+    end
+  end
+
+  @doc """
+  Updates a resource.
+  """
+  def update_resource(attrs \\ %{}) do
+    changeset = Resource.changeset(%Resource{}, attrs)
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{data: data, hash: hash}} ->
+        Repo.insert(changeset,
+          on_conflict: [set: [data: data, hash: hash]],
+          conflict_target: [:owner_id, :type, :name])
+      _ ->
+        {:error, changeset}
+    end
+  end
+
+  def create_resource(attrs \\ %{}) do
+    %Resource{}
+    |> Resource.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Deletes a Resource.
+
+  ## Examples
+
+      iex> delete_resource(resource)
+      {:ok, %Resource{}}
+
+      iex> delete_resource(resource)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_resource(%Resource{} = resource) do
+    Repo.delete(resource)
   end
 end

@@ -1,12 +1,13 @@
-defmodule Db.Clients.Resource do
+defmodule Db.Accounts.Resource do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Db.Clients.Resource
+  alias Db.Accounts.Resource
   @moduledoc false
 
-  schema "app_resources" do
-    field :app_name, :string
+  schema "user_resources" do
+    field :owner_id, :binary_id
     field :type, :string
+    field :name, :string
     field :hash, :string
     field :data, :map
 
@@ -16,10 +17,9 @@ defmodule Db.Clients.Resource do
   @doc false
   def changeset(%Resource{} = resource, attrs) do
     resource
-    |> cast(attrs, [:type, :app_name, :data])
-    |> validate_required([:type, :app_name, :data])
-    |> unique_constraint(:type)
-    |> unique_constraint(:type, name: :app_resources_one_type_per_app)
+    |> cast(attrs, [:type, :name, :data, :owner_id])
+    |> validate_required([:type, :name, :data, :owner_id])
+    |> unique_constraint(:name, name: :user_resources_one_name_per_user)
     |> generate_hash_by_data
   end
 
@@ -34,5 +34,5 @@ defmodule Db.Clients.Resource do
 
   def hash(attrs \\ %{}) do
     Base.encode16(:erlang.md5(:erlang.term_to_binary(attrs)), case: :lower)
-  end
+  end  
 end
