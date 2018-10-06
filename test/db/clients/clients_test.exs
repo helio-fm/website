@@ -64,22 +64,25 @@ defmodule Db.ClientsTest do
   end
 
   describe "apps" do
-    alias Db.Clients.App
+    alias Db.Clients.AppVersion
 
     @valid_attrs %{
       app_name: "some app_name",
-      link: "some link",
-      platform_id: "some platform_id",
-      version: "some version"
+      platform_type: "platform_type",
+      build_type: "portable",
+      branch: "stable",
+      architecture: "all",
+      version: "2.0",
+      link: "some link"
     }
 
-    @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
+    @invalid_attrs %{app_name: nil, link: nil, platform_type: nil, version: nil}
 
     def app_fixture(attrs \\ %{}) do
       {:ok, app} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Clients.create_or_update_app()
+        |> Clients.create_or_update_app_version()
 
       app
     end
@@ -89,39 +92,39 @@ defmodule Db.ClientsTest do
       assert Clients.list_apps() == [app]
     end
 
-    test "get_clients_by_name!/1 returns the app with given name" do
+    test "get_app_versions_by_name!/1 returns the app with given name" do
       app = app_fixture()
-      {:ok, apps} = Clients.get_clients_by_name(app.app_name)
+      {:ok, apps} = Clients.get_app_versions_by_name(app.app_name)
       app2 = List.first(apps)
-      assert app2.platform_id == app.platform_id
+      assert app2.platform_type == app.platform_type
       assert app2.version == app.version
       assert app2.link == app.link
     end
 
-    test "create_or_update_app/1 with valid data creates and updates a app" do
-      assert {:ok, %App{} = app} = Clients.create_or_update_app(@valid_attrs)
+    test "create_or_update_app_version/1 with valid data creates and updates a app" do
+      assert {:ok, %AppVersion{} = app} = Clients.create_or_update_app_version(@valid_attrs)
       assert app.app_name == "some app_name"
       assert app.link == "some link"
-      assert app.platform_id == "some platform_id"
-      assert app.version == "some version"
+      assert app.platform_type == "platform_type"
+      assert app.version == "2.0"
 
-      conflict_attrs = %{@valid_attrs | link: "some updated link", version: "some updated version"}
+      conflict_attrs = %{@valid_attrs | link: "some updated link", version: "3.0"}
 
-      assert {:ok, %App{} = app2} = Clients.create_or_update_app(conflict_attrs)
+      assert {:ok, %AppVersion{} = app2} = Clients.create_or_update_app_version(conflict_attrs)
       assert app2.app_name == app.app_name
-      assert app2.platform_id == app.platform_id
-      assert app2.version == "some updated version"
+      assert app2.platform_type == app.platform_type
+      assert app2.version == "3.0"
       assert app2.link == "some updated link"
     end
 
-    test "create_or_update_app/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Clients.create_or_update_app(@invalid_attrs)
+    test "create_or_update_app_version/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Clients.create_or_update_app_version(@invalid_attrs)
     end
 
     test "delete_app/1 deletes the app" do
       app = app_fixture()
-      assert {:ok, %App{}} = Clients.delete_app(app)
-      assert {:error, :client_not_found} = Clients.get_clients_by_name(app.app_name)
+      assert {:ok, %AppVersion{}} = Clients.delete_app_version(app)
+      assert {:error, :client_not_found} = Clients.get_app_versions_by_name(app.app_name)
      end
   end
 

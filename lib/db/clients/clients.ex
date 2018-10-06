@@ -71,7 +71,7 @@ defmodule Db.Clients do
     Repo.delete(resource)
   end
 
-  alias Db.Clients.App
+  alias Db.Clients.AppVersion
 
   @doc """
   Returns the list of apps.
@@ -83,7 +83,7 @@ defmodule Db.Clients do
 
   """
   def list_apps do
-    Repo.all(App)
+    Repo.all(AppVersion)
   end
 
   @doc """
@@ -91,24 +91,24 @@ defmodule Db.Clients do
 
   ## Examples
 
-      iex> get_clients_by_name("helio")
-      %App{}
+      iex> get_app_versions_by_name("helio")
+      %AppVersion{}
 
-      iex> get_clients_by_name("test")
+      iex> get_app_versions_by_name("test")
       {:error, :client_not_found}
 
   """
-  def get_clients_by_name(app_name) do
-    query = from a in App,
+  def get_app_versions_by_name(app_name) do
+    query = from a in AppVersion,
           where: a.app_name == ^app_name,
-          select: struct(a, [:platform_id, :version, :link])
+          select: a
     case Repo.all(query) do
       [] -> {:error, :client_not_found}
       apps -> {:ok, apps}
     end
   end
 
-  def get_clients_resources_info(app_name) do
+  def get_resources_info(app_name) do
     query = from r in Resource,
       where: r.app_name == ^app_name,
       select: struct(r, [:hash, :type])
@@ -120,37 +120,37 @@ defmodule Db.Clients do
 
   ## Examples
 
-      iex> create_or_update_app(%{field: value})
+      iex> create_or_update_app_version(%{field: value})
       {:ok, %App{}}
 
-      iex> create_or_update_app(%{field: bad_value})
+      iex> create_or_update_app_version(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_or_update_app(attrs \\ %{}) do
-    app = %App{}
-    changeset = App.changeset(app, attrs)
+  def create_or_update_app_version(attrs \\ %{}) do
+    app = %AppVersion{}
+    changeset = AppVersion.changeset(app, attrs)
     link = Map.get(changeset.changes, :link)
     version = Map.get(changeset.changes, :version)
     on_conflict = [set: [link: link, version: version]]
-    conflict_target = [:app_name, :platform_id]
+    conflict_target = [:app_name, :platform_type, :build_type, :branch, :architecture]
     Repo.insert(changeset, on_conflict: on_conflict, conflict_target: conflict_target)
   end
 
 
   @doc """
-  Deletes a App.
+  Deletes a app version.
 
   ## Examples
 
-      iex> delete_app(app)
-      {:ok, %App{}}
+      iex> delete_app_version(app)
+      {:ok, %AppVersion{}}
 
-      iex> delete_app(app)
+      iex> delete_app_version(app)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_app(%App{} = app) do
+  def delete_app_version(%AppVersion{} = app) do
     Repo.delete(app)
   end
 

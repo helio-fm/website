@@ -11,19 +11,25 @@ defmodule Api.V1.ClientAppControllerTest do
 
   @create_attrs %{
     app_name: "some app_name",
+    build_type: "portable",
+    branch: "stable",
+    architecture: "all",
     link: "some link",
-    platform_id: "some platform_id",
-    version: "some version"
+    platform_type: "platform_type",
+    version: "2.0"
   }
 
   @update_attrs %{
     app_name: "some app_name",
+    build_type: "portable",
+    branch: "stable",
+    architecture: "all",
     link: "some updated link",
-    platform_id: "some platform_id",
-    version: "some updated version"
+    platform_type: "platform_type",
+    version: "2.1"
   }
 
-  @invalid_attrs %{app_name: nil, link: nil, platform_id: nil, version: nil}
+  @invalid_attrs %{app_name: nil, link: nil, platform_type: nil, version: nil}
 
   describe "get client info" do
     test "renders error on unauthenticated request to get client info", %{conn: conn} do
@@ -39,47 +45,45 @@ defmodule Api.V1.ClientAppControllerTest do
 
   describe "create app versions" do
     test "renders client info when data is valid", %{conn: conn} do
-      conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @create_attrs
+      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: @create_attrs
       assert json_response(conn, 200)["clientApp"] != %{}
 
-      conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
+      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: %{@create_attrs | platform_type: "platform_type 2"}
       assert json_response(conn, 200)["clientApp"] != %{}
 
-      conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: %{@create_attrs | platform_id: "some platform_id 2"}
+      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: %{@create_attrs | platform_type: "platform_type 2"}
 
       Clients.create_or_update_resource(%{app_name: @create_attrs.app_name, data: %{}, type: "some type"})
 
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert %{"resources" => [%{"type" => "some type", "hash" => _}],
         "versions" => [%{"link" => "some link",
-          "platformId" => "some platform_id",
-          "version" => "some version"},
+          "platformType" => "platform_type",
+          "version" => "2.0"},
           %{"link" => "some link",
-          "platformId" => "some platform_id 2",
-          "version" => "some version"}]} = json_response(conn, 200)["clientApp"]
+          "platformType" => "platform_type 2",
+          "version" => "2.0"}]} = json_response(conn, 200)["clientApp"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @invalid_attrs
+      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
   describe "update exisitng app version" do
     test "renders client info when data is valid", %{conn: conn} do
-      conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @create_attrs
+      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: @create_attrs
       assert json_response(conn, 200)["clientApp"] != %{}
 
-      conn = post authenticated(conn), api_client_app_path(conn, :create_or_update), app: @update_attrs
+      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: @update_attrs
       assert json_response(conn, 200)["clientApp"] != %{}
 
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
-      assert json_response(conn, 200)["clientApp"] == %{
-        "resources" => [],
-        "versions" => [%{
+      assert %{"resources" => [], "versions" => [%{
           "link" => "some updated link",
-          "platformId" => "some platform_id",
-          "version" => "some updated version"}]}
+          "platformType" => "platform_type",
+          "version" => "2.1"}]} = json_response(conn, 200)["clientApp"]
     end
   end
 

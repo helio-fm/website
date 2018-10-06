@@ -14,7 +14,7 @@ defmodule Web.HelioClientPageController do
         header -> header |> List.first
     end
 
-    clients = case Clients.get_clients_by_name("helio") do
+    clients = case Clients.get_app_versions_by_name("helio") do
         {:ok, clients_info} -> clients_info
         _ -> []
     end

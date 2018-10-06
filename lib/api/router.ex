@@ -33,7 +33,7 @@ defmodule Api.Router do
     scope "/clients", as: :client do
       pipe_through :clients
       get "/:app/info", ClientAppController, :get_client_info, as: :app_info
-      get "/:app/:resource", ClientAppResourceController, :get_client_resource, as: :resource
+      get "/:app/:resource", ClientAppController, :get_client_resource, as: :resource
 
       # initialize web authentication via, say, Github:
       # creates a new Clients.AuthSession and returns its id, secret key and browser url
@@ -47,8 +47,8 @@ defmodule Api.Router do
       post "/:app/auth/check", AuthSessionController, :finalise_client_auth_session, as: :auth_finalise
 
       pipe_through :authenticated
-      post "/:app/:resource/update", ClientAppResourceController, :update_client_resource, as: :resource_update
-      post "/", ClientAppController, :create_or_update, as: :app
+      post "/:app/:resource/update", ClientAppController, :update_client_resource, as: :resource_update
+      post "/", ClientAppController, :update_app_version, as: :app_version
     end
 
     # restrict unauthenticated access for routes below
