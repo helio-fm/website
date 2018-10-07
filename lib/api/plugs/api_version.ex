@@ -15,6 +15,7 @@ defmodule Api.Plugs.APIVersion do
   defp _call(conn, {:ok, [version]}) do
     assign(conn, :version, version)
   end
+
   defp _call(conn, _) do
     conn |> send_resp(404, "Not Found") |> halt()
   end

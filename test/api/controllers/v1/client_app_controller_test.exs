@@ -10,7 +10,7 @@ defmodule Api.V1.ClientAppControllerTest do
   end
 
   @create_attrs %{
-    app_name: "some app_name",
+    app_name: "helio",
     build_type: "portable",
     branch: "stable",
     architecture: "all",
@@ -20,7 +20,7 @@ defmodule Api.V1.ClientAppControllerTest do
   }
 
   @update_attrs %{
-    app_name: "some app_name",
+    app_name: "helio",
     build_type: "portable",
     branch: "stable",
     architecture: "all",
@@ -38,7 +38,7 @@ defmodule Api.V1.ClientAppControllerTest do
     end
 
     test "renders error on request to get info for unknown client", %{conn: conn} do
-      conn = get client(conn), api_client_app_info_path(conn, :get_client_info, "not found")
+      conn = get client(conn, "noname"), api_client_app_info_path(conn, :get_client_info, "noname")
       assert response(conn, 404)
     end
   end
@@ -94,12 +94,12 @@ defmodule Api.V1.ClientAppControllerTest do
     conn
       |> recycle
       |> put_req_header("authorization", "Bearer #{jwt}")
-      |> put_req_header("client", "helio")
+      |> put_req_header("user-agent", "helio")
   end
 
-  defp client(conn) do
+  defp client(conn, client \\ "Helio") do
     conn
       |> recycle
-      |> put_req_header("client", "helio")
+      |> put_req_header("user-agent", client)
   end
 end

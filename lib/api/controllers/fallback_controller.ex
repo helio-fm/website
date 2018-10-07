@@ -18,17 +18,18 @@ defmodule Api.FallbackController do
     |> render(Api.ErrorView, :"404")
   end
 
-  def call(conn, {:error, :login_failed}), do: login_failed(conn, "authentication failed")
-  def call(conn, {:error, :login_not_found}), do: login_failed(conn, "authentication failed, login not found")
-  def call(conn, {:error, :session_update_failed}), do: login_failed(conn, "failed to re-issue a token")
-  def call(conn, {:error, :invalid_session}), do: login_failed(conn, "failed to re-issue a token, no valid session")
+  def call(conn, {:error, :login_failed}), do: unauthorized(conn, "authentication failed")
+  def call(conn, {:error, :login_not_found}), do: unauthorized(conn, "authentication failed, login not found")
+  def call(conn, {:error, :session_update_failed}), do: unauthorized(conn, "failed to re-issue a token")
+  def call(conn, {:error, :invalid_session}), do: unauthorized(conn, "failed to re-issue a token, no valid session")
   def call(conn, {:error, :session_not_found}), do: not_found(conn, "session not found")
   def call(conn, {:error, :client_not_found}), do: not_found(conn, "client not found")
   def call(conn, {:error, :resource_not_found}), do: not_found(conn, "resource not found")
   def call(conn, {:error, :project_not_found}), do: not_found(conn, "project not found")
   def call(conn, {:error, :revision_not_found}), do: not_found(conn, "revision not found")
+  def call(conn, {:error, :user_agent_mismatch}), do: unauthorized(conn, "user agent mismatch")
 
-  defp login_failed(conn, message) do
+  defp unauthorized(conn, message) do
     conn
     |> put_status(:unauthorized)
     |> render(Api.ErrorView, "error.json", status: :unauthorized, message: message)

@@ -10,10 +10,6 @@ defmodule Api.Router do
     plug Api.Plugs.CamelCaseDecoder
   end
 
-  pipeline :clients do
-    plug Api.Auth.CheckClient
-  end
-
   pipeline :authenticated do
     plug Api.Auth.CheckToken
   end
@@ -31,7 +27,6 @@ defmodule Api.Router do
     # some stuff for specific client apps
     # e.g. `/api/v1/clients/helio/translations`
     scope "/clients", as: :client do
-      pipe_through :clients
       get "/:app/info", ClientAppController, :get_client_info, as: :app_info
       get "/:app/:resource", ClientAppController, :get_client_resource, as: :resource
 

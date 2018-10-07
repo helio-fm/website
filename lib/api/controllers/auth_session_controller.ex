@@ -4,14 +4,16 @@ defmodule Api.AuthSessionController do
 
   alias Db.Clients
   alias Db.Clients.AuthSession
+  alias Api.Auth.CheckUserAgent
   import Web.Router.Helpers
 
   action_fallback Api.FallbackController
 
   # Use %{assigns: %{version: :v2}} = conn for future versions
-  def init_client_auth_session(conn, %{"app" => _app_name, "session" => session}) do
-    Clients.delete_auth_session(session["provider"], session["device_id"])
-    with {:ok, %AuthSession{} = auth_session} <- Clients.create_auth_session(session) do
+  def init_client_auth_session(conn, %{"app" => app_name, "session" => session}) do
+    with {:ok, _agent} <- CheckUserAgent.check_against_app_name(conn, app_name),
+         _ <- Clients.delete_auth_session(session["provider"], session["device_id"]), 
+         {:ok, %AuthSession{} = auth_session} <- Clients.create_auth_session(session) do
       conn
         |> put_status(:created)
         |> put_resp_header("location", auth_confirmation_path(conn, :confirmation, session: auth_session.id))
