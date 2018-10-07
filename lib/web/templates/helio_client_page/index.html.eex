@@ -9,11 +9,11 @@
           <h1 class="white-text main-title">Free Music Sequencer</h1>
           <h5 class="white-text sub-title">For macOS, Linux, Windows, iOS and Android</h5>
           <%= for app <- @clients do %>
-            <%= if String.downcase(app.platform_type) == @platform do %>
+            <%= if String.downcase(app.platform_type) == @platform && app.branch == "stable" do %>
               <a href="<%= app.link %>" class="btn btn-large">
                 <span class="button-title-text">Get Helio <%= app.version %></span>
                 <br>
-                <span class="button-subtitle-text">for <%= app.platform_type %></span>
+                <span class="button-subtitle-text"><%= app.platform_type %>, <%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span>
               </a>
             <% end %>
           <% end %>
@@ -31,8 +31,7 @@
 
   <div id="helio-subheader">
     <div class="container">
-      <h4 class="center-align">Vive la culture libre</h4>
-      <h6 class="center-align">Helio is free and open-source software, aimed to be a modern music creation tool; it features high-performance core, linear-based sequencer with clean interface, integrated version control providing intelligent synchronization between devices, saved undo history, UI translations and themes, and more.</h6>
+      <h6 class="center-align"><i>“We shape our tools and thereafter our tools shape us”</i></h6>
     </div>
   </div>
 
@@ -54,17 +53,17 @@
           <img src="<%= static_path(@conn, "/images/screen4.png") %>" class="z-depth-1 full-width" alt="">
         </div>
         <div class="col m5 s12 right_text">
-          <h4>VST2, VST3, AudioUnit</h4>
+          <h4>Cross-platform tech</h4>
           <h6>
-            Hosts VST2, VST3 and AudioUnit. Runs on CoreAudio, ASIO, DirectSound, ALSA, JACK and OpenSLES. Imports and exports MIDI. Renders to WAV, FLAC and OGG.
+            Hosts VST2, VST3 and AudioUnit. Runs on CoreAudio, ASIO, DirectSound, ALSA, JACK and OpenSLES. Exports to MIDI, WAV and FLAC.
           </h6>
         </div>
       </div>
       <div class="row feature_block">
         <div class="col m5 s12 left_text">
-          <h4>Version control</h4>
+          <h4>Version control integrated</h4>
           <h6>
-            Helio introduces version control-driven workflow. The point of version control is overcoming the fear of making changes to your work. Every changeset can be tracked, every revision can be restored.
+            Make changes to your work easily: every changeset can be tracked, every revision can be restored.
           </h6>
         </div>
         <div class="col m7 s12">
@@ -76,9 +75,9 @@
           <img src="<%= static_path(@conn, "/images/screen2.png") %>" class="z-depth-1 full-width" alt="">
         </div>
         <div class="col m5 s12 right_text">
-          <h4>Themes and translations</h4>
+          <h4>Libre y gratis</h4>
           <h6>
-            Built-in color schemes and translations to English, German, French, Italian, Spanish, Russian, and more.
+            Open-source, GPL-licensed and free as in motherfucking freedom, forever. Vive la Resistance, yo.
           </h6>
         </div>
       </div>
@@ -86,7 +85,7 @@
         <div class="col m5 s12 left_text">
           <h4>Incomplete</h4>
           <h6>
-            Helio is a one-man hobby project, that is a work in progress. The author builds it for himself and shares with the world. If you feel like helping the project, you might share <a href="https://github.com/peterrudenko/helio-workstation/issues/new" target="_blank">your suggestions, report bugs</a>, or <a href="./translations/">make a translation</a> for your native language.
+            Helio is a work in progress, one-man hobby project, so it probably won't replace your DAW at the moment. The author builds it for himself and shares with the world.
           </h6>
         </div>
         <div class="col m7 s12"> 
@@ -97,37 +96,39 @@
   </div>
 
   <footer>
-      <div id="footer-nav">
-          <div class="container">
-              <div class="row">
-                  <div class="col s12 m4">
-                      <p>FEEDBACK</p>
-                          <ul>
-                              <li><a href="https://github.com/peterrudenko/helio-workstation/issues/new" target="_blank">Report a bug / request a feature</a></li>
-                              <li><a href="<%= static_path(@conn, "/translations/") %>" target="_blank">Help with translations</a></li>
-                              <li><a href="https://www.facebook.com/rudenko.peter" target="_blank">Contact author</a></li>
-                          </ul>
-                  </div>
-                  <div class="col s12 m4">
-                      <p>LINKS</p>
-                          <ul>
-                              <li><a href="https://github.com/peterrudenko/helio-workstation/blob/master/LICENSE">License agreement</a></li>
-                              <li><a href="https://www.youtube.com/channel/UCO3K8iCd1k2FTqSocoE-WXw">Youtube channel</a></li>
-                              <li><a href="https://www.facebook.com/HelioWorkstation">Facebook page</a></li>
-                          </ul>
-                  </div>
-                  <div class="col s12 m4">
-                      <p>RECENT BUILDS</p>
-                          <ul>
-                              <%= for app <- Enum.reverse(@clients) do %>
-                              <li><a href="<%= app.link %>">For <%= app.platform_type %></a></li>
-                              <% end %>
-                          </ul>
-                  </div>
-              </div>
+    <div id="footer-nav">
+      <div class="container">
+        <div class="row">
+          <div class="col s12 m4">
+            <p>FEEDBACK</p>
+              <ul>
+                <li><a href="https://www.facebook.com/rudenko.peter" target="_blank">Contact author</a></li>
+                <li><a href="<%= static_path(@conn, "/translations/") %>" target="_blank">Help with translations</a></li>
+                <li><a href="https://github.com/helio-fm/helio-workstation/pulls" target="_blank">Suggest changes</a></li>
+                <li><a href="https://github.com/helio-fm/helio-workstation/issues/new" target="_blank">Report bugs</a></li>
+              </ul>
           </div>
-          <div id="built-with-love">
-              <center>Built with ❤ in a garage in Izhevsk, Russia</center>
+          <div class="col s12 m4">
+            <p>STABLE BUILDS</p>
+              <ul>
+                <%= for app <- Enum.reverse(@clients), app.branch == "stable" do %>
+                <li><a href="<%= app.link %>"><%= app.platform_type %>, <span><%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span></a></li>
+                <% end %>
+              </ul>
           </div>
+          <div class="col s12 m4">
+            <p>DEVELOPMENT BUILDS</p>
+              <ul>
+                <%= for app <- Enum.reverse(@clients), app.branch != "stable" do %>
+                <li><a href="<%= app.link %>"><%= app.platform_type %>, <span><%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span></a></li>
+                <% end %>
+              </ul>
+          </div>
+        </div>
       </div>
+      <div id="built-with-love">
+        <center>Built with ❤ in a garage in Izhevsk, Russia</center>
+        <center><a href="https://github.com/helio-fm/helio-workstation/blob/master/LICENSE" target="_blank">License agreement</a></center>
+      </div>
+    </div>
   </footer>

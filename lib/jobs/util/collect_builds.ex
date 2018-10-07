@@ -102,7 +102,7 @@ defmodule Jobs.Util.CollectBuilds do
       "dmg" -> %{platform_type: "macOS", build_type: "disk image"}
       "pkg" -> %{platform_type: "macOS", build_type: "installer"}
       "apk" -> %{platform_type: "Android", build_type: "package"}
-      "deb" -> %{platform_type: "Linux", build_type: "installer"}
+      "deb" -> %{platform_type: "Linux", build_type: "deb package"}
       "tar.gz" -> %{platform_type: "Linux", build_type: "tarball"}
       "AppImage" -> %{platform_type: "Linux", build_type: "AppImage"}
       _ -> %{}

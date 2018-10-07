@@ -101,7 +101,8 @@ defmodule Db.Clients do
   def get_app_versions(app_name, platform_type) do
     query = from a in AppVersion,
       where: a.app_name == ^app_name and ilike(a.platform_type, ^platform_type),
-      select: a
+      select: a,
+      order_by: [:app_name, :branch, :platform_type]
     case Repo.all(query) do
       [] -> {:error, :client_not_found}
       apps -> {:ok, apps}

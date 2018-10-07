@@ -230,8 +230,8 @@ h6 {
 }
 .btn, .btn-large {
   display: inline-block;
-  padding: 0 0 0 0;
-  margin: 0 0 0 0;
+  padding: 14px 0 0 0;
+  margin: 0 5px 25px 5px;
   font-weight: 300;
   line-height: 1.3;
   text-align: center;
@@ -243,9 +243,7 @@ h6 {
   height: 74px;
   width: 230px;
   box-sizing: border-box;
-  padding-top: 14px;
   border-radius: 40px;
-  margin-bottom: 25px;
   text-align: center;
   -webkit-transition:.2s ease-out;
   -moz-transition:.2s ease-out;
@@ -321,8 +319,14 @@ body, html {
 .row {
   margin-bottom: 0;
 }
-footer, footer #footer-nav a {
+footer {
   color: #fff;
+}
+footer #footer-nav a {
+  color: #eee;
+}
+footer #footer-nav a span{
+  color: #aaa;
 }
 footer {
   background-color: #4E4D97;
@@ -340,7 +344,8 @@ footer #built-with-love {
   color: rgba(255, 255, 255, .55);
   font-size: 0.9rem;
   font-weight: 300;
-  margin-top: 15px;
+  line-height: 1.7rem;
+  margin: 15px 0px 0px 0px;
 }
 #helio-header, #splash {
   height: 700px;

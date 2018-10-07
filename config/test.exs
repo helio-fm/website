@@ -32,3 +32,7 @@ config :musehackers, Api.Auth.Token,
 
 # Use mock adapter for all clients
 config :tesla, adapter: Tesla.Mock
+
+# Locations
+config :musehackers, images_path: "./test"
+config :musehackers, builds_path: "./test"
