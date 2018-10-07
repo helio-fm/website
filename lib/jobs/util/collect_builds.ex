@@ -12,7 +12,7 @@ defmodule Jobs.Util.CollectBuilds do
   @builds_base_url Application.get_env(:musehackers, :builds_base_url)
 
   defp get_build_files() do
-    Path.wildcard(Path.join(@builds_path, "**")) |> Enum.map(&Path.basename/1) 
+    @builds_path |> Path.join("**") |> Path.wildcard() |> Enum.map(&Path.basename/1) 
   end
 
   def start_link(_) do
@@ -87,12 +87,14 @@ defmodule Jobs.Util.CollectBuilds do
   end
 
   defp parse_version_and_branch(version) do
-    cond do
-      String.contains?(version, "dev") -> %{branch: "develop", version: nil}
-      true -> %{branch: "stable", version: version}
+    if String.contains?(version, "dev") do
+      %{branch: "develop", version: nil}
+    else
+      %{branch: "stable", version: version}
     end
   end
 
+  # credo:disable-for-lines:10 /Refactor/
   defp parse_platform_and_type(extension) do
     case extension do
       "zip" -> %{platform_type: "Windows", build_type: "portable"}
