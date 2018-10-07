@@ -15,7 +15,7 @@ defmodule Api.V1.ClientAppControllerTest do
     branch: "stable",
     architecture: "all",
     link: "some link",
-    platform_type: "platform_type",
+    platform_type: "linux",
     version: "2.0"
   }
 
@@ -25,7 +25,7 @@ defmodule Api.V1.ClientAppControllerTest do
     branch: "stable",
     architecture: "all",
     link: "some updated link",
-    platform_type: "platform_type",
+    platform_type: "linux",
     version: "2.1"
   }
 
@@ -38,8 +38,13 @@ defmodule Api.V1.ClientAppControllerTest do
     end
 
     test "renders error on request to get info for unknown client", %{conn: conn} do
-      conn = get client(conn, "noname"), api_client_app_info_path(conn, :get_client_info, "noname")
+      conn = get client(conn, "noname on linux"), api_client_app_info_path(conn, :get_client_info, "noname")
       assert response(conn, 404)
+    end
+
+    test "renders error on request to get info for unknown platform", %{conn: conn} do
+      conn = get client(conn, "yo"), api_client_app_info_path(conn, :get_client_info, "yo")
+      assert response(conn, 404) =~ "unknown platform"
     end
   end
 
@@ -48,20 +53,21 @@ defmodule Api.V1.ClientAppControllerTest do
       conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: @create_attrs
       assert json_response(conn, 200)["clientApp"] != %{}
 
-      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: %{@create_attrs | platform_type: "platform_type 2"}
+      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: %{@create_attrs | branch: "develop"}
       assert json_response(conn, 200)["clientApp"] != %{}
 
-      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: %{@create_attrs | platform_type: "platform_type 2"}
+      conn = post authenticated(conn), api_client_app_version_path(conn, :update_app_version), app: %{@create_attrs | branch: "develop"}
 
       Clients.create_or_update_resource(%{app_name: @create_attrs.app_name, data: %{}, type: "some type"})
 
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert %{"resources" => [%{"type" => "some type", "hash" => _}],
         "versions" => [%{"link" => "some link",
-          "platformType" => "platform_type",
-          "version" => "2.0"},
-          %{"link" => "some link",
-          "platformType" => "platform_type 2",
+          "branch" => "develop",
+          "platformType" => "linux",
+          "version" => "2.0"}, %{"link" => "some link",
+          "branch" => "stable",
+          "platformType" => "linux",
           "version" => "2.0"}]} = json_response(conn, 200)["clientApp"]
     end
 
@@ -82,7 +88,7 @@ defmodule Api.V1.ClientAppControllerTest do
       conn = get client(conn), api_client_app_info_path(conn, :get_client_info, @create_attrs.app_name)
       assert %{"resources" => [], "versions" => [%{
           "link" => "some updated link",
-          "platformType" => "platform_type",
+          "platformType" => "linux",
           "version" => "2.1"}]} = json_response(conn, 200)["clientApp"]
     end
   end
@@ -94,10 +100,10 @@ defmodule Api.V1.ClientAppControllerTest do
     conn
       |> recycle
       |> put_req_header("authorization", "Bearer #{jwt}")
-      |> put_req_header("user-agent", "helio")
+      |> put_req_header("user-agent", "Helio on Debian Linux")
   end
 
-  defp client(conn, client \\ "Helio") do
+  defp client(conn, client \\ "Helio on Linux X 64-bit") do
     conn
       |> recycle
       |> put_req_header("user-agent", client)

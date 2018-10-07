@@ -28,6 +28,7 @@ defmodule Api.FallbackController do
   def call(conn, {:error, :project_not_found}), do: not_found(conn, "project not found")
   def call(conn, {:error, :revision_not_found}), do: not_found(conn, "revision not found")
   def call(conn, {:error, :user_agent_mismatch}), do: unauthorized(conn, "user agent mismatch")
+  def call(conn, {:error, :unknown_platform}), do: not_found(conn, "unknown platform")
 
   defp unauthorized(conn, message) do
     conn

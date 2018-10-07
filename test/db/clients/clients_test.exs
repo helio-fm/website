@@ -92,9 +92,9 @@ defmodule Db.ClientsTest do
       assert Clients.list_apps() == [app]
     end
 
-    test "get_app_versions_by_name!/1 returns the app with given name" do
+    test "get_app_versions/2 returns the app with given name" do
       app = app_fixture()
-      {:ok, apps} = Clients.get_app_versions_by_name(app.app_name)
+      {:ok, apps} = Clients.get_app_versions(app.app_name, String.upcase(app.platform_type))
       app2 = List.first(apps)
       assert app2.platform_type == app.platform_type
       assert app2.version == app.version
@@ -124,7 +124,7 @@ defmodule Db.ClientsTest do
     test "delete_app/1 deletes the app" do
       app = app_fixture()
       assert {:ok, %AppVersion{}} = Clients.delete_app_version(app)
-      assert {:error, :client_not_found} = Clients.get_app_versions_by_name(app.app_name)
+      assert {:error, :client_not_found} = Clients.get_app_versions(app.app_name, app.platform_type)
      end
   end
 

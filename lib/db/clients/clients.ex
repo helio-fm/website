@@ -91,17 +91,17 @@ defmodule Db.Clients do
 
   ## Examples
 
-      iex> get_app_versions_by_name("helio")
+      iex> get_app_versions("helio", "linux")
       %AppVersion{}
 
-      iex> get_app_versions_by_name("test")
+      iex> get_app_versions("test", "test")
       {:error, :client_not_found}
 
   """
-  def get_app_versions_by_name(app_name) do
+  def get_app_versions(app_name, platform_type) do
     query = from a in AppVersion,
-          where: a.app_name == ^app_name,
-          select: a
+      where: a.app_name == ^app_name and ilike(a.platform_type, ^platform_type),
+      select: a
     case Repo.all(query) do
       [] -> {:error, :client_not_found}
       apps -> {:ok, apps}

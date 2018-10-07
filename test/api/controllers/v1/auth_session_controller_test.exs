@@ -112,6 +112,6 @@ defmodule Api.V1.AuthSessionControllerTest do
   defp client(conn) do
     conn
       |> recycle
-      |> put_req_header("user-agent", "Helio")
+      |> put_req_header("user-agent", "Helio on Linux")
   end
 end

@@ -30,17 +30,10 @@ defmodule Jobs.Util.CollectBuilds do
     end
   end
 
-  # Async call used by schedule_work() with Process.send_after
   def handle_info(:process, state) do
     collect_builds(get_build_files())
     schedule_work()
     {:noreply, state}
-  end
-
-  # Sync call used by web controller to fetch translations immediately
-  def handle_call(:process, _from, state) do
-    resource = collect_builds(get_build_files())
-    {:reply, resource, state}
   end
 
   def collect_builds(build_files) do
