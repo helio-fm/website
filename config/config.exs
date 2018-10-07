@@ -58,8 +58,10 @@ config :mime, :types, %{
 
 # Locations
 config :musehackers, users_base_url: "https://helio.fm/"
+config :musehackers, builds_base_url: "https://ci.helio.fm/"
 config :musehackers, images_base_url: "https://img.helio.fm/"
 config :musehackers, images_path: "/opt/musehackers/files/img/"
+config :musehackers, builds_path: "/opt/musehackers/files/ci/"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
