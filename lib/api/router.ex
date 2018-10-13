@@ -28,7 +28,7 @@ defmodule Api.Router do
     # e.g. `/api/v1/clients/helio/translations`
     scope "/clients", as: :client do
       get "/:app/info", ClientAppController, :get_client_info, as: :app_info
-      get "/:app/:resource", ClientAppController, :get_client_resource, as: :resource
+      get "/:app/:resource_type", ClientAppController, :get_client_resource, as: :resource
 
       # initialize web authentication via, say, Github:
       # creates a new Clients.AuthSession and returns its id, secret key and browser url
@@ -84,17 +84,19 @@ defmodule Api.Router do
 
       scope "/projects" do
         # identical to `projects` array in `get /my` response
-        get "/", ProjectController, :index, as: :project
-        # includes summary for all revisions
-        get "/:id", ProjectController, :summary, as: :project
-        put "/:id", ProjectController, :create_or_update, as: :project
-        delete "/:id", ProjectController, :delete, as: :project
-      end
+        get "/", ProjectController, :index
+        scope "/:project_id" do
+          # includes summary for all revisions
+          get "/", ProjectController, :summary
+          put "/", ProjectController, :create_or_update
+          delete "/", ProjectController, :delete
 
-      scope "/revisions" do
-        # put and get full data for any revision
-        get "/:id", RevisionController, :show
-        put "/:id", RevisionController, :create
+          scope "/revisions/:revision_id" do
+            # put and get full data for any revision
+            get "/", RevisionController, :show
+            put "/", RevisionController, :create
+          end
+        end
       end
     end
   end

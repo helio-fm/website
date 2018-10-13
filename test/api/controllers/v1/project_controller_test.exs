@@ -167,12 +167,11 @@ defmodule Api.V1.ProjectControllerTest do
   describe "create and show project revisions" do
     setup [:create_user_and_project]
 
-    test "renders revision when created one with valid data", %{conn: conn, project: %Project{id: id}, user: user} do
-      attrs = %{@revision_attrs | project_id: id}
-      conn = put authenticated(conn, user), api_user_revision_path(conn, :create, attrs.id), revision: attrs
+    test "renders revision when created one with valid data", %{conn: conn, project: %Project{id: project_id}, user: user} do
+      conn = put authenticated(conn, user), api_user_revision_path(conn, :create, @revision_attrs.id, project_id), revision: @revision_attrs
       assert response(conn, :created)
 
-      conn = get authenticated(conn, user), api_user_revision_path(conn, :show, id)
+      conn = get authenticated(conn, user), api_user_revision_path(conn, :show, @revision_attrs.id, project_id)
       assert json_response(conn, :ok)["revision"] == %{
         "id" => "some id",
         "message" => "some message",
@@ -181,29 +180,28 @@ defmodule Api.V1.ProjectControllerTest do
         "parentId" => nil}
     end
 
-    test "renders error when trying to create revision with existing id", %{conn: conn, project: %Project{id: id}, user: user} do
-      attrs = %{@revision_attrs | project_id: id}
-      conn = put authenticated(conn, user), api_user_revision_path(conn, :create, attrs.id), revision: attrs
+    test "renders error when trying to create revision with existing id", %{conn: conn, project: %Project{id: project_id}, user: user} do
+      conn = put authenticated(conn, user), api_user_revision_path(conn, :create, @revision_attrs.id, project_id), revision: @revision_attrs
       assert response(conn, :created)
 
-      conn = put authenticated(conn, user), api_user_revision_path(conn, :create, attrs.id), revision: attrs
+      conn = put authenticated(conn, user), api_user_revision_path(conn, :create, @revision_attrs.id, project_id), revision: @revision_attrs
       assert response(conn, :unprocessable_entity)
     end
 
-    test "renders unauthorized when not authenticated", %{conn: conn, project: _, user: _} do
-      conn = get conn, api_user_revision_path(conn, :create, @revision_attrs.id), @revision_attrs
+    test "renders unauthorized when not authenticated", %{conn: conn, project: %Project{id: project_id}, user: _} do
+      conn = get conn, api_user_revision_path(conn, :create, @revision_attrs.id, project_id), @revision_attrs
       assert response(conn, :unauthorized)
     end
 
-    test "renders not found when fetching revisions as another user", %{conn: conn, project: _, user: _} do
+    test "renders not found when fetching revisions as another user", %{conn: conn, project: %Project{id: project_id}, user: _} do
       {:ok, user} = second_user_fixture()
-      conn = get authenticated(conn, user), api_user_revision_path(conn, :show, @revision_attrs.id)
+      conn = get authenticated(conn, user), api_user_revision_path(conn, :show, @revision_attrs.id, project_id)
       assert response(conn, :not_found)
     end
 
-    test "renders error when creating revisions as another user", %{conn: conn, project: _, user: _} do
+    test "renders error when creating revisions as another user", %{conn: conn, project: %Project{id: project_id}, user: _} do
       {:ok, user} = second_user_fixture()
-      conn = get authenticated(conn, user), api_user_revision_path(conn, :create, @revision_attrs.id), @revision_attrs
+      conn = get authenticated(conn, user), api_user_revision_path(conn, :create, @revision_attrs.id, project_id), @revision_attrs
       assert response(conn, :not_found)
     end
   end

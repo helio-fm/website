@@ -17,7 +17,7 @@ defmodule Api.ClientAppController do
       do: render(conn, "client.info.v1.json", versions: versions, resources: resources)
   end
 
-  def get_client_resource(conn, %{"app" => app_name, "resource" => resource_type}) do
+  def get_client_resource(conn, %{"app" => app_name, "resource_type" => resource_type}) do
     with {:ok, %Resource{} = resource} <- Clients.get_resource_for_app(app_name, resource_type),
       do: render(conn, "resource.data.v1.json", resource: resource)
   end
