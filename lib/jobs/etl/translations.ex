@@ -84,12 +84,12 @@ defmodule Jobs.Etl.Translations do
     result = translations
       |> Enum.map(fn(x) ->
         # Iterate sublists to remove columns marked as incomplete
-        Enum.filter(x, fn(y) -> columt_belongs_to_draft(headers, x, y) end)
+        Enum.filter(x, fn(y) -> column_belongs_to_draft(headers, x, y) end)
       end)
     {:ok, result}
   end
 
-  defp columt_belongs_to_draft(headers, column, token) do
+  defp column_belongs_to_draft(headers, column, token) do
     index = column |> Enum.find_index(fn(x) -> x == token end)
     is_draft = String.downcase(Enum.at(headers, index)) =~ "todo"
     !is_draft

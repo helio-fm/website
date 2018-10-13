@@ -10,14 +10,8 @@ defmodule Api.ProjectController do
   def summary(conn, %{"id" => id}) do
     with user_id <- Token.current_subject(conn),
          {:ok, project} <- VersionControl.get_project(id, user_id),
-      do: conn |> put_status(:ok) |> render("show.v1.json", project: project)
-  end
-
-  def heads(conn, %{"id" => id}) do
-    with user_id <- Token.current_subject(conn),
-         {:ok, project} <- VersionControl.get_project(id, user_id),
-         {:ok, heads} <- VersionControl.get_project_heads(project),
-      do: conn |> put_status(:ok) |> render("show.heads.v1.json", heads: heads)
+         {:ok, revisions} <- VersionControl.get_revisions_summary(project),
+      do: conn |> put_status(:ok) |> render("show.revisions.v1.json", project: project, revisions: revisions)
   end
 
   def create_or_update(conn, %{"id" => id, "project" => params}) do

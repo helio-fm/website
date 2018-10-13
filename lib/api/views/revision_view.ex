@@ -16,7 +16,6 @@ defmodule Api.RevisionView do
 
   def render("brief.v1.json", %{revision: revision}) do
     %{id: revision.id,
-      hash: revision.hash,
       message: revision.message,
       parent_id: revision.parent_id}
   end

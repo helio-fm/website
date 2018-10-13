@@ -33,14 +33,12 @@ defmodule Db.VersionControl do
   end
 
   @doc """
-  Gets all leaf revision for a given project.
+  Gets all revisions summary for a given project.
   """
-  def get_project_heads(%Project{} = project) do
+  def get_revisions_summary(%Project{} = project) do
     query = from r in Revision,
-      left_join: child in Revision, on: r.id == child.parent_id,
-      where: r.project_id == ^project.id and is_nil(child.parent_id),
-      select: struct(r, [:id, :hash, :message, :parent_id]),
-      order_by: [:id]
+      where: r.project_id == ^project.id,
+      select: struct(r, [:id, :message, :parent_id])
     {:ok, Repo.all(query)}
   end
 
@@ -89,19 +87,6 @@ defmodule Db.VersionControl do
   end
 
   alias Db.VersionControl.Revision
-
-  @doc """
-  Returns the list of revisions.
-
-  ## Examples
-
-      iex> list_revisions()
-      [%Revision{}, ...]
-
-  """
-  def list_revisions do
-    Repo.all(Revision)
-  end
 
   @doc """
   Gets a single revision which belongs to the project of a given user.

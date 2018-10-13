@@ -13,8 +13,14 @@ defmodule Api.ProjectView do
     %{project: render_one(project, ProjectView, "project.v1.json")}
   end
 
-  def render("show.heads.v1.json", %{heads: heads}) do
-    %{revisions: render_many(heads, RevisionView, "brief.v1.json")}
+  def render("show.revisions.v1.json", %{project: project, revisions: revisions}) do
+    %{project:
+      %{id: project.id,
+        title: project.title,
+        alias: project.alias,
+        head: project.head,
+        updated_at: project.updated_at,
+        revisions: render_many(revisions, RevisionView, "brief.v1.json")}}
   end
 
   def render("project.v1.json", %{project: project}) do

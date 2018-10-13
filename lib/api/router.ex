@@ -55,42 +55,44 @@ defmodule Api.Router do
       # and the summary of existing projects (identical to get /vcs/projects)
       get "/profile", UserController, :get_current_user, as: :profile
 
-      delete "/sessions/:device_id", SessionController, :delete, as: :session
+      scope "/sessions" do
+        # this endpoint provides a kind of a sliding session:
+        # first, it checks for a token, that is
+        #   1) valid and unexpired,
+        #   2) present in active sessions for a given device id;
+        # if passed, it issues a new token and saves it in the related active session
+        # (there can be only one session per user and device id),
+        # so that if user runs the app, say, at least once a week, his session won't expire
+        # (and if the token is compromised/stolen, the user's session won't be prolonged,
+        # eventually forcing him to re-login, and thus invalidating attacker's session);
+        # and, although re-issuing a token is stateful, authentication is still stateless and fast
+        post "/current/update", SessionController, :refresh_token, as: :current_session
+
+        # a simple authentication check (mainly used in tests)
+        get "/current/status", SessionController, :is_authenticated, as: :current_session
+
+        # invalidate custom session (also to be used as logout endpoint)
+        delete "/:device_id", SessionController, :delete, as: :session
+      end
 
       # e.g. /my/arpeggiators/arp-name or /my/scripts/script-name
-      get "/resources/:type/:name", UserResourceController, :show, as: :resource
-      put "/resources/:type/:name", UserResourceController, :create_or_update, as: :resource
-      delete "/resources/:type/:name", UserResourceController, :delete, as: :resource
-    end
+      scope "/resources" do
+        get "/:type/:name", UserResourceController, :show, as: :resource
+        put "/:type/:name", UserResourceController, :create_or_update, as: :resource
+        delete "/:type/:name", UserResourceController, :delete, as: :resource
+      end
 
-    scope "/session", as: :session do
-      # this endpoint provides a kind of a sliding session:
-      # first, it checks for a token, that is
-      #   1) valid and unexpired,
-      #   2) present in active sessions for a given device id;
-      # if passed, it issues a new token and saves it in the related active session
-      # (there can be only one session per user and device id),
-      # so that if user runs the app, say, at least once a week, his session won't expire
-      # (and if the token is compromised/stolen, the user's session won't be prolonged,
-      # eventually forcing him to re-login, and thus invalidating attacker's session);
-      # and, although re-issuing a token is stateful, authentication is still stateless and fast
-      post "/update", SessionController, :refresh_token, as: :update
-
-      # a simple authentication check (mainly used in tests)
-      get "/status", SessionController, :is_authenticated, as: :status
-    end
-
-    # version control stuff
-    scope "/vcs", as: :vcs do
       scope "/projects" do
-        get "/", ProjectController, :index
-        get "/:id", ProjectController, :summary
-        get "/:id/heads", ProjectController, :heads
-        put "/:id", ProjectController, :create_or_update
-        delete "/:id", ProjectController, :delete
+        # identical to `projects` array in `get /my` response
+        get "/", ProjectController, :index, as: :project
+        # includes summary for all revisions
+        get "/:id", ProjectController, :summary, as: :project
+        put "/:id", ProjectController, :create_or_update, as: :project
+        delete "/:id", ProjectController, :delete, as: :project
       end
 
       scope "/revisions" do
+        # put and get full data for any revision
         get "/:id", RevisionController, :show
         put "/:id", RevisionController, :create
       end

@@ -99,11 +99,6 @@ defmodule Db.VersionControlTest do
       {revision, user}
     end
 
-    test "list_revisions/0 returns all revisions" do
-      {revision, _user} = revision_fixture()
-      assert VersionControl.list_revisions() == [revision]
-    end
-
     test "get_revision/2 returns the revision with given id" do
       {revision, user} = revision_fixture()
       assert VersionControl.get_revision(revision.id, user.id) == {:ok, revision}
