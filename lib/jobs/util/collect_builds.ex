@@ -3,10 +3,16 @@ defmodule Jobs.Util.CollectBuilds do
   A job to scan through releases directory and fill up app versions table
   """
 
+  use Tesla
   use GenServer
+
   require Logger
 
+  alias Db.Repo
   alias Db.Clients
+  alias Db.Clients.AppVersion
+
+  plug Tesla.Middleware.FollowRedirects, max_redirects: 2
 
   @builds_path Application.get_env(:musehackers, :builds_path)
   @builds_base_url Application.get_env(:musehackers, :builds_base_url)
@@ -37,9 +43,22 @@ defmodule Jobs.Util.CollectBuilds do
   end
 
   def collect_builds(build_files) do
-    Enum.map(build_files,
-      fn x -> parse_and_update_version(x) end)
+    # Cleanup all records where link contains hostname, but download responds with 404:
+    invalid_versions = AppVersion |> Repo.all |> Enum.filter(fn x -> link_is_invalid(x.link) end)
+    for app_version <- invalid_versions, do: Clients.delete_app_version(app_version)
+    # Detect all new available versions:
+    report = Enum.map(build_files, fn x -> parse_and_update_version(x) end)
+    # Logger.info inspect report
+    report
   end
+
+  defp link_is_invalid(link) do
+    needs_head_check = String.downcase(link) =~ @builds_base_url
+    needs_head_check && link |> Tesla.head |> head_not_found
+  end
+
+  defp head_not_found({:ok, %Tesla.Env{status: 404}}), do: true
+  defp head_not_found(_), do: false
 
   defp parse_and_update_version(build_file) do
     try do
@@ -70,8 +89,6 @@ defmodule Jobs.Util.CollectBuilds do
         app_name: app_name,
         link: Path.join(@builds_base_url, build_file)
       })
-
-      Logger.info inspect attrs
       {:ok, attrs}
     else
       {:error, :parse_error}
@@ -110,6 +127,6 @@ defmodule Jobs.Util.CollectBuilds do
   end
 
   defp schedule_work do
-    Process.send_after(self(), :process, 1000 * 60 * 30) # 30 min
+    Process.send_after(self(), :process, 1000 * 60 * 60) # 1h
   end
 end

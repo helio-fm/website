@@ -1,8 +1,18 @@
 defmodule Jobs.Util.CollectBuildsTest do
   use Jobs.DataCase
 
-  alias Jobs.Util.CollectBuilds
+  alias Db.Clients
   alias Db.Clients.AppVersion
+  alias Jobs.Util.CollectBuilds
+
+  setup do
+    Tesla.Mock.mock fn
+      _env -> %Tesla.Env{status: 404, headers: [], body: ""}
+    end
+    :ok
+  end
+
+  @builds_base_url Application.get_env(:musehackers, :builds_base_url)
 
   @test_files [
     "client-dev.exe",
@@ -20,6 +30,12 @@ defmodule Jobs.Util.CollectBuildsTest do
 
   describe "collect builds" do
     test "collect_builds/1 creates properly parsed app versions" do
+      # insert some version and make sure it is removed after the link check:
+      Clients.create_or_update_app_version(%{
+        app_name: "an", platform_type: "p", build_type: "bt",
+        architecture: "all", branch: "dev", version: "0",
+        link: @builds_base_url <> "test.app"})
+
       results = CollectBuilds.collect_builds(@test_files)
       assert {:error, _} = List.last(results)
       assert {:ok, _} = List.first(results)
