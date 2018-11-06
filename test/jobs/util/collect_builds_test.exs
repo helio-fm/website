@@ -15,13 +15,13 @@ defmodule Jobs.Util.CollectBuildsTest do
   @builds_base_url Application.get_env(:musehackers, :builds_base_url)
 
   @test_files [
-    "client-dev.exe",
     "client-dev-32-bit.zip",
+    "client-dev.exe",
     "client-2.0-64-bit.tar.gz",
     "client-02.1.02.AppImage",
     "client-dev.deb",
     "client-3.0.dmg",
-    "client-dev-32-bit.pkg",
+    "client-dev-x32.pkg",
     "client-2.1.1.apk",
     "client-20.02.232111111111.zip",
     "client.zip",
@@ -45,9 +45,9 @@ defmodule Jobs.Util.CollectBuildsTest do
       version = List.first(versions)
       assert version.app_name == "client"
       assert version.platform_type == "Windows"
-      assert version.build_type == "installer"
+      assert version.build_type == "portable"
       assert version.branch == "develop"
-      assert version.architecture == "all"
+      assert version.architecture == "32-bit"
       assert version.version == nil
       assert version.link != nil
     end

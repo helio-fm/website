@@ -70,13 +70,13 @@ defmodule Jobs.Util.CollectBuilds do
     end
   end
 
-  defp parse_version_attrs(build_file) do
+  defp parse_version_attrs(file) do
     # Example of valid file names to be parsed:
     # helio-dev.exe
-    # helio-dev-32-bit.zip
-    # helio-2.0-64-bit.tar.gz
+    # helio-develop-32-bit.zip
+    # helio-2.0-x64.tar.gz
     # helio-20.02.232.AppImage
-    groups = Regex.run(~r/(\w*)-(\d+\.?\d+\.?\d*|dev)(\.|-64-\w*\.|-32-\w*\.)(.*)/, build_file)
+    groups = Regex.run(~r/(\w*)-(\d+\.?\d+\.?\d*|dev\w*)-?(|x64|x32|64-bit|32-bit|i386|x86_64)\.(.*)/, file)
     if Enum.count(groups) == 5 do
       app_name = groups |> Enum.at(1)
       version_and_branch = groups |> Enum.at(2) |> parse_version_and_branch()
@@ -87,7 +87,7 @@ defmodule Jobs.Util.CollectBuilds do
       |> Map.merge(arch)
       |> Map.merge(%{
         app_name: app_name,
-        link: Path.join(@builds_base_url, build_file)
+        link: Path.join(@builds_base_url, file)
       })
       {:ok, attrs}
     else
@@ -95,36 +95,46 @@ defmodule Jobs.Util.CollectBuilds do
     end
   end
 
-  defp parse_architecture(arch) do
-    cond do
-      String.contains?(arch, "32") -> %{architecture: "32-bit"}
-      String.contains?(arch, "64") -> %{architecture: "64-bit"}
-      true -> %{architecture: "all"}
-    end
-  end
+  defp parse_architecture(arch) when arch in ["x32", "32-bit", "i386"],
+    do: %{architecture: "32-bit"}
 
-  defp parse_version_and_branch(version) do
-    if String.contains?(version, "dev") do
-      %{branch: "develop", version: nil}
-    else
-      %{branch: "stable", version: version}
-    end
-  end
+  defp parse_architecture(arch) when arch in ["x64", "64-bit", "x86_64"],
+    do: %{architecture: "64-bit"}
 
-  # credo:disable-for-lines:10 /Refactor/
-  defp parse_platform_and_type(extension) do
-    case extension do
-      "zip" -> %{platform_type: "Windows", build_type: "portable"}
-      "exe" -> %{platform_type: "Windows", build_type: "installer"}
-      "dmg" -> %{platform_type: "macOS", build_type: "disk image"}
-      "pkg" -> %{platform_type: "macOS", build_type: "installer"}
-      "apk" -> %{platform_type: "Android", build_type: "package"}
-      "deb" -> %{platform_type: "Linux", build_type: "deb package"}
-      "tar.gz" -> %{platform_type: "Linux", build_type: "tarball"}
-      "AppImage" -> %{platform_type: "Linux", build_type: "AppImage"}
-      _ -> %{}
-    end
-  end
+  defp parse_architecture(_),
+    do: %{architecture: "all"}
+
+  defp parse_version_and_branch(version) when version in ["dev", "develop"],
+    do: %{branch: "develop", version: nil}
+
+  defp parse_version_and_branch(version),
+    do: %{branch: "stable", version: version}
+
+  defp parse_platform_and_type(ext) when ext === "zip",
+    do: %{platform_type: "Windows", build_type: "portable"}
+
+  defp parse_platform_and_type(ext) when ext === "exe",
+    do: %{platform_type: "Windows", build_type: "installer"}
+
+  defp parse_platform_and_type(ext) when ext === "dmg",
+    do: %{platform_type: "macOS", build_type: "disk image"}
+
+  defp parse_platform_and_type(ext) when ext === "pkg",
+    do: %{platform_type: "macOS", build_type: "installer"}
+
+  defp parse_platform_and_type(ext) when ext === "apk",
+    do: %{platform_type: "Android", build_type: "package"}
+
+  defp parse_platform_and_type(ext) when ext === "deb",
+    do: %{platform_type: "Linux", build_type: "deb package"}
+
+  defp parse_platform_and_type(ext) when ext === "tar.gz",
+    do: %{platform_type: "Linux", build_type: "tarball"}
+
+  defp parse_platform_and_type(ext) when ext === "AppImage",
+    do: %{platform_type: "Linux", build_type: "AppImage"}
+
+  defp parse_platform_and_type(_), do: %{}
 
   defp schedule_work do
     Process.send_after(self(), :process, 1000 * 60 * 60) # 1h
