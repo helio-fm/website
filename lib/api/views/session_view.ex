@@ -15,12 +15,11 @@ defmodule Api.SessionView do
 
   def render("refresh.token.v1.json", %{user: user, jwt: jwt}) do
     %{status: :ok,
+      message: "Token was successfully re-issued",
       session: %{
         token: jwt,
         email: user.email
-      }, message: """
-        Token was successfully re-generated!
-      """}
+      }}
   end
 
   def render("session.info.v1.json", %{session: session}) do

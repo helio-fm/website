@@ -22,7 +22,7 @@ defmodule Api.V1.ProjectControllerTest do
   @revision_attrs %{
     id: "some id",
     message: "some message",
-    hash: "some hash",
+    timestamp: "12345678",
     data: %{},
     parent_id: nil,
     project_id: nil
@@ -146,10 +146,11 @@ defmodule Api.V1.ProjectControllerTest do
     test "renders head list when data is valid", %{conn: conn, project: %Project{id: id}, user: user, tree: _} do
       conn = get authenticated(conn, user), api_user_project_path(conn, :summary, id)
       assert [%{"id" => "5", "message" => _, "parentId" => "3"},
-        %{"id" => "4", "message" => _, "parentId" => "3"},
-        %{"id" => "3", "message" => _, "parentId" => "1"},
-        %{"id" => "2", "message" => _, "parentId" => "1"},
-        %{"id" => "1", "message" => _, "parentId" => nil}] = json_response(conn, 200)["project"]["revisions"]
+        %{"id" => "4", "message" => _, "timestamp" => _, "parentId" => "3"},
+        %{"id" => "3", "message" => _, "timestamp" => _, "parentId" => "1"},
+        %{"id" => "2", "message" => _, "timestamp" => _, "parentId" => "1"},
+        %{"id" => "1", "message" => _, "timestamp" => _, "parentId" => nil}]
+          = json_response(conn, 200)["project"]["revisions"]
     end
 
     test "renders unauthorized when not authenticated", %{conn: conn, project: _, user: _} do
@@ -175,7 +176,7 @@ defmodule Api.V1.ProjectControllerTest do
       assert json_response(conn, :ok)["revision"] == %{
         "id" => "some id",
         "message" => "some message",
-        "hash" => "some hash",
+        "timestamp" => "12345678",
         "data" => %{},
         "parentId" => nil}
     end

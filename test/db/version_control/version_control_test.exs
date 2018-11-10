@@ -79,14 +79,14 @@ defmodule Db.VersionControlTest do
 
     @valid_attrs %{
       data: %{},
-      hash: "some hash",
+      timestamp: "some timestamp",
       id: "some id",
       message: "some message",
       project_id: nil,
       parent_id: nil
     }
 
-    @invalid_attrs %{data: nil, hash: nil, id: nil, message: nil}
+    @invalid_attrs %{data: nil, timestamp: nil, id: nil, message: nil}
 
     def revision_fixture(attrs \\ %{}) do
       {project, user} = project_fixture()
@@ -113,9 +113,9 @@ defmodule Db.VersionControlTest do
       assert {:ok, revision} = VersionControl.create_revision(%{@valid_attrs | project_id: project.id})
       assert %Revision{} = revision
       assert revision.data == %{}
-      assert revision.hash == "some hash"
       assert revision.id == "some id"
       assert revision.message == "some message"
+      assert revision.timestamp == "some timestamp"
     end
 
     test "create_revision/2 fails when clasing with existing revision" do
