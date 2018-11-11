@@ -10,6 +10,6 @@ defmodule Api.UserResourceView do
     %{type: resource.type,
       name: resource.name,
       hash: resource.hash,
-      updated_at: resource.updated_at}
+      updated_at: resource.updated_at |> DateTime.to_unix(:millisecond)}
   end
 end

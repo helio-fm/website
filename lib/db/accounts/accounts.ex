@@ -201,7 +201,7 @@ defmodule Db.Accounts do
   def get_resources_brief_for_user(user_id) do
     query = from r in Resource,
       where: r.owner_id == ^user_id,
-      select: struct(r, [:type, :name, :hash]),
+      select: struct(r, [:type, :name, :hash, :updated_at]),
       order_by: [:type, :name]
     {:ok, Repo.all(query)}
   end

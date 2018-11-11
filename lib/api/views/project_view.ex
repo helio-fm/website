@@ -19,7 +19,7 @@ defmodule Api.ProjectView do
         title: project.title,
         alias: project.alias,
         head: project.head,
-        updated_at: project.updated_at,
+        updated_at: project.updated_at |> DateTime.to_unix(:millisecond),
         revisions: render_many(revisions, RevisionView, "brief.v1.json")}}
   end
 
@@ -28,6 +28,6 @@ defmodule Api.ProjectView do
       title: project.title,
       alias: project.alias,
       head: project.head,
-      updated_at: project.updated_at}
+      updated_at: project.updated_at |> DateTime.to_unix(:millisecond)}
   end
 end
