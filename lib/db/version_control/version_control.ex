@@ -38,7 +38,7 @@ defmodule Db.VersionControl do
   def get_revisions_summary(%Project{} = project) do
     query = from r in Revision,
       where: r.project_id == ^project.id,
-      select: struct(r, [:id, :message, :parent_id])
+      select: struct(r, [:id, :message, :timestamp, :parent_id])
     {:ok, Repo.all(query)}
   end
 
