@@ -13,7 +13,7 @@ defmodule Musehackers.Mixfile do
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
-        "coveralls": :test,
+        coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
@@ -45,13 +45,15 @@ defmodule Musehackers.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.4"},
+      {:phoenix, "~> 1.4.0"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:phoenix_ecto, "~> 3.3.0"},
-      {:postgrex, "~> 0.13.3"},
-      {:phoenix_html, "~> 2.10"},
+      {:phoenix_ecto, "~> 4.0"},
+      {:ecto_sql, "~> 3.0.3"},
+      {:postgrex, "~> 0.14.1"},
+      {:phoenix_html, "~> 2.12"},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
+      {:cowboy, "~> 2.4"},
+      {:plug_cowboy, "~> 2.0"},
       {:slugify, "~> 1.1"},
 
       # For auth
@@ -89,7 +91,7 @@ defmodule Musehackers.Mixfile do
       "deploy.prod": ["edeliver update production --start-deploy", "edeliver migrate production"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end

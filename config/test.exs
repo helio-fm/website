@@ -17,7 +17,6 @@ config :logger, level: :warn
 
 # Configure your database
 config :musehackers, Db.Repo,
-  adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "",
   database: "musehackers_test",

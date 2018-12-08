@@ -35,6 +35,7 @@ defmodule Api.SessionController do
   def is_authenticated(conn, _params) do
     conn
     |> put_status(:ok)
-    |> render(Api.SessionView, "session.status.v1.json")
+    |> put_view(Api.SessionView)
+    |> render("session.status.v1.json")
   end
 end

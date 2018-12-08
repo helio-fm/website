@@ -9,13 +9,15 @@ defmodule Api.FallbackController do
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)
-    |> render(Api.ChangesetView, "error.json", changeset: changeset)
+    |> put_view(Api.ChangesetView)
+    |> render("error.json", changeset: changeset)
   end
 
   def call(conn, {:error, :not_found}) do
     conn
     |> put_status(:not_found)
-    |> render(Api.ErrorView, :"404")
+    |> put_view(Api.ErrorView)
+    |> render(:"404")
   end
 
   def call(conn, {:error, :login_failed}), do: unauthorized(conn, "authentication failed")
@@ -33,12 +35,14 @@ defmodule Api.FallbackController do
   defp unauthorized(conn, message) do
     conn
     |> put_status(:unauthorized)
-    |> render(Api.ErrorView, "error.json", status: :unauthorized, message: message)
+    |> put_view(Api.ErrorView)
+    |> render("error.json", status: :unauthorized, message: message)
   end
 
   defp not_found(conn, message) do
     conn
     |> put_status(:not_found)
-    |> render(Api.ErrorView, "error.json", status: :not_found, message: message)
+    |> put_view(Api.ErrorView)
+    |> render("error.json", status: :not_found, message: message)
   end
 end

@@ -16,7 +16,7 @@ defmodule Api.V1.ClientAppResourceControllerTest do
 
   @create_attrs %{
     app_name: "some app_name",
-    data: %{"translations": "test"},
+    data: %{translations: "test"},
     hash: "some hash",
     type: "some type"
   }
