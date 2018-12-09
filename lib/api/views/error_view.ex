@@ -2,9 +2,9 @@ defmodule Api.ErrorView do
   use Api, :view
   @moduledoc false
 
-  def render("400.html", _assigns) do 
-    "Bad request" 
-  end 
+  def render("400.html", _assigns) do
+    "Bad request"
+  end
 
   def render("404.html", _assigns) do
     "Page not found"
@@ -14,8 +14,8 @@ defmodule Api.ErrorView do
     "Internal server error"
   end
 
-  def render("error.json", %{status: status, message: message}) do
-    %{errors: %{status: status, message: message}}
+  def render("error.json", %{message: message}) do
+    %{errors: %{message: message}}
   end
 
   # In case no render clause matches or no

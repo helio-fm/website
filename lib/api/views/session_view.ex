@@ -2,24 +2,12 @@ defmodule Api.SessionView do
   use Api, :view
   @moduledoc false
 
-  def render("sign.in.v1.json", %{user: user, jwt: jwt}) do
-    %{status: :ok,
-      session: %{
-        token: jwt,
-        email: user.email
-      }, message: """
-        You are successfully logged in!
-        Add this token to authorization header to make authorized requests.
-      """}
+  def render("sign.in.v1.json", %{jwt: jwt}) do
+    %{token: jwt}
   end
 
-  def render("refresh.token.v1.json", %{user: user, jwt: jwt}) do
-    %{status: :ok,
-      message: "Token was successfully re-issued",
-      session: %{
-        token: jwt,
-        email: user.email
-      }}
+  def render("refresh.token.v1.json", %{jwt: jwt}) do
+    %{token: jwt}
   end
 
   def render("session.info.v1.json", %{session: session}) do
@@ -30,6 +18,6 @@ defmodule Api.SessionView do
   end
 
   def render("session.status.v1.json", _params) do
-    %{status: :ok}
+    %{}
   end
 end

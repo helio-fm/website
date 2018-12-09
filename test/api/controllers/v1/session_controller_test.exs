@@ -33,8 +33,8 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      assert json_response(conn, 200)["session"]["token"] != ""
+      assert %{"token" => token} = json_response(conn, 200)
+      assert token != ""
     end
 
     test "registers and logs user in when data is valid but email case differs", %{conn: conn} do
@@ -42,8 +42,8 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_login_path(conn, :sign_in), session: %{@sign_in_payload | email: "email@helio.FM"}
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      assert json_response(conn, 200)["session"]["token"] != ""
+      assert %{"token" => token} = json_response(conn, 200)
+      assert token != ""
     end
 
     test "returns valid JWT token that successfully authorizes a protected resource request", %{conn: conn} do
@@ -51,12 +51,10 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      assert json_response(conn, 200)["session"]["email"] == "email@helio.fm"
+      assert %{"token" => jwt} = json_response(conn, 200)
 
-      jwt = json_response(conn, 200)["session"]["token"]
       conn = get authenticated(conn, jwt), api_user_current_session_path(conn, :is_authenticated)
-      assert json_response(conn, 200)["status"] == "ok"
+      assert json_response(conn, 200)
     end
 
     test "renders login error when email is invalid", %{conn: conn} do
@@ -64,7 +62,7 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_login_path(conn, :sign_in), session: %{@sign_in_payload | email: "invalid"}
-      assert %{"errors" => %{"status" => "unauthorized"}} = json_response(conn, 401)
+      assert %{"errors" => %{"message" => _}} = json_response(conn, 401)
     end
 
     test "renders login error when password is invalid", %{conn: conn} do
@@ -72,7 +70,7 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_login_path(conn, :sign_in), session: %{@sign_in_payload | password: "invalid"}
-      assert %{"errors" => %{"status" => "unauthorized"}} = json_response(conn, 401)
+      assert %{"errors" => %{"message" => _}} = json_response(conn, 401)
     end
   end
 
@@ -82,33 +80,30 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      token = json_response(conn, 200)["session"]["token"]
+      assert %{"token" => token} = json_response(conn, 200)
 
-      :timer.sleep(1000) # to make sure new tokens will have different expiry 
+      :timer.sleep(1000) # to make sure new tokens will have different expiry
 
       conn = post authenticated(conn, token), api_user_current_session_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
 
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      new_token_1 = json_response(conn, 200)["session"]["token"]
+      assert %{"token" => new_token_1} = json_response(conn, 200)
       assert token != new_token_1
 
       # authorizes the protected resource request with a refreshed token
       conn = get authenticated(conn, new_token_1), api_user_current_session_path(conn, :is_authenticated)
-      assert json_response(conn, 200)["status"] == "ok"
+      assert json_response(conn, 200)
 
-      :timer.sleep(1000) # to make sure new tokens will have different expiry 
+      :timer.sleep(1000) # to make sure new tokens will have different expiry
 
       conn = post authenticated(conn, new_token_1), api_user_current_session_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: new_token_1}
 
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      new_token_2 = json_response(conn, 200)["session"]["token"]
+      assert %{"token" => new_token_2} = json_response(conn, 200)
       assert new_token_1 != new_token_2
 
       conn = get authenticated(conn, new_token_2), api_user_current_session_path(conn, :is_authenticated)
-      assert json_response(conn, 200)["status"] == "ok"
+      assert json_response(conn, 200)
     end
 
     test "fails to re-generate token twice based on the same token", %{conn: conn} do
@@ -116,16 +111,14 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      token = json_response(conn, 200)["session"]["token"]
+      assert %{"token" => token} = json_response(conn, 200)
 
-      :timer.sleep(1000) # to make sure new tokens will have different expiry 
+      :timer.sleep(1000) # to make sure new tokens will have different expiry
 
       conn = post authenticated(conn, token), api_user_current_session_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
 
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      new_token = json_response(conn, 200)["session"]["token"]
+      assert %{"token" => new_token} = json_response(conn, 200)
 
       assert new_token != token
 
@@ -140,8 +133,7 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"status" => "ok"} = json_response(conn, 201)
 
       conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
-      assert %{"status" => "ok"} = json_response(conn, 200)
-      token = json_response(conn, 200)["session"]["token"]
+      assert %{"token" => token} = json_response(conn, 200)
 
       conn = post authenticated(conn, token), api_user_current_session_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token, device_id: "other"}

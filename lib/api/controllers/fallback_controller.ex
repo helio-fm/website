@@ -36,13 +36,13 @@ defmodule Api.FallbackController do
     conn
     |> put_status(:unauthorized)
     |> put_view(Api.ErrorView)
-    |> render("error.json", status: :unauthorized, message: message)
+    |> render("error.json", message: message)
   end
 
   defp not_found(conn, message) do
     conn
     |> put_status(:not_found)
     |> put_view(Api.ErrorView)
-    |> render("error.json", status: :not_found, message: message)
+    |> render("error.json", message: message)
   end
 end
