@@ -244,7 +244,6 @@ h6 {
   width: 230px;
   box-sizing: border-box;
   border-radius: 40px;
-  text-align: center;
   -webkit-transition:.2s ease-out;
   -moz-transition:.2s ease-out;
   -o-transition:.2s ease-out;
@@ -372,7 +371,9 @@ footer #built-with-love {
   margin-top: 0;
 }
 #helio-header #payoff {
-  position: relative;
+  position: absolute;
+  top: 305px;
+  left: 0px;
   z-index: 3;
 }
 #helio-header .screencast {
@@ -471,7 +472,19 @@ section h3 {
   margin: 0;
   padding: 5px 0;
 }
-/* Github link */
+.logo-container {
+  position: relative;
+  display: table;
+  margin: 0 auto;
+  width: 280px;
+  height: 280px;
+}
+#helio-logo-alt {
+  position: absolute;
+  top: -88px;
+  left: 0px;
+  clip: rect(88px, 280px, 368px, 0px);
+}
 .github-corner:hover .octo-arm {
   animation:octocat-wave 560ms ease-in-out
 }
