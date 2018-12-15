@@ -16,6 +16,7 @@ defmodule Api.V1.ProjectControllerTest do
     id: @id,
     alias: "some-alias",
     title: "some title",
+    head: nil,
     author_id: "11111111-1111-1111-1111-111111111111"
   }
 
@@ -61,15 +62,15 @@ defmodule Api.V1.ProjectControllerTest do
   end
 
   describe "update the project" do
-    setup [:create_user_and_project]
+    setup [:create_revisions_tree]
 
     test "renders updated project when data is valid", %{conn: conn, project: %Project{id: id}, user: user} do
-      attrs = %{@project_attrs | title: "another title", alias: "another-alias"}
+      attrs = %{@project_attrs | title: "another title", alias: "another-alias", head: "5"}
       conn = put authenticated(conn, user), api_user_project_path(conn, :create_or_update, id), project: attrs
       assert %{"id" => _,
         "alias" => "another-alias",
         "title" => "another title",
-        "head" => nil,
+        "head" => "5",
         "updatedAt" => _} = json_response(conn, :ok)["project"]
     end
 
@@ -77,6 +78,12 @@ defmodule Api.V1.ProjectControllerTest do
       {:ok, user} = second_user_fixture()
       conn = get authenticated(conn, user), api_user_project_path(conn, :summary, id)
       assert response(conn, :not_found)
+    end
+
+    test "renders error when updated head points to non-existent revision", %{conn: conn, project: %Project{id: id}, user: user} do
+      attrs = %{@project_attrs | title: "another title", alias: "another-alias", head: "no-such-revision"}
+      conn = put authenticated(conn, user), api_user_project_path(conn, :create_or_update, id), project: attrs
+      assert response(conn, :unprocessable_entity)
     end
 
     test "renders error when updating existing project as another user", %{conn: conn, project: _, user: _} do

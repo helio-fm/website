@@ -20,7 +20,7 @@ defmodule Db.VersionControl.Project do
   @doc false
   def changeset(%Project{} = project, attrs) do
     project
-    |> cast(attrs, [:id, :title, :alias, :author_id])
+    |> cast(attrs, [:id, :title, :alias, :head, :author_id])
     |> validate_required([:id, :title])
     |> validate_length(:title, min: 2, max: 32)
     |> generate_alias_if_needed()
