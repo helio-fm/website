@@ -115,7 +115,7 @@ defmodule Jobs.Etl.Translations do
 
     result = ids
       |> Enum.flat_map(fn{x, i} ->
-        case x != "ID"  && x != "" do
+        case x != "ID" && x != "" do
           true -> [%{
             id: x,
             name: Enum.at(names, i),
@@ -134,7 +134,7 @@ defmodule Jobs.Etl.Translations do
       |> Enum.flat_map(fn(x) ->
         name = x |> Enum.at(0) |> elem(0)
         translation = x |> Enum.at(locale_index) |> elem(0)
-        case translation == "" || name =~ "{x}" do
+        case name == "" || translation == "" || name =~ "{x}" do
           false -> [%{
             name: name,
             translation: translation
@@ -149,7 +149,7 @@ defmodule Jobs.Etl.Translations do
       |> Enum.flat_map(fn(x) ->
         name = x |> Enum.at(0) |> elem(0)
         translations = x |> Enum.at(locale_index) |> elem(0)
-        case translations != "" && name =~ "{x}" do
+        case name != "" && translations != "" && name =~ "{x}" do
           true -> [%{
             name: name,
             translation: split_plural_forms(translations)

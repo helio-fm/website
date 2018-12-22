@@ -59,7 +59,7 @@ defmodule Jobs.Etl.TranslationsTest do
             pluralLiteral: [
               %{name: "{x} input channels", translation: [%{name: "{x} 入力チャンネル", pluralForm: "1"}]},
               %{name: "{x} output channels", translation: [%{name: "{x} 出力チャンネル", pluralForm: "1"}]}]
-          }          
+          }
         ]
       }
     }
@@ -81,7 +81,8 @@ Plural forms:,,,,,
 {x} output channels\",\"{x} выходной канал
 {x} выходных канала
 {x} выходных каналов\",{x} 出力チャンネル,\"{X} uitgangskanaal
-{X} uitgangskanalen\""
+{X} uitgangskanalen\"
+,test,should not be exported,since key is empty,yo,"
 
     test "transform/1 returns properly transformed translations map" do
       {:ok, resource_map} = Translations.transform(@valid_imported_csv)

@@ -75,7 +75,7 @@ defmodule Musehackers.Mixfile do
       {:distillery, "~> 2.0"},
 
       # For tests
-      {:credo, "~> 0.10", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.9", only: :test}
     ]
   end
