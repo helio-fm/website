@@ -2,18 +2,23 @@ use Mix.Config
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :musehackers, MusehackersWeb.Endpoint,
-  http: [port: 4001],
+config :musehackers, Web.Endpoint,
+  http: [port: 4100],
+  secret_key_base: "TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST",
+  server: false
+
+config :musehackers, Api.Endpoint,
+  http: [port: 4101],
+  secret_key_base: "TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST",
   server: false
 
 # Print only warnings and errors during test
 config :logger, level: :warn
 
 # Configure your database
-config :musehackers, Musehackers.Repo,
-  adapter: Ecto.Adapters.Postgres,
+config :musehackers, Db.Repo,
   username: "postgres",
-  password: "123",
+  password: "",
   database: "musehackers_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
@@ -21,8 +26,12 @@ config :musehackers, Musehackers.Repo,
 # Reduce the number of rounds so it does not slow down tests
 config :pbkdf2_elixir, :rounds, 1
 
-config :musehackers, Musehackers.Auth.Token,
+config :musehackers, Api.Auth.Token,
   secret_key: "TEST_SECRET_KEY_GUARDIAN"
 
-config :musehackers, MusehackersWeb.Endpoint,
-  secret_key_base: "TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE_TEST_SECRET_KEY_BASE__"
+# Use mock adapter for all clients
+config :tesla, adapter: Tesla.Mock
+
+# Locations
+config :musehackers, images_path: "./test"
+config :musehackers, builds_path: "./test"

@@ -6,20 +6,22 @@
 use Mix.Config
 
 # General application configuration
-config :musehackers,
-  ecto_repos: [Musehackers.Repo]
+config :musehackers, ecto_repos: [Db.Repo]
 
-# Configures the endpoint
-config :musehackers, MusehackersWeb.Endpoint,
+# Configures the endpoints
+config :musehackers, Web.Endpoint,
   url: [host: "localhost"],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
-  render_errors: [view: MusehackersWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Musehackers.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: Web.ErrorView, accepts: ~w(html json)]
+
+config :musehackers, Api.Endpoint,
+  url: [host: "localhost"],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  render_errors: [view: Api.ErrorView, accepts: ~w(html json)]
 
 # Configure Guardian for JWT authentication
-config :musehackers, Musehackers.Auth.Token,
-  issuer: "musehackers",
+config :musehackers, Api.Auth.Token,
+  issuer: "hfm",
   secret_key: System.get_env("SECRET_KEY_GUARDIAN"),
   token_verify_module: Guardian.Token.Jwt.Verify,
   allowed_algos: ["HS512"],
@@ -31,7 +33,7 @@ config :musehackers, Musehackers.Auth.Token,
 config :ueberauth, Ueberauth,
   providers: [
     github: {Ueberauth.Strategy.Github,
-      [default_scope: "read:user,user:email"]}
+      [default_scope: "read:user,user:email", send_redirect_uri: false]}
   ]
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
@@ -45,14 +47,19 @@ config :logger, :console,
 
 # Configure encoders
 config :phoenix, :format_encoders,
-  json: Musehackers.Json.CamelCaseEncoder
+  json: Api.Plugs.CamelCaseEncoder
 
-config :ecto, json_library: Jason
+# Mime types for versioning
+config :mime, :types, %{
+  "application/helio.fm.v1+json" => [:v1]
+}
 
-# Uploads locations
-config :musehackers, music_path: "/opt/musehackers/files/music/"
-config :musehackers, builds_path: "/opt/musehackers/files/builds/"
-config :musehackers, avatars_path: "/opt/musehackers/files/images/"
+# Locations
+config :musehackers, users_base_url: "https://helio.fm/"
+config :musehackers, builds_base_url: "https://ci.helio.fm/"
+config :musehackers, images_base_url: "https://img.helio.fm/"
+config :musehackers, images_path: "/opt/musehackers/files/img/"
+config :musehackers, builds_path: "/opt/musehackers/files/ci/"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

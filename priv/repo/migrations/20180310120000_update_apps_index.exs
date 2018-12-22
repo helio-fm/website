@@ -1,4 +1,4 @@
-defmodule Musehackers.Repo.Migrations.UpdateAppsIndex do
+defmodule Db.Repo.Migrations.UpdateAppsIndex do
   use Ecto.Migration
 
   def change do

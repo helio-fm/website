@@ -16,7 +16,6 @@ use Mix.Releases.Config,
 # For a full list of config options for both releases
 # and environments, visit https://hexdocs.pm/distillery/configuration.html
 
-
 # You may define one or more environments in this file,
 # an environment's settings will override those of a release
 # when building in that environment, this combination of release
@@ -25,12 +24,14 @@ use Mix.Releases.Config,
 environment :dev do
   set dev_mode: true
   set include_erts: false
+  set cookie: :"bMLs+UU3UjsaC1lwGUTjzKFJvXEvpLeaOYgnOqoPYCIQ1JmDwDHorhJn6L6k0ZGU"
 end
 
 environment :prod do
   set include_erts: true
   set include_src: false
   set output_dir: "rel/musehackers"
+  set cookie: :"09X3mQLxEOLFQmdaOfBSuH5UAxN6gI2+RIXEvZvQSeJx4F9tFQSyvO+b/nSUtzpD"
 end
 
 # You may define one or more releases in this file.

@@ -1,4 +1,4 @@
-defmodule Musehackers.Repo.Migrations.CreateApps do
+defmodule Db.Repo.Migrations.CreateApps do
   use Ecto.Migration
 
   def change do

@@ -18,5 +18,7 @@ erl_crash.dump
 *.tar.gz
 
 /.idea
+/.elixir_ls
 *.iml
+vscode.code-workspace
 errors.txt

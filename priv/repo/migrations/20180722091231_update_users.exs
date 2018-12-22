@@ -1,4 +1,4 @@
-defmodule Musehackers.Repo.Migrations.UpdateUsersGithubInfo do
+defmodule Db.Repo.Migrations.UpdateUsersGithubInfo do
   use Ecto.Migration
 
   def change do
