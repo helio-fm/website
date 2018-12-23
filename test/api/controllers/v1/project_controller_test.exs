@@ -122,9 +122,9 @@ defmodule Api.V1.ProjectControllerTest do
   end
 
   describe "delete project" do
-    setup [:create_user_and_project]
+    setup [:create_revisions_tree]
 
-    test "deletes chosen project", %{conn: conn, project: %Project{id: id}, user: user} do
+    test "deletes chosen project all revisions", %{conn: conn, project: %Project{id: id}, user: user} do
       conn = delete authenticated(conn, user), api_user_project_path(conn, :delete, id)
       assert response(conn, :no_content)
 

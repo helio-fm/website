@@ -34,7 +34,7 @@ defmodule Api.ProjectController do
   def delete(conn, %{"project_id" => id}) do
     with user_id <- Token.current_subject(conn),
          {:ok, project} <- VersionControl.get_project(id, user_id),
-         {:ok, %Project{}} <- VersionControl.delete_project(project),
+         {:ok, %{project: %Project{}, revisions: _}} <- VersionControl.delete_project(project),
       do: conn |> send_resp(:no_content, "")
   end
 

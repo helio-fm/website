@@ -8,6 +8,7 @@ defmodule Db.VersionControl do
 
   alias Db.VersionControl.Project
   alias Db.VersionControl.Revision
+  alias Ecto.Multi
 
   @doc """
   Returns the list of projects for a given user id.
@@ -71,7 +72,7 @@ defmodule Db.VersionControl do
   end
 
   @doc """
-  Deletes a Project.
+  Deletes a project with all linked revisions.
 
   ## Examples
 
@@ -83,7 +84,12 @@ defmodule Db.VersionControl do
 
   """
   def delete_project(%Project{} = project) do
-    Repo.delete(project)
+    project_revisions = from r in Revision,
+      where: r.project_id == ^project.id
+    Multi.new
+      |> Multi.delete_all(:revisions, project_revisions)
+      |> Multi.delete(:project, project)
+      |> Repo.transaction()
   end
 
   alias Db.VersionControl.Revision

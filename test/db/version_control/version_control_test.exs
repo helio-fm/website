@@ -68,7 +68,7 @@ defmodule Db.VersionControlTest do
 
     test "delete_project/1 deletes the project" do
       {project, user} = project_fixture()
-      assert {:ok, %Project{}} = VersionControl.delete_project(project)
+      assert {:ok, %{project: %Project{}, revisions: _}} = VersionControl.delete_project(project)
       assert {:error, :project_not_found} = VersionControl.get_project(project.id, user.id)
       assert VersionControl.get_projects_for_user(user.id) == {:ok, []}
     end
