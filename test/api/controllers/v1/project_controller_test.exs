@@ -243,12 +243,14 @@ defmodule Api.V1.ProjectControllerTest do
 
   defp create_revisions_tree(_) do
     {:ok, user} = Accounts.create_user(@user_attrs)
-    {:ok, project} = VersionControl.create_project(%{@project_attrs | author_id: user.id})
+    attrs = %{@project_attrs | author_id: user.id}
+    {:ok, project} = VersionControl.create_project(attrs)
     {:ok, r1} = VersionControl.create_revision(%{@revision_attrs | id: "1", project_id: project.id})
     {:ok, r2} = VersionControl.create_revision(%{@revision_attrs | id: "2", project_id: project.id, parent_id: r1.id})
     {:ok, r3} = VersionControl.create_revision(%{@revision_attrs | id: "3", project_id: project.id, parent_id: r1.id})
     {:ok, r4} = VersionControl.create_revision(%{@revision_attrs | id: "4", project_id: project.id, parent_id: r3.id})
     {:ok, r5} = VersionControl.create_revision(%{@revision_attrs | id: "5", project_id: project.id, parent_id: r3.id})
+    {:ok, project} = VersionControl.update_project(%{attrs | head: r5.id})
     tree = [r1, r2, r3, r4, r5]
     {:ok, project: project, user: user, tree: tree}
   end

@@ -6,9 +6,10 @@ defmodule Db.VersionControl do
   import Ecto.Query, warn: false
   alias Db.Repo
 
+  alias Ecto.Multi
+  alias Ecto.Changeset
   alias Db.VersionControl.Project
   alias Db.VersionControl.Revision
-  alias Ecto.Multi
 
   @doc """
   Returns the list of projects for a given user id.
@@ -87,9 +88,10 @@ defmodule Db.VersionControl do
     project_revisions = from r in Revision,
       where: r.project_id == ^project.id
     Multi.new
-      |> Multi.delete_all(:revisions, project_revisions)
-      |> Multi.delete(:project, project)
-      |> Repo.transaction()
+    |> Multi.update(:head, Changeset.change(project, %{head: nil}))
+    |> Multi.delete_all(:revisions, project_revisions)
+    |> Multi.delete(:project, project)
+    |> Repo.transaction()
   end
 
   alias Db.VersionControl.Revision
