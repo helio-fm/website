@@ -18,7 +18,6 @@ defmodule Api.V1.SessionControllerTest do
   }
 
   @refresh_token_payload %{
-    bearer: "none",
     device_id: "some device",
     platform_id: "ios"
   }
@@ -85,7 +84,7 @@ defmodule Api.V1.SessionControllerTest do
       :timer.sleep(1000) # to make sure new tokens will have different expiry
 
       conn = post authenticated(conn, token), api_user_current_session_path(conn, :refresh_token),
-        session: %{@refresh_token_payload | bearer: token}
+        session: @refresh_token_payload
 
       assert %{"token" => new_token_1} = json_response(conn, 200)
       assert token != new_token_1
@@ -98,7 +97,7 @@ defmodule Api.V1.SessionControllerTest do
 
       # and is able to use new token to prolong the sliding session again
       conn = post authenticated(conn, new_token_1), api_user_current_session_path(conn, :refresh_token),
-        session: %{@refresh_token_payload | bearer: new_token_1}
+        session: @refresh_token_payload
 
       assert %{"token" => new_token_2} = json_response(conn, 200)
       assert new_token_1 != new_token_2
@@ -108,12 +107,12 @@ defmodule Api.V1.SessionControllerTest do
 
       # fails to re-generate token twice based on the old tokens
       conn = post authenticated(conn, token), api_user_current_session_path(conn, :refresh_token),
-        session: %{@refresh_token_payload | bearer: token}
+        session: @refresh_token_payload
 
       assert response(conn, 401)
 
       conn = post authenticated(conn, new_token_1), api_user_current_session_path(conn, :refresh_token),
-        session: %{@refresh_token_payload | bearer: new_token_1}
+        session: @refresh_token_payload
 
       assert response(conn, 401)
     end
@@ -126,7 +125,7 @@ defmodule Api.V1.SessionControllerTest do
       assert %{"token" => token} = json_response(conn, 200)
 
       conn = post authenticated(conn, token), api_user_current_session_path(conn, :refresh_token),
-        session: %{@refresh_token_payload | bearer: token, device_id: "other"}
+        session: %{@refresh_token_payload | device_id: "other"}
 
       assert response(conn, 401)
     end
