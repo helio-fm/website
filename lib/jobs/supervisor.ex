@@ -4,9 +4,6 @@ defmodule Jobs.Supervisor do
   use Supervisor
   require Logger
 
-  alias Jobs.Etl.Translations
-  alias Jobs.Util.CollectBuilds
-
   def start_link(opts \\ []) do
     Logger.info IO.ANSI.magenta <> "Starting jobs supervisor" <> IO.ANSI.reset
     Supervisor.start_link(__MODULE__, opts, name: __MODULE__)
@@ -14,8 +11,9 @@ defmodule Jobs.Supervisor do
 
   def init(_arg) do
     children = [
-      {Translations, []},
-      {CollectBuilds, []}
+      {Jobs.Etl.Translations, []},
+      {Jobs.Util.CollectBuilds, []},
+      {Jobs.Util.CleanupStaleSessions, []}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

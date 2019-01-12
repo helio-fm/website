@@ -48,7 +48,7 @@ defmodule Musehackers.Mixfile do
       {:phoenix, "~> 1.4.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.0.3"},
+      {:ecto_sql, "~> 3.0.4"},
       {:postgrex, "~> 0.14.1"},
       {:phoenix_html, "~> 2.12"},
       {:gettext, "~> 0.11"},
@@ -59,7 +59,7 @@ defmodule Musehackers.Mixfile do
       # For auth
       {:ueberauth, "~> 0.5"},
       {:ueberauth_github, "~> 0.7.0"},
-      {:guardian, "~> 1.1.1"},
+      {:guardian, "~> 1.2.1"},
       {:comeonin, "~> 4.1.1"},
       {:pbkdf2_elixir, "~> 0.12.3"},
 
@@ -71,7 +71,7 @@ defmodule Musehackers.Mixfile do
       {:jason, "~> 1.1.1"},
 
       # For deployment
-      {:edeliver, ">= 1.6.0"},
+      {:edeliver, "~> 1.6.0"},
       {:distillery, "~> 2.0"},
 
       # For tests
