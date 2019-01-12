@@ -139,6 +139,18 @@ defmodule Db.Accounts do
   end
 
   @doc """
+  Returns the list of sessions info for a given user.
+  Tokens are not included.
+  """
+  def get_recent_tokens(age_seconds) do
+    date = DateTime.from_unix!(DateTime.to_unix(DateTime.utc_now()) - age_seconds)
+    query = from s in Session,
+      where: s.updated_at >= ^date,
+      select: s
+    {:ok, Repo.all(query)}
+  end
+
+  @doc """
   Gets a single session id for a given user and device.
   """
   def get_user_session_for_device(user_id, device_id) do

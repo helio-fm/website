@@ -27,7 +27,10 @@ config :musehackers, Db.Repo,
 config :pbkdf2_elixir, :rounds, 1
 
 config :musehackers, Api.Auth.Token,
-  secret_key: "TEST_SECRET_KEY_GUARDIAN"
+  secret_key: "TEST_SECRET_KEY_GUARDIAN",
+  token_verify_module: Guardian.Token.Jwt.Verify,
+  allowed_algos: ["HS512"],
+  allowed_drift: 0
 
 # Use mock adapter for all clients
 config :tesla, adapter: Tesla.Mock

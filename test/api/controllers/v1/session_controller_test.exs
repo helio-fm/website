@@ -96,6 +96,7 @@ defmodule Api.V1.SessionControllerTest do
 
       :timer.sleep(1000) # to make sure new tokens will have different expiry
 
+      # and is able to use new token to prolong the sliding session again
       conn = post authenticated(conn, new_token_1), api_user_current_session_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: new_token_1}
 
@@ -104,26 +105,15 @@ defmodule Api.V1.SessionControllerTest do
 
       conn = get authenticated(conn, new_token_2), api_user_current_session_path(conn, :is_authenticated)
       assert json_response(conn, 200)
-    end
 
-    test "fails to re-generate token twice based on the same token", %{conn: conn} do
-      conn = post conn, api_signup_path(conn, :sign_up), user: @sign_up_payload
-      assert %{"status" => "ok"} = json_response(conn, 201)
-
-      conn = post conn, api_login_path(conn, :sign_in), session: @sign_in_payload
-      assert %{"token" => token} = json_response(conn, 200)
-
-      :timer.sleep(1000) # to make sure new tokens will have different expiry
-
+      # fails to re-generate token twice based on the old tokens
       conn = post authenticated(conn, token), api_user_current_session_path(conn, :refresh_token),
         session: %{@refresh_token_payload | bearer: token}
 
-      assert %{"token" => new_token} = json_response(conn, 200)
+      assert response(conn, 401)
 
-      assert new_token != token
-
-      conn = post authenticated(conn, token), api_user_current_session_path(conn, :refresh_token),
-        session: %{@refresh_token_payload | bearer: token}
+      conn = post authenticated(conn, new_token_1), api_user_current_session_path(conn, :refresh_token),
+        session: %{@refresh_token_payload | bearer: new_token_1}
 
       assert response(conn, 401)
     end

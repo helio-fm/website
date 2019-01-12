@@ -6,9 +6,7 @@ defmodule Jobs.Util.CleanupStaleSessions do
   use GenServer
   require Logger
 
-  alias Db.Repo
   alias Db.Accounts
-  alias Db.Accounts.Session
   alias Api.Auth.Token
 
   def start_link(_) do
@@ -38,16 +36,14 @@ defmodule Jobs.Util.CleanupStaleSessions do
 
   def cleanup_sessions() do
     # Get all sessions updated within the last week,
-    # which should be enough, since the script works every ?? hr
-    datetime = DateTime.utc_now # todo minus N
-    stale_sessions = from s in Sessions where s.updated_at >= ^datetime
-    |> Repo.all
-    |> Enum.filter(fn x -> token_is_invalid(x) end)
-    # num_sessions_deleted = stale_sessions |> Enum.count
-    # for session <- stale_sessions do
-    #   Accounts.delete_session(session)
-    # end
-    # num_sessions_deleted
+    # which should be enough, since the script works every 3 hr
+    {:ok, sessions} = Accounts.get_recent_tokens(60 * 60 * 24 * 7)
+    stale_sessions = sessions |> Enum.filter(fn x -> token_is_invalid(x.token) end)
+    num_sessions_deleted = stale_sessions |> Enum.count
+    for session <- stale_sessions do
+      Accounts.delete_session(session)
+    end
+    num_sessions_deleted
   end
 
   defp token_is_invalid(token) do
