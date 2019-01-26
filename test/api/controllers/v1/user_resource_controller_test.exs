@@ -28,7 +28,7 @@ defmodule Api.V1.UserResourceControllerTest do
     test "renders created resource when data is valid", %{conn: conn, user: user} do
       attrs = %{@create_attrs | owner_id: user.id}
       conn = put authenticated(conn, user), api_user_resource_path(conn, :create_or_update, attrs.type, attrs.name), resource: attrs
-      assert %{"test" => "test"} = json_response(conn, :ok)["data"]
+      assert %{"type" => "some type", "name" => "some name"} = json_response(conn, :ok)
 
       conn = get authenticated(conn, user), api_user_resource_path(conn, :show, @create_attrs.type, @create_attrs.name)
       assert %{"test" => "test"} = json_response(conn, :ok)["data"]
@@ -46,7 +46,7 @@ defmodule Api.V1.UserResourceControllerTest do
 
     test "renders updated resource when data is valid", %{conn: conn, resource: _, user: user} do
       conn = put authenticated(conn, user), api_user_resource_path(conn, :create_or_update, @update_attrs.type, @update_attrs.name), resource: @update_attrs
-      assert %{"test2" => "test2"} = json_response(conn, :ok)["data"]
+      assert %{"type" => "some type", "name" => "some name"} = json_response(conn, :ok)
 
       conn = get authenticated(conn, user), api_user_resource_path(conn, :show, @create_attrs.type, @create_attrs.name)
       assert %{"test2" => "test2"} = json_response(conn, :ok)["data"]
@@ -61,6 +61,9 @@ defmodule Api.V1.UserResourceControllerTest do
     test "renders different data for different users when type and name are the same", %{conn: conn, resource: resource, user: user} do
       {:ok, user2} = second_user_fixture()
       conn = put authenticated(conn, user2), api_user_resource_path(conn, :create_or_update, resource.type, resource.name), resource: @update_attrs
+      assert %{"type" => "some type", "name" => "some name"} = json_response(conn, :ok)
+
+      conn = get authenticated(conn, user2), api_user_resource_path(conn, :show, resource.type, resource.name)
       assert %{"test2" => "test2"} = json_response(conn, :ok)["data"]
 
       conn = get authenticated(conn, user), api_user_resource_path(conn, :show, resource.type, resource.name)
