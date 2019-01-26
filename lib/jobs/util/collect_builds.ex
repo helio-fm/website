@@ -63,8 +63,8 @@ defmodule Jobs.Util.CollectBuilds do
   defp parse_and_update_version(build_file) do
     try do
       with {:ok, version_attrs} <- parse_version_attrs(build_file),
-          # TODO when I'll be setting up CI for release builds:
-          # now that build attributes are parsed, we need to do a check like:
+          # When I'll be setting up CI for release builds, I'll need to update the logic:
+          # now that build attributes are parsed, do a check like:
           # select count(*) from app_versions
           #   where app_name='...' and platform_type ilike '...' and build_type='...' and branch='...' and architecture='...'
           #   and (string_to_array(version, '.') >= string_to_array('2.0', '.') or version is null);
