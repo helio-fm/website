@@ -89,16 +89,23 @@ defmodule Db.Clients do
   @doc """
   Gets a list of client versions.
 
+  to return available versions:
+
+  select * from versions
+  where app_name='helio' and platform_type ilike 'windows'
+    and (string_to_array(version, '.') >= string_to_array('2.0', '.')
+      or version is null);
+
   ## Examples
 
-      iex> get_app_versions("helio", "linux")
+      iex> get_latest_app_versions("helio", "linux")
       %AppVersion{}
 
-      iex> get_app_versions("test", "test")
+      iex> get_latest_app_versions("test", "test")
       {:error, :client_not_found}
 
   """
-  def get_app_versions(app_name, platform_type) do
+  def get_latest_app_versions(app_name, platform_type) do
     query = from a in AppVersion,
       where: a.app_name == ^app_name and ilike(a.platform_type, ^platform_type),
       select: a,
@@ -118,6 +125,10 @@ defmodule Db.Clients do
 
   @doc """
   Creates or updates existing app version.
+  Here, conflict_target/on_conflict is used, because
+  app versions table is only meant to store the very latest versions.
+  And all the code around assumes it only deals with latest versions.
+  It's up to versions collection job to fill the table properly.
 
   ## Examples
 

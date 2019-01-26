@@ -20,7 +20,7 @@ defmodule Web.HelioClientPageController do
 
     architecture = AppVersion.detect_architecture(user_agent)
 
-    clients = case Clients.get_app_versions("helio", "%") do
+    clients = case Clients.get_latest_app_versions("helio", "%") do
         {:ok, clients_info} -> clients_info
         _ -> []
     end

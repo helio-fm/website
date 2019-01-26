@@ -18,7 +18,7 @@ defmodule Jobs.Util.CollectBuilds do
   @builds_base_url Application.get_env(:musehackers, :builds_base_url)
 
   defp get_build_files() do
-    @builds_path |> Path.join("**") |> Path.wildcard() |> Enum.map(&Path.basename/1) 
+    @builds_path |> Path.join("**") |> Path.wildcard() |> Enum.map(&Path.basename/1)
   end
 
   def start_link(_) do
@@ -63,6 +63,15 @@ defmodule Jobs.Util.CollectBuilds do
   defp parse_and_update_version(build_file) do
     try do
       with {:ok, version_attrs} <- parse_version_attrs(build_file),
+          # TODO when I'll be setting up CI for release builds:
+          # now that build attributes are parsed, we need to do a check like:
+          # select count(*) from app_versions
+          #   where app_name='...' and platform_type ilike '...' and build_type='...' and branch='...' and architecture='...'
+          #   and (string_to_array(version, '.') >= string_to_array('2.0', '.') or version is null);
+          # and, if there is already a newer version, either:
+          #   - skip this file,
+          #   - try to move this file in the archive? will break existing links
+          #   - insert a record marked as archived?
            {:ok, _version} <- Clients.create_or_update_app_version(version_attrs),
         do: {:ok, build_file}
     rescue
@@ -137,6 +146,6 @@ defmodule Jobs.Util.CollectBuilds do
   defp parse_platform_and_type(_), do: %{}
 
   defp schedule_work do
-    Process.send_after(self(), :process, 1000 * 60 * 60) # 1h
+    Process.send_after(self(), :process, 1000 * 60 * 60 * 4) # 4h
   end
 end

@@ -18,7 +18,9 @@ defmodule Jobs.Util.CollectBuildsTest do
     "client-dev-32-bit.zip",
     "client-dev.exe",
     "client-2.0-64-bit.tar.gz",
+    "client-2.1-64-bit.tar.gz", # replaces previous one
     "client-02.1.02.AppImage",
+    "client-02.1.03.AppImage", # replaces previous one
     "client-dev.deb",
     "client-3.0.dmg",
     "client-dev-x32.pkg",

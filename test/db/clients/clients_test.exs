@@ -92,16 +92,16 @@ defmodule Db.ClientsTest do
       assert Clients.list_apps() == [app]
     end
 
-    test "get_app_versions/2 returns the app with given name" do
+    test "get_latest_app_versions/2 returns the app with given name" do
       app = app_fixture()
-      {:ok, apps} = Clients.get_app_versions(app.app_name, String.upcase(app.platform_type))
+      {:ok, apps} = Clients.get_latest_app_versions(app.app_name, String.upcase(app.platform_type))
       app2 = List.first(apps)
       assert app2.platform_type == app.platform_type
       assert app2.version == app.version
       assert app2.link == app.link
     end
 
-    test "create_or_update_app_version/1 with valid data creates and updates a app" do
+    test "create_or_update_app_version/1 with valid data creates and updates an app" do
       assert {:ok, %AppVersion{} = app} = Clients.create_or_update_app_version(@valid_attrs)
       assert app.app_name == "some app_name"
       assert app.link == "some link"
@@ -124,7 +124,7 @@ defmodule Db.ClientsTest do
     test "delete_app/1 deletes the app" do
       app = app_fixture()
       assert {:ok, %AppVersion{}} = Clients.delete_app_version(app)
-      assert {:error, :client_not_found} = Clients.get_app_versions(app.app_name, app.platform_type)
+      assert {:error, :client_not_found} = Clients.get_latest_app_versions(app.app_name, app.platform_type)
      end
   end
 

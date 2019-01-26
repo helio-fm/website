@@ -12,7 +12,7 @@ defmodule Api.ClientAppController do
   def get_client_info(conn, %{"app" => app_name}) do
     with {:ok, user_agent} <- CheckUserAgent.check_against_app_name(conn, app_name),
          {:ok, platform} <- AppVersion.detect_platform(user_agent),
-         {:ok, versions} <- Clients.get_app_versions(app_name, platform),
+         {:ok, versions} <- Clients.get_latest_app_versions(app_name, platform),
          {:ok, resources} <- Clients.get_resources_info(app_name),
       do: render(conn, "client.info.v1.json", versions: versions, resources: resources)
   end
