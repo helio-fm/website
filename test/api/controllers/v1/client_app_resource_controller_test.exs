@@ -62,7 +62,7 @@ defmodule Api.V1.ClientAppResourceControllerTest do
   end
 
   defp authenticated(conn) do
-    user = %User{id: "11111111-1111-1111-1111-111111111111", password: "admin"}
+    user = %User{id: "11111111-1111-1111-1111-111111111111"}
     {:ok, jwt, _claims} = Token.encode_and_sign(user, %{},
       token_ttl: {1, :minute}, permissions: %{admin: [:read, :write]})
     conn

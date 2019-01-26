@@ -2,10 +2,6 @@ defmodule Api.SessionView do
   use Api, :view
   @moduledoc false
 
-  def render("sign.in.v1.json", %{jwt: jwt}) do
-    %{token: jwt}
-  end
-
   def render("refresh.token.v1.json", %{jwt: jwt}) do
     %{token: jwt}
   end

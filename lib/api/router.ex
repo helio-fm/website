@@ -17,13 +17,6 @@ defmodule Api.Router do
   scope "/", Api, as: :api do
     pipe_through :api
 
-    # username/password registration and login;
-    # I wonder if the only available way to sign up should be via Github
-    if Mix.env == :test do
-      post "/join", RegistrationController, :sign_up, as: :signup
-      post "/login", SessionController, :sign_in, as: :login
-    end
-
     # some stuff for specific client apps
     # e.g. `/clients/helio/translations`
     scope "/clients", as: :client do

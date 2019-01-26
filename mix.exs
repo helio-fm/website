@@ -29,7 +29,6 @@ defmodule Musehackers.Mixfile do
       mod: {Musehackers.Application, []},
       extra_applications: [:logger,
                            :runtime_tools,
-                           :comeonin,
                            :ueberauth,
                            :ueberauth_github,
                            :edeliver]
@@ -60,8 +59,6 @@ defmodule Musehackers.Mixfile do
       {:ueberauth, "~> 0.5"},
       {:ueberauth_github, "~> 0.7.0"},
       {:guardian, "~> 1.2.1"},
-      {:comeonin, "~> 4.1.1"},
-      {:pbkdf2_elixir, "~> 0.12.3"},
 
       # For jobs
       {:tesla, "~> 1.1"},
