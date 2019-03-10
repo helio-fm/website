@@ -325,7 +325,7 @@ footer #footer-nav a {
   color: #eee;
 }
 footer #footer-nav a span{
-  color: #aaa;
+  color: rgba(255, 255, 255, .5);
 }
 footer {
   background-color: #4E4D97;
