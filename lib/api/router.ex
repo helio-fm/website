@@ -36,7 +36,6 @@ defmodule Api.Router do
 
       pipe_through :authenticated
       post "/:app/:resource/update", ClientAppController, :update_client_resource, as: :resource_update
-      post "/", ClientAppController, :update_app_version, as: :app_version
     end
 
     # restrict unauthenticated access for routes below

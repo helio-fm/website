@@ -22,16 +22,7 @@ defmodule Api.ClientAppController do
       do: render(conn, "resource.data.v1.json", resource: resource)
   end
 
-  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:write]}] when action in [:update_app_version, :update_client_resource]
-
-  def update_app_version(conn, %{"app" => app_params}) do
-    with {:ok, %AppVersion{} = app_version} <- Clients.create_or_update_app_version(app_params) do
-      conn
-      |> put_status(:ok)
-      # |> put_resp_header("location", api_client_app_info_path(conn, :get_client_info, app.app_name))
-      |> render("version.info.v1.json", version: app_version)
-    end
-  end
+  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:write]}] when action in [:update_client_resource]
 
   # for helio translations, force running a worker to fetch them
   def update_client_resource(conn, %{"app" => app_name, "resource" => resource_type})
