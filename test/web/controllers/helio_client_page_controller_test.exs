@@ -24,16 +24,13 @@ defmodule Web.HelioClientPageControllerTest do
   end
 
   defp create_clients(_) do
-    Clients.create_or_update_app_version(%{app_name: "helio", link: "1", platform_type: "Linux",
-      build_type: "installer", branch: "stable", architecture: "all", version: "2.0"})
-    Clients.create_or_update_app_version(%{app_name: "helio", link: "1", platform_type: "Windows",
-      build_type: "installer", branch: "stable", architecture: "all", version: "2.0"})
-    Clients.create_or_update_app_version(%{app_name: "helio", link: "1", platform_type: "macOS",
-      build_type: "installer", branch: "stable", architecture: "all", version: "2.0"})
-    Clients.create_or_update_app_version(%{app_name: "helio", link: "1", platform_type: "iOS",
-      build_type: "installer", branch: "stable", architecture: "all", version: "2.0"})
-    Clients.create_or_update_app_version(%{app_name: "helio", link: "1", platform_type: "Android",
-      build_type: "installer", branch: "stable", architecture: "all", version: "2.0"})
+    Clients.update_versions([
+      %{app_name: "helio", link: "1", platform_type: "Linux", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
+      %{app_name: "helio", link: "1", platform_type: "Windows", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
+      %{app_name: "helio", link: "1", platform_type: "macOS", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
+      %{app_name: "helio", link: "1", platform_type: "iOS", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
+      %{app_name: "helio", link: "1", platform_type: "Android", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"}
+    ])
     :ok
   end
 

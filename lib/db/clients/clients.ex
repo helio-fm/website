@@ -4,8 +4,8 @@ defmodule Db.Clients do
   """
 
   import Ecto.Query, warn: false
-  alias Db.Repo
 
+  alias Db.Repo
   alias Db.Clients.Resource
 
   @doc """
@@ -107,7 +107,9 @@ defmodule Db.Clients do
   """
   def get_latest_app_versions(app_name, platform_type) do
     query = from a in AppVersion,
-      where: a.app_name == ^app_name and ilike(a.platform_type, ^platform_type),
+      where: a.is_archived == false
+        and a.app_name == ^app_name
+        and ilike(a.platform_type, ^platform_type),
       select: a,
       order_by: [:app_name, :branch, :platform_type]
     case Repo.all(query) do
@@ -125,28 +127,63 @@ defmodule Db.Clients do
 
   @doc """
   Creates or updates existing app version.
-  Here, conflict_target/on_conflict is used, because
-  app versions table is only meant to store the very latest versions.
-  And all the code around assumes it only deals with latest versions.
-  It's up to versions collection job to fill the table properly.
+  Sets archived flag for all versions where a later version exists.
 
   ## Examples
 
-      iex> create_or_update_app_version(%{field: value})
+      iex> update_versions(%{field: value})
       {:ok, %App{}}
 
-      iex> create_or_update_app_version(%{field: bad_value})
+      iex> update_versions(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_or_update_app_version(attrs \\ %{}) do
+  def update_versions(versions) do
+    update_query = "update app_versions a1
+      set is_archived = true
+      where exists
+        (
+          select 1 from app_versions a2
+            where a1.app_name = a2.app_name
+              and a1.platform_type = a2.platform_type
+              and a1.build_type = a2.build_type
+              and a1.branch = a2.branch
+              and a1.architecture = a2.architecture
+              and string_to_array(a1.version, '.') < string_to_array(a2.version, '.')
+        );"
+
+    Repo.transaction fn ->
+      # If some version records are malformed
+      # and fail to insert - that's fine, fuck them
+      apps = Enum.map versions, fn version_attrs ->
+        update_and_return_version version_attrs
+      end
+
+      # But if updating `is_archived` flags fails,
+      # we'd better rollback the transaction to make sure
+      # we won't get inconsistent data for app versions
+      with {:ok, _} <- Ecto.Adapters.SQL.query(Repo, update_query) do
+        apps
+      else
+        {:error, error_key} -> Repo.rollback(error_key)
+      end
+    end
+  end
+
+  defp update_and_return_version(version_attrs) do
     app = %AppVersion{}
-    changeset = AppVersion.changeset(app, attrs)
+    changeset = AppVersion.changeset(app, version_attrs)
     link = Map.get(changeset.changes, :link)
-    version = Map.get(changeset.changes, :version)
-    on_conflict = [set: [link: link, version: version]]
-    conflict_target = [:app_name, :platform_type, :build_type, :branch, :architecture]
-    Repo.insert(changeset, on_conflict: on_conflict, conflict_target: conflict_target)
+    conflict_target = [:app_name,
+      :platform_type, :build_type,
+      :branch, :architecture, :version]
+
+    case Repo.insert(changeset,
+      on_conflict: [set: [link: link]],
+      conflict_target: conflict_target) do
+        {:ok, version} -> version
+        {:error, _} -> nil
+    end
   end
 
 
