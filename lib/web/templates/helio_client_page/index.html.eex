@@ -125,7 +125,7 @@
               </ul>
           </div>
           <div class="col s12 m4">
-            <p>STABLE BUILDS</p>
+            <p>MASTER BUILDS</p>
               <ul>
                 <%= for app <- Enum.reverse(@latest_releases), app.branch == "stable" do %>
                 <li><a href="<%= app.link %>"><%= app.platform_type %>, <span><%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span></a></li>

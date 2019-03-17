@@ -29,9 +29,9 @@ defmodule Db.Clients.AppVersion do
     cond do
       String.match?(user_agent, ~r/Android/) ->
         {:ok, "android"}
-      String.match?(user_agent, ~r/(iPad|iPhone|iPod)/) ->
+      String.match?(user_agent, ~r/(iPad|iPhone|iPod|iOS)/) ->
         {:ok, "ios"}
-      String.match?(user_agent, ~r/Mac OS X/) ->
+      String.match?(user_agent, ~r/(Mac OS|macOS)/) ->
         {:ok, "macos"}
       String.match?(user_agent, ~r/(Linux|FreeBSD)/) ->
         {:ok, "linux"}
