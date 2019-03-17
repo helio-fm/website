@@ -16,7 +16,7 @@
             <span class="<%= String.downcase(@auth_session.provider) %>-icon"></span>
             <h2>Please confirm</h2>
             <hr />
-            <p class="lead">If you initiated this authorization <br />from <b><%= @auth_session.app_name %></b> <b><%= @auth_session.app_version %></b> for <b><%= @auth_session.app_platform %></b>, <br />then proceed:</p>
+            <p class="lead">If you initiated this authorization <br />from <b><%= @auth_session.app_name %></b> <b><%= @auth_session.app_version %></b> for <b><%= @auth_session.app_platform %></b>, then proceed:</p>
             <h3><a href="/auth/<%= String.downcase(@auth_session.provider) %>">
               Sign in with <%= @auth_session.provider %>
             </a></h3>

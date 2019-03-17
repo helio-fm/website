@@ -111,7 +111,7 @@ defmodule Db.Clients do
         and a.app_name == ^app_name
         and ilike(a.platform_type, ^platform_type),
       select: a,
-      order_by: [:app_name, :branch, :platform_type]
+      order_by: [:app_name, :branch, :platform_type, :architecture]
     case Repo.all(query) do
       [] -> {:error, :client_not_found}
       apps -> {:ok, apps}
@@ -148,7 +148,6 @@ defmodule Db.Clients do
               and a1.platform_type = a2.platform_type
               and a1.build_type = a2.build_type
               and a1.branch = a2.branch
-              and a1.architecture = a2.architecture
               and string_to_array(a1.version, '.') < string_to_array(a2.version, '.')
         );"
 

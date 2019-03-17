@@ -26,7 +26,8 @@ defmodule Web.HelioClientPageController do
     end
 
     render conn, "index.html",
-        clients: clients,
+        latest_releases: clients,
+        suggested_releases: clients |> Enum.filter(fn(x) -> String.downcase(x.platform_type) == platform && x.branch == "stable" end),
         platform: platform,
         architecture: architecture
   end

@@ -66,7 +66,7 @@ defmodule Jobs.Util.CollectBuildsTest do
     end
 
     test "collect_builds/1 cleans up incorrect links" do
-      # insert a version with invalid like
+      # insert a version with invalid link
       # and make sure it is removed after the link check:
       Clients.update_versions([%{
         app_name: "an", platform_type: "p", build_type: "bt",

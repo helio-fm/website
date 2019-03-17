@@ -3,10 +3,19 @@
 ul, ul li {
   list-style-type: none;
 }
-.btn, .btn-large, a {
+a {
   text-decoration: none;
 }
-.btn, .btn-large, .center, .center-align, section h3 {
+.download-block a {
+  margin: 4px;
+  padding: 0 0 8px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.download-block a:hover {
+  padding-bottom: 5px;
+  border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+}
+.download-block, .download-button, .center, .center-align, section h3 {
   text-align: center;
 }
 .white-text {
@@ -220,29 +229,36 @@ h6 {
   color: #fff;
   clear: both;
   font-size: 1.2rem;
-  font-weight:400;
-  letter-spacing:.25px;
+  font-weight: 400;
+  letter-spacing: .25px;
 }
 .button-subtitle-text {
   color: #fff;
   clear: both;
-  font-size: 0.95rem;
+  font-size: .95rem;
 }
-.btn, .btn-large {
+.download-block, .download-button {
   display: inline-block;
-  padding: 14px 0 0 0;
-  margin: 0 5px 25px 5px;
+  padding: 7px 12px 5px 12px;
   font-weight: 300;
-  line-height: 1.3;
+  line-height: 1.5;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
+  border-top: 3px solid rgba(255, 255, 255, 0.75);
+  height: 66px;
+  box-sizing: border-box;
+  user-select: none;   
+}
+.download-button {
+  padding: 14px 0 0 0;
+  margin: 0 5px 25px 5px;
+  line-height: 1.3;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.05);
   border: 2px solid #F2F4FE;
   height: 74px;
   width: 230px;
-  box-sizing: border-box;
   border-radius: 40px;
   -webkit-transition:.2s ease-out;
   -moz-transition:.2s ease-out;
@@ -255,18 +271,18 @@ h6 {
   -o-user-select: none;
   user-select: none;   
 }
-.btn-large:hover, .btn:hover {
+.download-button:hover {
   background: rgba(255, 255, 255, 0.12);
   -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .4), 0 1px 1px 0 rgba(0, 0, 0, .4);
   -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .4), 0 1px 1px 0 rgba(0, 0, 0, .4);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .4), 0 1px 1px 0 rgba(0, 0, 0, .4);
 }
-.btn {
+.download-button {
   -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .2);
   -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .2);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .2);
 }
-.btn:active {
+.download-button:active {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .2);
 }
 .z-depth-2 {
