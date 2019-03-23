@@ -64,7 +64,7 @@ defmodule Api.V1.AuthSessionControllerTest do
     setup [:create_auth_session]
 
     test "renders token and deletes the finalised auth session", %{conn: conn, auth_session: %AuthSession{} = auth_session} do
-      {:ok, token, _claims} = Token.encode_and_sign(%User{id: @invalid_id, password: ""}, %{})
+      {:ok, token, _claims} = Token.encode_and_sign(%User{id: @invalid_id}, %{})
       Clients.finalise_auth_session(auth_session, token)
       session = %{session: Map.from_struct(auth_session)}
       conn = post client(conn), api_client_auth_finalise_path(conn, :finalise_client_auth_session, "helio"), session

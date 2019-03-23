@@ -29,7 +29,6 @@ defmodule Musehackers.Mixfile do
       mod: {Musehackers.Application, []},
       extra_applications: [:logger,
                            :runtime_tools,
-                           :comeonin,
                            :ueberauth,
                            :ueberauth_github,
                            :edeliver]
@@ -48,7 +47,7 @@ defmodule Musehackers.Mixfile do
       {:phoenix, "~> 1.4.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.0.3"},
+      {:ecto_sql, "~> 3.0.4"},
       {:postgrex, "~> 0.14.1"},
       {:phoenix_html, "~> 2.12"},
       {:gettext, "~> 0.11"},
@@ -59,9 +58,7 @@ defmodule Musehackers.Mixfile do
       # For auth
       {:ueberauth, "~> 0.5"},
       {:ueberauth_github, "~> 0.7.0"},
-      {:guardian, "~> 1.1.1"},
-      {:comeonin, "~> 4.1.1"},
-      {:pbkdf2_elixir, "~> 0.12.3"},
+      {:guardian, "~> 1.2.1"},
 
       # For jobs
       {:tesla, "~> 1.1"},
@@ -71,12 +68,12 @@ defmodule Musehackers.Mixfile do
       {:jason, "~> 1.1.1"},
 
       # For deployment
-      {:edeliver, ">= 1.6.0"},
-      {:distillery, "~> 2.0"},
+      {:edeliver, "~> 1.6.0"},
+      {:distillery, "~> 2.0", runtime: false},
 
       # For tests
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.9", only: :test}
+      {:excoveralls, "~> 0.9", only: :test, runtime: false}
     ]
   end
 

@@ -6,6 +6,8 @@ defmodule Db.VersionControl do
   import Ecto.Query, warn: false
   alias Db.Repo
 
+  alias Ecto.Multi
+  alias Ecto.Changeset
   alias Db.VersionControl.Project
   alias Db.VersionControl.Revision
 
@@ -71,7 +73,7 @@ defmodule Db.VersionControl do
   end
 
   @doc """
-  Deletes a Project.
+  Deletes a project with all linked revisions.
 
   ## Examples
 
@@ -83,7 +85,13 @@ defmodule Db.VersionControl do
 
   """
   def delete_project(%Project{} = project) do
-    Repo.delete(project)
+    project_revisions = from r in Revision,
+      where: r.project_id == ^project.id
+    Multi.new
+    |> Multi.update(:head, Changeset.change(project, %{head: nil}))
+    |> Multi.delete_all(:revisions, project_revisions)
+    |> Multi.delete(:project, project)
+    |> Repo.transaction()
   end
 
   alias Db.VersionControl.Revision

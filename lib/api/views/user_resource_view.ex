@@ -3,7 +3,9 @@ defmodule Api.UserResourceView do
   @moduledoc false
 
   def render("resource.v1.json", %{user_resource: resource}) do
-    %{data: resource.data}
+    %{type: resource.type,
+      name: resource.name,
+      data: resource.data}
   end
 
   def render("resource.info.v1.json", %{user_resource: resource}) do

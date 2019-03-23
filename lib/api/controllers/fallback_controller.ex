@@ -20,8 +20,6 @@ defmodule Api.FallbackController do
     |> render(:"404")
   end
 
-  def call(conn, {:error, :login_failed}), do: unauthorized(conn, "authentication failed")
-  def call(conn, {:error, :login_not_found}), do: unauthorized(conn, "authentication failed, login not found")
   def call(conn, {:error, :session_update_failed}), do: unauthorized(conn, "failed to re-issue a token")
   def call(conn, {:error, :invalid_session}), do: unauthorized(conn, "failed to re-issue a token, no valid session")
   def call(conn, {:error, :session_not_found}), do: not_found(conn, "session not found")

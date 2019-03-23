@@ -17,15 +17,8 @@ defmodule Api.Router do
   scope "/", Api, as: :api do
     pipe_through :api
 
-    # username/password registration and login;
-    # I wonder if the only available way to sign up should be via Github
-    if Mix.env == :test do
-      post "/join", RegistrationController, :sign_up, as: :signup
-      post "/login", SessionController, :sign_in, as: :login
-    end
-
     # some stuff for specific client apps
-    # e.g. `/api/v1/clients/helio/translations`
+    # e.g. `/clients/helio/translations`
     scope "/clients", as: :client do
       get "/:app/info", ClientAppController, :get_client_info, as: :app_info
       get "/:app/:resource_type", ClientAppController, :get_client_resource, as: :resource
@@ -37,13 +30,12 @@ defmodule Api.Router do
       # requires auth id and secret key received using a method above,
       # returns 404, if auth with such id and key does not exist
       # returns 204, if auth is still in progress and there is no token available,
-      # returns 410, if auth was completed with an error (or is stale), then deletes auth request 
+      # returns 410, if auth was completed with an error (or is stale), then deletes auth request
       # returns 200 with token, if auth completed successfully, then deletes the auth request
       post "/:app/auth/check", AuthSessionController, :finalise_client_auth_session, as: :auth_finalise
 
       pipe_through :authenticated
       post "/:app/:resource/update", ClientAppController, :update_client_resource, as: :resource_update
-      post "/", ClientAppController, :update_app_version, as: :app_version
     end
 
     # restrict unauthenticated access for routes below

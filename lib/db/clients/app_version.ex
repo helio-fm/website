@@ -12,6 +12,7 @@ defmodule Db.Clients.AppVersion do
     field :branch, :string
     field :version, :string
     field :link, :string
+    field :is_archived, :boolean
 
     timestamps(type: :utc_datetime)
   end
@@ -19,9 +20,9 @@ defmodule Db.Clients.AppVersion do
   @doc false
   def changeset(%AppVersion{} = app, attrs) do
     app
-    |> cast(attrs, [:app_name, :platform_type, :build_type, :architecture, :branch, :version, :link])
+    |> cast(attrs, [:app_name, :platform_type, :build_type, :architecture, :branch, :version, :link, :is_archived])
     |> validate_required([:app_name, :platform_type, :build_type, :architecture, :branch, :link])
-    |> unique_constraint(:app_name, name: :apps_versions_constraint)
+    |> unique_constraint(:app_name, name: :app_versions_constraint)
   end
 
   def detect_platform(user_agent) do

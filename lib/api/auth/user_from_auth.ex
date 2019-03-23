@@ -6,7 +6,6 @@ defmodule Api.Auth.UserFromAuth do
   @images_store_path Application.get_env(:musehackers, :images_path)
 
   require Logger
-  require Poison
 
   alias Ueberauth.Auth
   alias Db.Accounts
@@ -50,7 +49,7 @@ defmodule Api.Auth.UserFromAuth do
   defp upload_avatar({:error, _error}, _login), do: nil
   defp upload_avatar({:ok, _other}, _login), do: nil
 
-  defp get_avatar(auth) do    
+  defp get_avatar(auth) do
     with url <- avatar_url_from_auth(auth),
       {:ok, %Tesla.Env{} = env} <- Tesla.get(url) do
       {:ok, env}

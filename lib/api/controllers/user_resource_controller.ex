@@ -18,7 +18,7 @@ defmodule Api.UserResourceController do
     with user_id <- Token.current_subject(conn),
          attrs <- Map.put(params, "owner_id", user_id),
          {:ok, %Resource{} = resource} <- create_or_update_resource(user_id, type, name, attrs),
-      do: conn |> render("resource.v1.json", user_resource: resource)
+      do: conn |> render("resource.info.v1.json", user_resource: resource)
   end
 
   defp create_or_update_resource(user_id, type, name, attrs) do

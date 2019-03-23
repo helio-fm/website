@@ -34,5 +34,5 @@ defmodule Db.Accounts.Resource do
 
   def hash(attrs \\ %{}) do
     Base.encode16(:erlang.md5(:erlang.term_to_binary(attrs)), case: :lower)
-  end  
+  end
 end

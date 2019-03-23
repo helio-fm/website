@@ -3,10 +3,7 @@
       <div class="row">
         <div class="col s12 center-align">
           <noscript>
-            <!--
-             So, you're disabling JS by default (like me)?
-             I appreciate the paranoia.
-            -->
+            <!-- So you're disabling JS by default (like me)? I appreciate the paranoia. -->
             <div class="logo-container">
               <img id="helio-logo-alt" src="<%= static_path(@conn, "/images/helio_logo_animation.png") %>">
             </div>
@@ -19,14 +16,22 @@
         <div class="col s12 center-align" id="payoff">
          <h1 class="white-text main-title">Free Music Sequencer</h1>
           <h5 class="white-text sub-title">For macOS, Linux, Windows, iOS and Android</h5>
-          <%= for app <- @clients do %>
-            <%= if String.downcase(app.platform_type) == @platform && app.branch == "stable" do %>
-              <a href="<%= app.link %>" class="btn btn-large">
-                <span class="button-title-text">Get Helio <%= app.version %></span>
-                <br>
-                <span class="button-subtitle-text"><%= app.platform_type %>, <%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span>
+          <%= if Enum.count(@suggested_releases) == 1 do %>
+            <span class="download-button">
+              <a href="<%= List.first(@suggested_releases).link %>">
+                <span class="button-title-text">Get Helio</span><br>
+                <span class="button-subtitle-text">for <%= List.first(@suggested_releases).platform_type %></span>
               </a>
-            <% end %>
+            </span>
+          <% else %>
+            <span class="download-block">
+              <span class="button-title-text">Get Helio for <%= Macro.camelize(@platform) %>:</span><br>
+              <%= for app <- @suggested_releases do %>
+              <a href="<%= app.link %>">
+                <span class="button-subtitle-text"><%= app.build_type %><%= if app.architecture != "all" do %> <%= app.architecture %><% end %></span>
+              </a>
+              <% end %>
+            </span>
           <% end %>
         </div>
       </div>
@@ -122,7 +127,7 @@
           <div class="col s12 m4">
             <p>STABLE BUILDS</p>
               <ul>
-                <%= for app <- Enum.reverse(@clients), app.branch == "stable" do %>
+                <%= for app <- Enum.reverse(@latest_releases), app.branch == "stable" do %>
                 <li><a href="<%= app.link %>"><%= app.platform_type %>, <span><%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span></a></li>
                 <% end %>
               </ul>
@@ -130,7 +135,7 @@
           <div class="col s12 m4">
             <p>DEVELOPMENT BUILDS</p>
               <ul>
-                <%= for app <- Enum.reverse(@clients), app.branch != "stable" do %>
+                <%= for app <- Enum.reverse(@latest_releases), app.branch != "stable" do %>
                 <li><a href="<%= app.link %>"><%= app.platform_type %>, <span><%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span></a></li>
                 <% end %>
               </ul>

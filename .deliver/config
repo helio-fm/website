@@ -12,7 +12,7 @@ BUILD_AT="/home/$BUILD_USER/edeliver/$APP/builds"
 RELEASE_DIR="$BUILD_AT/rel/$APP"
 
 STAGING_HOSTS="helio.fm"
-STAGING_USER="git"
+STAGING_USER="deploy"
 TEST_AT="/test/$APP"
 
 PRODUCTION_HOSTS="helio.fm"

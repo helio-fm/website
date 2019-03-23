@@ -49,6 +49,13 @@ config :logger, :console,
 config :phoenix, :format_encoders,
   json: Api.Plugs.CamelCaseEncoder
 
+config :phoenix, :json_library, Jason
+
+config :oauth2,
+  serializers: %{
+    "application/json" => Jason
+  }
+
 # Mime types for versioning
 config :mime, :types, %{
   "application/helio.fm.v1+json" => [:v1]

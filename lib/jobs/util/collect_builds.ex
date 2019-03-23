@@ -18,7 +18,7 @@ defmodule Jobs.Util.CollectBuilds do
   @builds_base_url Application.get_env(:musehackers, :builds_base_url)
 
   defp get_build_files() do
-    @builds_path |> Path.join("**") |> Path.wildcard() |> Enum.map(&Path.basename/1) 
+    @builds_path |> Path.join("**") |> Path.wildcard() |> Enum.map(&Path.basename/1)
   end
 
   def start_link(_) do
@@ -47,9 +47,13 @@ defmodule Jobs.Util.CollectBuilds do
     invalid_versions = AppVersion |> Repo.all |> Enum.filter(fn x -> link_is_invalid(x.link) end)
     for app_version <- invalid_versions, do: Clients.delete_app_version(app_version)
     # Detect all new available versions:
-    report = Enum.map(build_files, fn x -> parse_and_update_version(x) end)
-    # Logger.info inspect report
-    report
+    version_attributes = Enum.map(build_files, fn x -> parse_version_attrs(x) end)
+
+    try do
+      Clients.update_versions(version_attributes)
+    rescue
+      _ -> {:error, nil} # catch DB insertion errors
+    end
   end
 
   defp link_is_invalid(link) do
@@ -60,16 +64,6 @@ defmodule Jobs.Util.CollectBuilds do
   defp head_not_found({:ok, %Tesla.Env{status: 404}}), do: true
   defp head_not_found(_), do: false
 
-  defp parse_and_update_version(build_file) do
-    try do
-      with {:ok, version_attrs} <- parse_version_attrs(build_file),
-           {:ok, _version} <- Clients.create_or_update_app_version(version_attrs),
-        do: {:ok, build_file}
-    rescue
-      _ -> {:error, build_file} # avoid DB insertion errors
-    end
-  end
-
   defp parse_version_attrs(file) do
     # Example of valid file names to be parsed:
     # helio-dev.exe
@@ -77,7 +71,7 @@ defmodule Jobs.Util.CollectBuilds do
     # helio-2.0-x64.tar.gz
     # helio-20.02.232.AppImage
     groups = Regex.run(~r/(\w*)-(\d+\.?\d+\.?\d*|dev\w*)-?(|x64|x32|64-bit|32-bit|i386|x86_64)\.(.*)/, file)
-    if Enum.count(groups) == 5 do
+    if groups != nil && Enum.count(groups) == 5 do
       app_name = groups |> Enum.at(1)
       version_and_branch = groups |> Enum.at(2) |> parse_version_and_branch()
       arch = groups |> Enum.at(3) |> parse_architecture()
@@ -89,9 +83,9 @@ defmodule Jobs.Util.CollectBuilds do
         app_name: app_name,
         link: Path.join(@builds_base_url, file)
       })
-      {:ok, attrs}
+      attrs
     else
-      {:error, :parse_error}
+      nil
     end
   end
 
@@ -105,7 +99,7 @@ defmodule Jobs.Util.CollectBuilds do
     do: %{architecture: "all"}
 
   defp parse_version_and_branch(version) when version in ["dev", "develop"],
-    do: %{branch: "develop", version: nil}
+    do: %{branch: "develop", version: "develop"}
 
   defp parse_version_and_branch(version),
     do: %{branch: "stable", version: version}
@@ -137,6 +131,6 @@ defmodule Jobs.Util.CollectBuilds do
   defp parse_platform_and_type(_), do: %{}
 
   defp schedule_work do
-    Process.send_after(self(), :process, 1000 * 60 * 60) # 1h
+    Process.send_after(self(), :process, 1000 * 60 * 60 * 6) # 6h
   end
 end
