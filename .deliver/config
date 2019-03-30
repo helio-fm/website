@@ -18,12 +18,3 @@ TEST_AT="/test/$APP"
 PRODUCTION_HOSTS="helio.fm"
 PRODUCTION_USER="deploy"
 DELIVER_TO="/opt/$APP"
-
-pre_erlang_clean_compile() {
-  status "Running phoenix.digest"
-  __sync_remote "
-    set -e # fail if any command fails (recommended)
-    cd '$BUILD_AT'
-    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phx.digest $SILENCE
-  "
-}

@@ -36,7 +36,7 @@
         </div>
       </div>
         <div class="screencast hide-on-small-and-down z-depth-2">
-          <iframe id="ytplayer" type="text/html" width="567" height="322" frameborder="0"
+          <iframe title="Screencast" id="ytplayer" type="text/html" width="567" height="322" frameborder="0"
               src="https://www.youtube.com/embed/ogjW801357c?wmode=transparent&autoplay=0&controls=0&showinfo=0&hd=1&rel=0&vq=large&origin=https://helio.fm"/>
           </iframe>
         </div>
@@ -61,12 +61,12 @@
           </h6>
         </div>
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screen1.png") %>" class="z-depth-1 full-width">
+          <img src="<%= static_path(@conn, "/images/screen1.png") %>" class="z-depth-1 full-width" alt="Screenshot 1">
         </div>
       </div>
       <div class="row feature_block">
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screen4.png") %>" class="z-depth-1 full-width" alt="">
+          <img src="<%= static_path(@conn, "/images/screen4.png") %>" class="z-depth-1 full-width" alt="Screenshot 2">
         </div>
         <div class="col m5 s12 right_text">
           <h4>Cross-platform tech</h4>
@@ -83,12 +83,12 @@
           </h6>
         </div>
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screen3.png") %>" class="z-depth-1 full-width">
+          <img src="<%= static_path(@conn, "/images/screen3.png") %>" class="z-depth-1 full-width" alt="Screenshot 3">
         </div>
       </div>  
       <div class="row feature_block">
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screen2.png") %>" class="z-depth-1 full-width" alt="">
+          <img src="<%= static_path(@conn, "/images/screen2.png") %>" class="z-depth-1 full-width" alt="Screenshot 4">
         </div>
         <div class="col m5 s12 right_text">
           <h4>Libre y gratis</h4>
@@ -105,7 +105,7 @@
           </h6>
         </div>
         <div class="col m7 s12"> 
-          <img src="<%= static_path(@conn, "/images/screen5.png") %>" class="full-width" alt="">
+          <img src="<%= static_path(@conn, "/images/screen5.png") %>" class="full-width" alt="Screenshot 5">
         </div>
       </div>
     </div>
