@@ -21,6 +21,11 @@ defmodule Web.HelioClientPageControllerTest do
       conn = get useragent(conn, "Mozilla/5.0 (Linux; Android 4.0.4)"), "/"
       assert html_response(conn, 200) =~ "<span class=\"button-subtitle-text\">for Android"
     end
+
+    test "renders download link for iOS even though only dev build is available", %{conn: conn} do
+      conn = get useragent(conn, "Mozilla/5.0 (iPad; CPU OS 9_3_5 like Mac OS X)"), "/"
+      assert html_response(conn, 200) =~ "<span class=\"button-subtitle-text\">for iOS"
+    end
   end
 
   defp create_clients(_) do
@@ -28,7 +33,7 @@ defmodule Web.HelioClientPageControllerTest do
       %{app_name: "helio", link: "1", platform_type: "Linux", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
       %{app_name: "helio", link: "1", platform_type: "Windows", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
       %{app_name: "helio", link: "1", platform_type: "macOS", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
-      %{app_name: "helio", link: "1", platform_type: "iOS", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
+      %{app_name: "helio", link: "1", platform_type: "iOS", build_type: "TestFlight", branch: "develop", architecture: "all", version: "develop"},
       %{app_name: "helio", link: "1", platform_type: "Android", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"}
     ])
     :ok

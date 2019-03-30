@@ -27,8 +27,27 @@ defmodule Web.HelioClientPageController do
 
     render conn, "index.html",
         latest_releases: clients,
-        suggested_releases: clients |> Enum.filter(fn(x) -> String.downcase(x.platform_type) == platform && x.branch == "stable" end),
+        suggested_releases: clients
+          |> filter_stable_builds_for(platform)
+          |> add_dev_build_if_empty(clients, platform),
         platform: platform,
         architecture: architecture
   end
+
+  defp filter_stable_builds_for(all_clients, platform) do
+    Enum.filter(all_clients, fn(x) ->
+      String.downcase(x.platform_type) == platform && x.branch == "stable"
+    end)
+  end
+
+  defp add_dev_build_if_empty([], all_clients, platform) do
+    case Enum.find(all_clients, fn(x) ->
+      String.downcase(x.platform_type) == platform && x.branch != "stable" end) do
+      nil -> []
+      build -> [build]
+    end
+  end
+
+  defp add_dev_build_if_empty(releases, _, _), do: releases
+
 end
