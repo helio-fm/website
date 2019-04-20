@@ -334,17 +334,32 @@ body, html {
 .row {
   margin-bottom: 0;
 }
+footer:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -25px; 
+  left: 0;
+  right: 0;
+  width:100%;
+  min-height: 50px;
+  background-color: #3B3E6B;
+  transform: skew(0deg, -1deg);
+  -ms-transform: skew(0deg, -1deg);
+  -webkit-transform: skew(0deg, -1deg);
+}
 footer {
+  margin-top: 70px;
   color: #fff;
+  position:relative;
 }
 footer #footer-nav a {
   color: #eee;
 }
-footer #footer-nav a span{
+footer #footer-nav a span {
   color: rgba(255, 255, 255, .5);
 }
 footer {
-  background-color: #4E4D97;
   min-height: 200px;
 }
 footer #footer-nav {
@@ -493,6 +508,8 @@ section h3 {
   margin: 30px auto;
   width: 280px;
   height: 280px;
+  image-rendering: pixelated;
+  image-rendering: optimize-contrast;
 }
 .github-corner:hover .octo-arm {
   animation:octocat-wave 560ms ease-in-out
