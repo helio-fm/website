@@ -370,12 +370,14 @@ footer #built-with-love {
   line-height: 3.56rem;
   color: #121212;
 }
+svg.header {
+  z-index: -2;
+  position: absolute;
+  width: 100%;
+  height: 720px;
+}
 #helio-header {
-  background: url("/images/bg.png"), #48358C;
-  background: url("/images/bg.png"), -webkit-radial-gradient(center top, cover, #48358C, #343A6C);
-  background: url("/images/bg.png"), -o-radial-gradient(center top, cover, #48358C, #343A6C);
-  background: url("/images/bg.png"), -moz-radial-gradient(center top, cover, #48358C, #343A6C);
-  background: url("/images/bg.png"), radial-gradient(center top, cover, #48358C, #343A6C);
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAABGdBTUEAALGPC/xhBQAAABtQTFRFAAAA////gICAgICA////MzMzZmZmmZmZzMzMwAf6rgAAAAl0Uk5TAAECBAQFBQUFekhc0wAAAHRJREFUWIXt0kENgDAQRNHBwS4OagIFHDBQBZVAQi0gm5IggOHE4W8yx0nayVPPXp1oz6U2I8qcz2JE0rTG+2x3IcPIeJJ1ocP6cvtQ8DYqxj5PzI1GwVwpfRpYwhKWsIQlLGEJS1jCEpawhCUsYemPlty7AJPoqBsh2163AAAAAElFTkSuQmCC');
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
@@ -430,9 +432,13 @@ iframe {
     padding-bottom: 30px;
     text-align: center;
   }
+  svg.header
+  {
+    height: 620px;
+  }
   #helio-header {
     padding-bottom: 30px;
-    max-height: 540px;
+    max-height: 500px;
   }
 }
 @media screen and (max-width:600px) {
@@ -450,7 +456,7 @@ iframe {
 }
 @media screen and (max-width:800px) {
   #helio-subheader {
-    padding: 14em 4vw 40px!important;
+    padding: 140px 4vw 40px!important;
   }
 }
 @media screen and (max-width:600px) {
@@ -461,12 +467,6 @@ iframe {
 section {
   position: relative;
   height: 100%;
-  padding-top: 18px;
-}
-@media only screen and (min-width:601px) {
-  section {
-    padding-top: 18px;
-  }
 }
 @media only screen and (max-width:600px) {
   section {
@@ -481,8 +481,7 @@ section h3 {
   margin: 0;
 }
 #helio-subheader {
-  background: #EEE;
-  padding: 190px 4vw 40px;
+  padding: 170px 4vw 40px;
 }
 #helio-subheader h4, #helio-subheader h6 {
   margin: 0;
@@ -491,15 +490,9 @@ section h3 {
 .logo-container {
   position: relative;
   display: table;
-  margin: 0 auto;
+  margin: 30px auto;
   width: 280px;
   height: 280px;
-}
-#helio-logo-alt {
-  position: absolute;
-  top: -88px;
-  left: 0px;
-  clip: rect(88px, 280px, 368px, 0px);
 }
 .github-corner:hover .octo-arm {
   animation:octocat-wave 560ms ease-in-out

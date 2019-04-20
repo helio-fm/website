@@ -1,55 +1,52 @@
   <section id="helio-header" class="z-depth-1">
-    <div class="container">
-      <div class="row">
-        <div class="col s12 center-align">
-          <noscript>
-            <!-- So you're disabling JS by default (like me)? I appreciate the paranoia. -->
-            <div class="logo-container">
-              <img id="helio-logo-alt" src="<%= static_path(@conn, "/images/helio_logo_animation.png") %>">
-            </div>
-          </noscript>
-          <canvas id="helio-logo"></canvas>
-          <script>
-          !function(){for(var a=0,b=["ms","moz","webkit","o"],c=0;c<b.length&&!window.requestAnimationFrame;++c)window.requestAnimationFrame=window[b[c]+"RequestAnimationFrame"],window.cancelAnimationFrame=window[b[c]+"CancelAnimationFrame"]||window[b[c]+"CancelRequestAnimationFrame"];window.requestAnimationFrame||(window.requestAnimationFrame=function(b,c){var d=(new Date).getTime(),e=Math.max(0,16-(d-a)),f=window.setTimeout(function(){b(d+e)},e);return a=d+e,f}),window.cancelAnimationFrame||(window.cancelAnimationFrame=function(a){clearTimeout(a)})}(),function(){function i(){window.requestAnimationFrame(i),a.update(),a.render()}function j(a){var b={},c=0,i=0,j=h.length;return b.context=a.context,b.width=a.width,b.height=a.height,b.image=a.image,b.update=function(){(i+=1)>2&&(i=0,c<j-1?c+=1:c=0)},b.render=function(){b.context.clearRect(0,0,b.width,b.height),b.context.drawImage(b.image,h[c].x,h[c].y,f,g,0,0,d,e)},b}var a,b,c,d=280,e=d,f=d,g=d,h=[{x:3360,y:1768},{x:3080,y:1768},{x:2520,y:1768},{x:3640,y:1768},{x:2800,y:1768},{x:2240,y:1768},{x:2240,y:648},{x:2240,y:368},{x:2240,y:928},{x:2240,y:1488},{x:2240,y:1208},{x:1680,y:88},{x:1960,y:1768},{x:1680,y:368},{x:1680,y:928},{x:1680,y:648},{x:1960,y:1488},{x:1960,y:368},{x:1960,y:88},{x:1960,y:648},{x:1960,y:1208},{x:1960,y:928},{x:2240,y:88},{x:2800,y:928},{x:2800,y:648},{x:3640,y:1208},{x:3080,y:1208},{x:3360,y:1208},{x:2800,y:368},{x:3640,y:928},{x:3080,y:648},{x:3360,y:928},{x:2800,y:88},{x:3080,y:928},{x:3360,y:1488},{x:3640,y:1488},{x:3080,y:1488},{x:2520,y:1488},{x:2800,y:1488},{x:2520,y:1208},{x:2520,y:88},{x:2800,y:1208},{x:2520,y:368},{x:2520,y:928},{x:2520,y:648},{x:560,y:1768},{x:560,y:1488},{x:280,y:88},{x:280,y:648},{x:280,y:368},{x:560,y:1208},{x:560,y:88},{x:840,y:1768},{x:560,y:368},{x:560,y:928},{x:560,y:648},{x:0,y:928},{x:0,y:648},{x:0,y:1208},{x:0,y:1768},{x:0,y:1488},{x:0,y:368},{x:280,y:1208},{x:280,y:928},{x:280,y:1488},{x:0,y:88},{x:280,y:1768},{x:840,y:1488},{x:1400,y:1208},{x:1400,y:928},{x:1400,y:1488},{x:1120,y:88},{x:1400,y:1768},{x:1400,y:648},{x:1680,y:1488},{x:1680,y:1208},{x:1680,y:1768},{x:1400,y:368},{x:1400,y:88},{x:840,y:368},{x:840,y:88},{x:840,y:648},{x:840,y:1208},{x:840,y:928},{x:1120,y:1768},{x:1120,y:648},{x:1120,y:368},{x:1120,y:928},{x:1120,y:1488},{x:1120,y:1208}];c=document.getElementById("helio-logo"),c.width=d,c.height=e,b=new Image,a=j({context:c.getContext("2d"),width:4096,height:2048,image:b}),b.addEventListener("load",i),b.src="<%= static_path(@conn, "/images/helio_logo_animation.png") %>"}();
-          </script>
-        </div>
-        <div class="col s12 center-align" id="payoff">
-         <h1 class="white-text main-title">Free Music Sequencer</h1>
-          <h5 class="white-text sub-title">For macOS, Linux, Windows, iOS and Android</h5>
-          <%= if Enum.count(@suggested_releases) == 1 do %>
-            <span class="download-button">
-              <a href="<%= List.first(@suggested_releases).link %>">
-                <span class="button-title-text">Get Helio</span><br>
-                <span class="button-subtitle-text">for <%= List.first(@suggested_releases).platform_type %></span>
-              </a>
-            </span>
-          <% else %>
-            <span class="download-block">
-              <span class="button-title-text">Get Helio for <%= Macro.camelize(@platform) %>:</span><br>
-              <%= for app <- @suggested_releases do %>
-              <a href="<%= app.link %>">
-                <span class="button-subtitle-text"><%= app.build_type %><%= if app.architecture != "all" do %> <%= app.architecture %><% end %></span>
-              </a>
-              <% end %>
-            </span>
-          <% end %>
+    <svg class="header" preserveAspectRatio="none" version="1.1" viewBox="0 0 210.55 97.518" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
+        <radialGradient id="a" cx="103.1" cy="-2.3288" r="92.982" gradientTransform="matrix(-1.5457 1.7173e-8 0 -.81683 264.38 14.948)" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#48358c" offset="0"/>
+          <stop stop-color="#343a6c" offset="1"/>
+        </radialGradient>
+      </defs>
+      <g><path d="m-0.0 0.0h210.55v89.468s-43.683 4.0-105.0 4.0c-58.85 0-105.0-4.0-105.0-4.0z" fill="url(#a)" stroke-width=".25285"/></g>
+    </svg>
+    <div class="row">
+      <div class="col s12 center-align">
+        <div class="logo-container">
+          <img width="256" height="256" src="<%= static_path(@conn, "/images/helio-logo-animation.png") %>">
         </div>
       </div>
-        <div class="screencast hide-on-small-and-down z-depth-2">
-          <iframe title="Screencast" id="ytplayer" type="text/html" width="567" height="322" frameborder="0"
-              src="https://www.youtube.com/embed/ogjW801357c?wmode=transparent&autoplay=0&controls=0&showinfo=0&hd=1&rel=0&vq=large&origin=https://helio.fm"/>
-          </iframe>
-        </div>
+      <div class="col s12 center-align" id="payoff">
+        <h1 class="white-text main-title">Free Music Sequencer</h1>
+        <h5 class="white-text sub-title">For macOS, Linux, Windows, iOS and Android</h5>
+        <%= if Enum.count(@suggested_releases) == 1 do %>
+          <span class="download-button">
+            <a href="<%= List.first(@suggested_releases).link %>">
+              <span class="button-title-text">Get Helio</span><br>
+              <span class="button-subtitle-text">for <%= List.first(@suggested_releases).platform_type %></span>
+            </a>
+          </span>
+        <% else %>
+          <span class="download-block">
+            <span class="button-title-text">Get Helio for <%= Macro.camelize(@platform) %>:</span><br>
+            <%= for app <- @suggested_releases do %>
+            <a href="<%= app.link %>">
+              <span class="button-subtitle-text"><%= app.build_type %><%= if app.architecture != "all" do %> <%= app.architecture %><% end %></span>
+            </a>
+            <% end %>
+          </span>
+        <% end %>
       </div>
+    </div>
+      <div class="screencast hide-on-small-and-down z-depth-2">
+        <iframe title="Screencast" id="ytplayer" type="text/html" width="567" height="322" frameborder="0"
+            src="https://www.youtube.com/embed/ogjW801357c?wmode=transparent&autoplay=0&controls=0&showinfo=0&hd=1&rel=0&vq=large&origin=https://helio.fm"/>
+        </iframe>
+      </div>
+    </div>
   </section>
 
   <a href="https://github.com/helio-fm" target="_blank" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
-  <div id="helio-subheader">
-    <div class="container">
-      <h6 class="center-align"><i>“We shape our tools and thereafter our tools shape us”</i></h6>
-    </div>
-  </div>
+  <div id="helio-subheader"></div>
 
   <div id="helio-features">
     <div class="container">
