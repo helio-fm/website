@@ -78,7 +78,7 @@ defmodule Jobs.Etl.Translations do
 
   defp parse_csv(body) do
     try do
-      parsed_list = CSV.parse_string(body, headers: false)
+      parsed_list = CSV.parse_string(body, skip_headers: false)
       {:ok, parsed_list}
     rescue
       ParseError -> {:error, "Failed to parse CSV"}

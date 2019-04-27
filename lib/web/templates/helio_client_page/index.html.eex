@@ -11,10 +11,10 @@
     <div class="row">
       <div class="col s12 center-align">
         <div class="logo-container">
-          <img width="256" height="256" src="<%= static_path(@conn, "/images/helio-logo-animation.png") %>">
+          <img src="<%= static_path(@conn, "/images/helio-logo-animation.png") %>">
         </div>
       </div>
-      <div class="col s12 center-align" id="payoff">
+      <div class="col s12 center-align">
         <h1 class="white-text main-title">Free Music Sequencer</h1>
         <h5 class="white-text sub-title">For macOS, Linux, Windows, iOS and Android</h5>
         <%= if Enum.count(@suggested_releases) == 1 do %>
