@@ -36,7 +36,7 @@
         <% end %>
       </div>
     </div>
-      <div class="screencast hide-on-small-and-down z-depth-2">
+      <div class="screencast hide-on-small-and-down has-shadow">
         <iframe title="Screencast" id="ytplayer" type="text/html" width="567" height="322" frameborder="0" allowfullscreen="allowfullscreen" 
           src="//www.youtube.com/embed/ogjW801357c?allowfullscreen=1&rel=0&showinfo=0&autohide=1&origin=https://helio.fm"/>
         </iframe>
@@ -49,57 +49,46 @@
     <div class="container">
       <div class="row feature_block">
         <div class="col m5 s12 left_text">
-          <h4>Distraction-free, <br \>clean interface</h4>
+          <h4>Distraction-free</h4>
           <h6>
-            Helio is a lightweight, minimalistic tool, that helps you to get into the zone and focus on music.
+            Lightweight, minimalistic UI, that helps you to get into the zone and focus on your ideas. Helio is an attempt to rethink a music sequencer to create a tool that <span class="feels-fucking-right">feels right</span>.
           </h6>
         </div>
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screen1.png") %>" class="z-depth-1 full-width" alt="Screenshot 1">
+          <img src="<%= static_path(@conn, "/images/screencap1.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 1">
         </div>
       </div>
       <div class="row feature_block">
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screen4.png") %>" class="z-depth-1 full-width" alt="Screenshot 2">
+          <img src="<%= static_path(@conn, "/images/screencap2.png") %>" class="z-depth-1 full-width has-shadow bbl" alt="Screen 4">
         </div>
         <div class="col m5 s12 right_text">
-          <h4>Cross-platform tech</h4>
+          <h4>Clear over clever</h4>
           <h6>
-            Hosts VST2, VST3 and AudioUnit. Runs on CoreAudio, ASIO, DirectSound, ALSA, JACK and OpenSLES. Exports to MIDI, WAV and FLAC.
+            Visualize music in a way that doesn't seem so <span title="(yes sheet music, I'm looking at you)">smoke and mirrors</span>. The app may serve educational purposes, and aims to be the tool you need to grow as a composer.
           </h6>
         </div>
       </div>
       <div class="row feature_block">
         <div class="col m5 s12 left_text">
-          <h4>Version control integrated</h4>
+          <h4>Sketching tool</h4>
           <h6>
-            Make changes to your work easily: every changeset can be tracked, every revision can be restored.
-          </h6>
+            Probably it won't replace your workstation at the moment, but you can use it as a quick way to compose before going into one of full-featured DAWs.
+         </h6>
         </div>
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screen3.png") %>" class="z-depth-1 full-width" alt="Screenshot 3">
-        </div>
-      </div>  
-      <div class="row feature_block">
-        <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screen2.png") %>" class="z-depth-1 full-width" alt="Screenshot 4">
-        </div>
-        <div class="col m5 s12 right_text">
-          <h4>Libre y gratis</h4>
-          <h6>
-            Open-source, GPL-licensed and free to use, forever. Vive la Resistance, yo.
-          </h6>
+          <img src="<%= static_path(@conn, "/images/screencap3.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 3">
         </div>
       </div>
       <div class="row feature_block">
-        <div class="col m5 s12 left_text">
-          <h4>Incomplete</h4>
-          <h6>
-            Helio is a work in progress, one-man hobby project, so it probably won't replace your DAW at the moment. The author builds it for himself and shares with the world.
-          </h6>
+        <div class="col m7 s12">
+          <img src="<%= static_path(@conn, "/images/screencap4.png") %>" class="z-depth-1 full-width has-shadow bbl" alt="Screen 2">
         </div>
-        <div class="col m7 s12"> 
-          <img src="<%= static_path(@conn, "/images/screen5.png") %>" class="full-width" alt="Screenshot 5">
+        <div class="col m5 s12 right_text">
+          <h4>Incomplete</h4>¯\_(シ)_/¯
+          <h6>
+            It's still a work in progress, one&#8209;man hobby project, which I'm building for myself and sharing with the world. Many essential features are missing, so check back in a couple of years&nbsp;—&nbsp;or, better, contribute.
+          </h6>
         </div>
       </div>
     </div>

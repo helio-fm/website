@@ -38,6 +38,14 @@ a {
 a:active, a:hover {
   outline: 0;
 }
+img.bbk {
+  border: 1px solid #2a2a2a;
+  border-radius: 2px!important;
+}
+img.bbl {
+  border: 1px solid rgb(61, 65, 117);
+  border-radius: 2px!important;
+}
 img {
   border: 0;
   image-rendering: auto;
@@ -72,7 +80,7 @@ ul {
 .container .feature_block {
   margin-left: -.75rem;
   margin-right: -.75rem;
-  padding: 30px 0 30px 0;
+  padding: 40px 0 60px 0;
 }
 .row {
   margin-left: auto;
@@ -91,10 +99,10 @@ ul {
   padding: 0 .75rem;
 }
 .row .col.left_text {
-  padding: 0 35px 0 35px;
+  padding: 0 40px 0 40px;
 }
 .row .col.right_text {
-  padding: 0 35px 0 35px;
+  padding: 0 40px 0 40px;
 }
 .row .col.s1 {
   width: 8.33333%;
@@ -222,8 +230,12 @@ h5 {
   margin: .82rem 0 .656rem;
 }
 h6 {
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   margin: .65rem 0 .52rem;
+  color: #333;
+}
+.feels-fucking-right {
+  color: #000;
 }
 .button-title-text {
   color: #fff;
@@ -269,7 +281,7 @@ h6 {
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
-  user-select: none;   
+  user-select: none;
 }
 .download-button:hover {
   background: rgba(255, 255, 255, 0.12);
@@ -285,10 +297,10 @@ h6 {
 .download-button:active {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .2);
 }
-.z-depth-2 {
-  -webkit-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
-  -moz-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
+.has-shadow {
+  -webkit-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .3), 0 6px 20px 0 rgba(0, 0, 0, .3);
+  -moz-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .3), 0 6px 20px 0 rgba(0, 0, 0, .3);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .3), 0 6px 20px 0 rgba(0, 0, 0, .3);
 }
 html {
   -ms-text-size-adjust: 100%;
@@ -314,7 +326,7 @@ html {
 }
 h1, h2, h3, h4 {
   font-weight: 300;
-  color: #5a5a5a;
+  color: #222;
 }
 h5, h6 {
   font-weight: 300;
