@@ -15,7 +15,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :musehackers, Web.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4000],
-  cache_static_manifest: "priv/static/cache_manifest.json",
+  # cache_static_manifest: "priv/static/cache_manifest.json",
   server: true
 
 config :musehackers, Api.Endpoint,
