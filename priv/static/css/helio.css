@@ -80,7 +80,7 @@ ul {
 .container .feature_block {
   margin-left: -.75rem;
   margin-right: -.75rem;
-  padding: 40px 0 60px 0;
+  padding: 60px 0 80px 0;
 }
 .row {
   margin-left: auto;
@@ -511,6 +511,15 @@ iframe {
   }
   #helio-subheader {
     padding: 3.5em 4vw 60px;
+  }
+  .row .col.left_text {
+    padding: 25px 30px 25px 30px;
+  }
+  .row .col.right_text {
+    padding: 25px 30px 25px 30px;
+  }
+  .container .feature_block {
+    padding: 40px 0 60px 0;
   }
 }
 section {
