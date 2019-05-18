@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:300,400);
 
-ul, ul li {
+ul,ul li {
   list-style-type: none;
 }
 a {
@@ -15,7 +15,7 @@ a {
   padding-bottom: 5px;
   border-bottom: 3px solid rgba(255, 255, 255, 0.5);
 }
-.download-block, .download-button, .center, .center-align, section h3 {
+.download-block,.download-button,.center,.center-align,section h3 {
   text-align: center;
 }
 .white-text {
@@ -27,7 +27,7 @@ html {
 body {
   margin: 0;
 }
-article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+footer,header,main,nav,section {
   display: block;
 }
 a {
@@ -35,7 +35,7 @@ a {
   color: #139be5;
   -webkit-tap-highlight-color: transparent;
 }
-a:active, a:hover {
+a:active,a:hover {
   outline: 0;
 }
 img.bbk {
@@ -53,28 +53,28 @@ img {
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
-  user-select: none;   
+  user-select: none;
 }
-*, :after, :before {
+*,:after,:before {
   box-sizing: inherit;
 }
 ul {
   padding: 0;
 }
 @media only screen and (max-width:600px) {
-  .hide-on-small-and-down, .hide-on-small-only {
-      display: none!important;
+  .hide-on-small-and-down {
+    display: none!important;
   }
 }
 .container {
   padding: 0 1.5rem;
   margin: 0 auto;
   max-width: 1280px;
-  width: 99%
+  width: 99%;
 }
 @media only screen and (min-width:993px) {
   .container {
-    width: 70%
+    width: 70%;
   }
 }
 .container .feature_block {
@@ -202,7 +202,7 @@ ul {
     margin-left: 0;
   }
 }
-h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
   font-weight: inherit;
 }
 h1 {
@@ -249,7 +249,7 @@ h6 {
   clear: both;
   font-size: .95rem;
 }
-.download-block, .download-button {
+.download-block,.download-button {
   display: inline-block;
   padding: 7px 12px 5px 12px;
   font-weight: 300;
@@ -260,7 +260,7 @@ h6 {
   border-top: 3px solid rgba(255, 255, 255, 0.75);
   height: 66px;
   box-sizing: border-box;
-  user-select: none;   
+  user-select: none;
 }
 .download-button {
   padding: 14px 0 0 0;
@@ -272,11 +272,11 @@ h6 {
   height: 74px;
   width: 230px;
   border-radius: 40px;
-  -webkit-transition:.2s ease-out;
-  -moz-transition:.2s ease-out;
-  -o-transition:.2s ease-out;
-  -ms-transition:.2s ease-out;
-  transition:.2s ease-out;
+  -webkit-transition: .2s ease-out;
+  -moz-transition: .2s ease-out;
+  -o-transition: .2s ease-out;
+  -ms-transition: .2s ease-out;
+  transition: .2s ease-out;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -324,11 +324,11 @@ html {
     font-size: 15px;
   }
 }
-h1, h2, h3, h4 {
+h1,h2,h3,h4 {
   font-weight: 300;
   color: #222;
 }
-h5, h6 {
+h5,h6 {
   font-weight: 300;
   line-height: 1.5em;
 }
@@ -337,7 +337,7 @@ h5, h6 {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-body, html {
+body,html {
   min-width: 100%!important;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -350,10 +350,10 @@ footer:before {
   content: "";
   position: absolute;
   z-index: -1;
-  top: -25px; 
+  top: -25px;
   left: 0;
   right: 0;
-  width:100%;
+  width: 100%;
   min-height: 50px;
   background-color: #3B3E6B;
   transform: skew(0deg, -1deg);
@@ -363,7 +363,7 @@ footer:before {
 footer {
   margin-top: 70px;
   color: #fff;
-  position:relative;
+  position: relative;
 }
 footer #footer-nav a {
   color: #eee;
@@ -389,10 +389,10 @@ footer #built-with-love {
   line-height: 1.7rem;
   margin: 15px 0px 0px 0px;
 }
-#helio-header, #splash {
+#helio-header {
   height: 700px;
 }
-#helio-header h1, #splash h1 {
+#helio-header h1 {
   font-size: 3.56rem;
   line-height: 3.56rem;
   color: #121212;
@@ -432,11 +432,11 @@ svg.header {
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
-  user-select: none;   
+  user-select: none;
   z-index: 1;
 }
-.full-width, section {
-  width: 100%
+.full-width,section {
+  width: 100%;
 }
 iframe {
   border: 4px solid #363568;
@@ -465,7 +465,7 @@ iframe {
 #helio-subheader {
   padding: 170px 4vw 40px;
 }
-#helio-subheader h4, #helio-subheader h6 {
+#helio-subheader h4,#helio-subheader h6 {
   margin: 0;
   padding: 5px 0;
 }
@@ -531,30 +531,36 @@ section {
     height: auto;
   }
 }
-section.page {
-  height: auto;
-  margin-bottom: 30px;
-}
 section h3 {
   margin: 0;
 }
 .github-corner:hover .octo-arm {
-  animation:octocat-wave 560ms ease-in-out
+  animation: octocat-wave 560ms ease-in-out;
 }
 .github-corner svg {
-  fill:#eee;
-  color:#3b3877;
+  fill: #eee;
+  color: #3b3877;
   position: absolute;
   top: 0;
   border: 0;
-  right: 0;  
+  right: 0;
 }
 @keyframes octocat-wave {
-  0%,100%{transform:rotate(0)}
-  20%,60%{transform:rotate(-25deg)}
-  40%,80%{transform:rotate(10deg)}
+  0%, 100% {
+    transform: rotate(0);
+  }
+  20%, 60% {
+    transform: rotate(-25deg);
+  }
+  40%, 80% {
+    transform: rotate(10deg);
+  }
 }
 @media (max-width:500px) {
-  .github-corner:hover .octo-arm {animation:none}
-  .github-corner .octo-arm {animation:octocat-wave 560ms ease-in-out}
+  .github-corner:hover .octo-arm {
+    animation: none;
+  }
+  .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
 }
