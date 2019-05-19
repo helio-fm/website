@@ -1,7 +1,7 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400&display=fallback);
 
 html {
-  font-family: Lato, sans-serif;
+  font-family: Lato, "Lucida Grande", Tahoma, Sans-Serif;
   font-weight: 400;
   -ms-text-size-adjust:100%;
   -webkit-text-size-adjust:100%;
