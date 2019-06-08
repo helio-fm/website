@@ -1,10 +1,10 @@
-dist: trusty
+dist: xenial
 language: elixir
+elixir: 1.8.1
+otp_release: 21.2.4
 addons:
   postgresql: '9.6'
   ssh_known_hosts: helio.fm
-elixir:
-- 1.6.0
 services:
 - postgresql
 cache:
