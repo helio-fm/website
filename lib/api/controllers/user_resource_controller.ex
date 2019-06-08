@@ -22,9 +22,9 @@ defmodule Api.UserResourceController do
   end
 
   defp create_or_update_resource(user_id, type, name, attrs) do
-    with {:ok, %Resource{}} <- Accounts.get_resource_for_user(user_id, type, name) do
-      Accounts.update_resource(attrs)
-    else
+    case Accounts.get_resource_for_user(user_id, type, name) do
+      {:ok, %Resource{}} ->
+        Accounts.update_resource(attrs)
       {:error, :resource_not_found} ->
         Accounts.create_resource(attrs)
     end

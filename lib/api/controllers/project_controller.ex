@@ -23,9 +23,9 @@ defmodule Api.ProjectController do
   end
 
   defp create_or_update_project(id, user_id, attrs) do
-    with {:ok, %Project{}} <- VersionControl.get_project(id, user_id) do
-      VersionControl.update_project(attrs)
-    else
+    case  VersionControl.get_project(id, user_id) do
+      {:ok, %Project{}} ->
+        VersionControl.update_project(attrs)
       {:error, :project_not_found} ->
         VersionControl.create_project(attrs)
     end

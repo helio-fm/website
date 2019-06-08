@@ -139,9 +139,10 @@ defmodule Db.Clients do
 
   """
   def update_versions(versions) do
-    update_query = "update app_versions a1
-      set is_archived = true
-      where exists
+    update_query = """
+      update app_versions a1
+        set is_archived = true
+        where exists
         (
           select 1 from app_versions a2
             where a1.app_name = a2.app_name
@@ -149,7 +150,8 @@ defmodule Db.Clients do
               and a1.build_type = a2.build_type
               and a1.branch = a2.branch
               and string_to_array(a1.version, '.') < string_to_array(a2.version, '.')
-        );"
+        );
+    """
 
     Repo.transaction fn ->
       # If some version records are malformed
@@ -161,10 +163,11 @@ defmodule Db.Clients do
       # But if updating `is_archived` flags fails,
       # we'd better rollback the transaction to make sure
       # we won't get inconsistent data for app versions
-      with {:ok, _} <- Ecto.Adapters.SQL.query(Repo, update_query) do
-        apps
-      else
-        {:error, error_key} -> Repo.rollback(error_key)
+      case Ecto.Adapters.SQL.query(Repo, update_query) do
+        {:ok, _} ->
+          apps
+        {:error, error_key} ->
+          Repo.rollback(error_key)
       end
     end
   end

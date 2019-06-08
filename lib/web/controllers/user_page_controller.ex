@@ -10,10 +10,11 @@ defmodule Web.UserPageController do
   plug :assign_custom_css, custom_css: "user.css"
 
   def show(conn, %{"user" => user_login}) do
-    with %User{} = user <- Accounts.get_user_by_login(user_login) do
-      render(conn, "index.html", user: user)
-    else
-      nil -> render(conn, "index.html", user: nil)
+    case Accounts.get_user_by_login(user_login) do
+      %User{} = user ->
+        render(conn, "index.html", user: user)
+      nil ->
+        render(conn, "index.html", user: nil)
     end
   end
 end
