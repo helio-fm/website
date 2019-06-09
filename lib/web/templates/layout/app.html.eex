@@ -10,10 +10,10 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="author" content="Peter Rudenko" />
-    <meta name="description" content="helio.fm" />
+    <meta name="description" content="Libre music sequencer for all major platforms, both desktop and mobile" />
     <meta name="keywords" content="helio, music, midi, sequencer, composition, audio, vst, host" />
     <meta name="robots" content="noydir, noopd" />
-    <meta name="copyright" content="(c) 2014-2018" />
+    <meta name="copyright" content="(c) 2014-<%= DateTime.utc_now.year %>" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="apple-mobile-web-app-title" content="Helio Workstation">
     <meta name="application-name" content="Helio Workstation">
