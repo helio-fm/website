@@ -21,9 +21,6 @@ a {
 .white-text {
   color: #fff!important;
 }
-html {
-  color: #121212;
-}
 body {
   margin: 0;
 }
@@ -32,7 +29,6 @@ footer,header,main,nav,section {
 }
 a {
   background-color: transparent;
-  color: #139be5;
   -webkit-tap-highlight-color: transparent;
 }
 a:active,a:hover {
@@ -206,6 +202,9 @@ ul {
 h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
   font-weight: inherit;
 }
+h1,h2,h3,h4,h5,h6 {
+  font-weight: 300;
+}
 h1 {
   font-size: 4.2rem;
   line-height: 4.62rem;
@@ -222,16 +221,16 @@ h3 {
   margin: 1.46rem 0 1.168rem;
 }
 h4 {
-  font-size: 2.28rem;
-  line-height: 2.508rem;
-  margin: 1.14rem 0 .912rem;
+  font-size: 2rem;
+  line-height: 2.28rem;
+  margin: 0.8rem 0 1rem;
 }
 h5 {
   font-size: 1.64rem;
   margin: .82rem 0 .656rem;
 }
 h6 {
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   margin: .65rem 0 .52rem;
   color: #333;
 }
@@ -315,7 +314,7 @@ html {
     font-size: 14px;
   }
 }
-@media only screen and (min-width:992px) {
+@media only screen and (min-width:600px) {
   html {
     font-size: 14.5px;
   }
@@ -324,14 +323,6 @@ html {
   html {
     font-size: 15px;
   }
-}
-h1,h2,h3,h4 {
-  font-weight: 300;
-  color: #222;
-}
-h5,h6 {
-  font-weight: 300;
-  line-height: 1.5em;
 }
 * {
   -webkit-box-sizing: border-box;
@@ -386,6 +377,7 @@ footer #built-with-love {
   font-weight: 300;
   line-height: 1.7rem;
   margin: 15px 0px 0px 0px;
+  text-align: center;
 }
 svg.header {
   z-index: -2;
@@ -407,7 +399,6 @@ svg.header {
   margin-top: 0;
   font-size: 3.56rem;
   line-height: 3.56rem;
-  color: #121212;
 }
 #helio-header .screencast {
   background-color: #363568!important;
@@ -448,7 +439,7 @@ iframe {
 .logo-container {
   position: relative;
   display: table;
-  margin: 30px auto 10px auto;
+  margin: 30px auto 5px auto;
   width: 280px;
   height: 280px;
 }
