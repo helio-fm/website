@@ -44,11 +44,11 @@ defmodule Musehackers.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.0"},
+      {:phoenix, "~> 1.4"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.0.4"},
-      {:postgrex, "~> 0.14.1"},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, "~> 0.14"},
       {:phoenix_html, "~> 2.12"},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 2.4"},
@@ -57,19 +57,19 @@ defmodule Musehackers.Mixfile do
 
       # For auth
       {:ueberauth, "~> 0.5"},
-      {:ueberauth_github, "~> 0.7.0"},
-      {:guardian, "~> 1.2.1"},
+      {:ueberauth_github, "~> 0.7"},
+      {:guardian, "~> 1.2"},
 
       # For jobs
       {:tesla, "~> 1.1"},
       {:nimble_csv, "~> 0.4"},
 
       # Faster json encoding
-      {:jason, "~> 1.1.1"},
+      {:jason, "~> 1.1"},
 
       # For deployment
       {:edeliver, "~> 1.6.0"},
-      {:distillery, "~> 2.0", runtime: false},
+      {:distillery, "~> 2.0.0", runtime: false},
 
       # For tests
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
