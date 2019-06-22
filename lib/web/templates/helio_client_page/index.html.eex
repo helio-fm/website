@@ -26,7 +26,7 @@
           </span>
         <% else %>
           <span class="download-block">
-            <span class="button-title-text">Available for <%= Macro.camelize(@platform) %>:</span><br>
+            <span class="button-title-text"><%= Macro.camelize(@platform) %> builds:</span><br>
             <%= for app <- @suggested_releases do %>
             <a href="<%= app.link %>">
               <span class="button-subtitle-text"><%= app.build_type %><%= if app.architecture != "all" do %> <%= app.architecture %><% end %></span>
@@ -124,8 +124,8 @@
         </div>
       </div>
       <div id="built-with-love">
-        Built with ❤ in a garage in Izhevsk, Russia<br>
-        <a href="https://github.com/helio-fm/helio-workstation/blob/master/LICENSE" target="_blank">License agreement</a>
+        <center>Built with ❤ in a garage in Izhevsk, Russia</center>
+        <center><a href="https://github.com/helio-fm/helio-workstation/blob/master/LICENSE" target="_blank">License agreement</a></center>
       </div>
     </div>
   </footer>
