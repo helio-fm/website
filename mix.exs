@@ -58,7 +58,7 @@ defmodule Musehackers.Mixfile do
       # For auth
       {:ueberauth, "~> 0.5"},
       {:ueberauth_github, "~> 0.7"},
-      {:guardian, "~> 1.2"},
+      {:guardian, "~> 2.0"},
 
       # For jobs
       {:tesla, "~> 1.1"},

@@ -22,7 +22,7 @@ defmodule Api.ClientAppController do
       do: render(conn, "resource.data.v1.json", resource: resource)
   end
 
-  plug Guardian.Permissions.Bitwise, [ensure: %{admin: [:write]}] when action in [:update_client_resource]
+  plug Guardian.Permissions, [ensure: %{admin: [:write]}] when action in [:update_client_resource]
 
   # for helio translations, force running a worker to fetch them
   def update_client_resource(conn, %{"app" => app_name, "resource" => resource_type})

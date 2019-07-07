@@ -12,7 +12,7 @@ defmodule Api.Auth.Token do
       admin: [:read, :write]
     }
 
-  use Guardian.Permissions.Bitwise
+  use Guardian.Permissions, encoding: Guardian.Permissions.BitwiseEncoding
 
   alias Db.Repo
   alias Db.Accounts.User
