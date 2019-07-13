@@ -116,7 +116,11 @@
             <p>MASTER BUILDS</p>
               <ul>
                 <%= for app <- Enum.reverse(@latest_releases), app.branch == "stable" do %>
-                <li><a href="<%= app.link %>"><%= app.platform_type %>, <span><%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span></a></li>
+                <li>
+                  <a href="<%= app.link %>">
+                      <span class="l1"><%= app.platform_type %></span><span class="l2 div"><%= app.build_type %></span><%= if app.architecture != "all" do %><span class="l3 div"><%= app.architecture %></span><% end %>
+                  </a>
+                </li>
                 <% end %>
               </ul>
           </div>
@@ -124,7 +128,11 @@
             <p>DEVELOPMENT BUILDS</p>
               <ul>
                 <%= for app <- Enum.reverse(@latest_releases), app.branch != "stable" do %>
-                <li><a href="<%= app.link %>"><%= app.platform_type %>, <span><%= app.build_type %><%= if app.architecture != "all" do %>, <%= app.architecture %><% end %></span></a></li>
+                <li>
+                  <a href="<%= app.link %>">
+                    <span class="l1"><%= app.platform_type %></span><span class="l2 div"><%= app.build_type %></span><%= if app.architecture != "all" do %><span class="l3 div"><%= app.architecture %></span><% end %>
+                  </a>
+                </li>
                 <% end %>
               </ul>
           </div>
