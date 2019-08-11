@@ -411,9 +411,15 @@ http {
         ssl_dhparam /usr/local/etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
     }
 
+    map $subdomain $expires {
+        default off;
+        ci epoch;
+    }
+
     server {
         server_name  ~^(?<subdomain>.+)\.helio\.fm$;
         root /opt/musehackers/files/$subdomain;
+        expires $expires;
 
         location / {
             try_files $uri $uri/ =404;
