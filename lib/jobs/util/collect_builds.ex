@@ -76,16 +76,29 @@ defmodule Jobs.Util.CollectBuilds do
       version_and_branch = groups |> Enum.at(2) |> parse_version_and_branch()
       arch = groups |> Enum.at(3) |> parse_architecture()
       platform_and_type = groups |> Enum.at(4) |> parse_platform_and_type()
+      file_stat = get_file_stat(file)
+
       attrs = platform_and_type
       |> Map.merge(version_and_branch)
       |> Map.merge(arch)
       |> Map.merge(%{
         app_name: app_name,
-        link: Path.join(@builds_base_url, file)
+        link: Path.join(@builds_base_url, file),
+        file_size: file_stat.size,
+        file_date: DateTime.from_unix!(file_stat.mtime)
       })
       attrs
     else
       nil
+    end
+  end
+
+  def get_file_stat(file) do
+    file_path = Path.join(@builds_path, file)
+    try do
+      File.stat!(file_path, time: :posix)
+    rescue
+      _ -> %{ size: 0, mtime: 0 }
     end
   end
 

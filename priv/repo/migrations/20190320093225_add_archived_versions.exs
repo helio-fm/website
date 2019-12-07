@@ -19,9 +19,7 @@ defmodule Db.Repo.Migrations.AddArchivedVersions do
       timestamps()
     end
 
-    # all fields except link and is_archived are meant to be unique
-    # there cannot be neither two versions with different links
-    # nor two different versions with different archived state
+    # all fields except link, is_archived, file size and date are meant to be unique
     create unique_index(:app_versions,
       [:app_name, :platform_type, :build_type, :branch, :architecture, :version],
       name: :app_versions_constraint)

@@ -12,6 +12,8 @@ defmodule Db.Clients.AppVersion do
     field :branch, :string
     field :version, :string
     field :link, :string
+    field :file_size, :integer
+    field :file_date, :utc_datetime
     field :is_archived, :boolean
 
     timestamps(type: :utc_datetime)
@@ -20,7 +22,7 @@ defmodule Db.Clients.AppVersion do
   @doc false
   def changeset(%AppVersion{} = app, attrs) do
     app
-    |> cast(attrs, [:app_name, :platform_type, :build_type, :architecture, :branch, :version, :link, :is_archived])
+    |> cast(attrs, [:app_name, :platform_type, :build_type, :architecture, :branch, :version, :link, :file_size, :file_date, :is_archived])
     |> validate_required([:app_name, :platform_type, :build_type, :architecture, :branch, :link])
     |> unique_constraint(:app_name, name: :app_versions_constraint)
   end
@@ -33,7 +35,7 @@ defmodule Db.Clients.AppVersion do
         {:ok, "ios"}
       String.match?(user_agent, ~r/(Mac OS|macOS)/) ->
         {:ok, "macos"}
-      String.match?(user_agent, ~r/(Linux|FreeBSD)/) ->
+      String.match?(user_agent, ~r/(Linux)/) ->
         {:ok, "linux"}
       String.match?(user_agent, ~r/Windows/) ->
         {:ok, "windows"}

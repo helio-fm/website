@@ -74,7 +74,9 @@ defmodule Db.ClientsTest do
       architecture: "all",
       version: "2.0",
       link: "some link",
-      is_archived: false
+      is_archived: false,
+      file_size: 1,
+      file_date: DateTime.from_unix!(0)
     }]
 
     @updated_attrs [%{
@@ -84,7 +86,9 @@ defmodule Db.ClientsTest do
       branch: "stable",
       architecture: "all",
       version: "2.0",
-      link: "some updated link"
+      link: "some updated link",
+      file_size: 2,
+      file_date: DateTime.from_unix!(1)
     }]
 
     @invalid_attrs [%{app_name: nil, link: nil, platform_type: nil, version: nil}]

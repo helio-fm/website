@@ -176,12 +176,14 @@ defmodule Db.Clients do
     app = %AppVersion{}
     changeset = AppVersion.changeset(app, version_attrs)
     link = Map.get(changeset.changes, :link)
+    file_size = Map.get(changeset.changes, :file_size)
+    file_date = Map.get(changeset.changes, :file_date)
     conflict_target = [:app_name,
       :platform_type, :build_type,
       :branch, :architecture, :version]
 
     case Repo.insert(changeset,
-      on_conflict: [set: [link: link]],
+      on_conflict: [set: [link: link, file_size: file_size, file_date: file_date]],
       conflict_target: conflict_target) do
         {:ok, version} -> version
         {:error, _} -> nil
