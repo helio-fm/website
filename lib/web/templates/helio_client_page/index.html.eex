@@ -19,7 +19,7 @@
         <h4 class="white-text sub-title">libre music composition software</h4>
         <%= if Enum.count(@suggested_releases) == 1 do %>
           <span class="download-button">
-            <a href="<%= List.first(@suggested_releases).link %>">
+            <a href="<%= List.first(@suggested_releases).link %>" title="<%= List.first(@suggested_releases).file_info %>">
               <span class="button-title-text">Get Helio</span><br>
               <span class="button-subtitle-text">for <%= List.first(@suggested_releases).platform_type %></span>
             </a>
@@ -28,7 +28,7 @@
           <span class="download-block">
             <span class="button-title-text"><%= Macro.camelize(@platform) %> builds:</span><br>
             <%= for app <- @suggested_releases do %>
-            <a href="<%= app.link %>">
+            <a href="<%= app.link %>"<%= if app.file_info != "" do %> title="<%= app.file_info %>"<% end %>>
               <span class="button-subtitle-text"><%= app.build_type %><%= if app.architecture != "all" do %> <%= app.architecture %><% end %></span>
             </a>
             <% end %>
@@ -117,7 +117,7 @@
               <ul>
                 <%= for app <- Enum.reverse(@latest_releases), app.branch == "stable" do %>
                 <li>
-                  <a href="<%= app.link %>">
+                  <a href="<%= app.link %>"<%= if app.file_info != "" do %> title="<%= app.file_info %>"<% end %>>
                       <span class="l1"><%= app.platform_type %></span><span class="l2 div"><%= app.build_type %></span><%= if app.architecture != "all" do %><span class="l3 div"><%= app.architecture %></span><% end %>
                   </a>
                 </li>
@@ -129,7 +129,7 @@
               <ul>
                 <%= for app <- Enum.reverse(@latest_releases), app.branch != "stable" do %>
                 <li>
-                  <a href="<%= app.link %>">
+                  <a href="<%= app.link %>"<%= if app.file_info != "" do %> title="<%= app.file_info %>"<% end %>>
                     <span class="l1"><%= app.platform_type %></span><span class="l2 div"><%= app.build_type %></span><%= if app.architecture != "all" do %><span class="l3 div"><%= app.architecture %></span><% end %>
                   </a>
                 </li>

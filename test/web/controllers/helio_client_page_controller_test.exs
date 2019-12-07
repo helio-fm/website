@@ -15,6 +15,7 @@ defmodule Web.HelioClientPageControllerTest do
     test "renders default page with Linux useragent", %{conn: conn} do
       conn = get useragent(conn, "Mozilla/5.0 (X11, Linux x86_64)"), "/"
       assert html_response(conn, 200) =~ "<span class=\"button-subtitle-text\">for Linux"
+      assert html_response(conn, 200) =~ "269.3 KB"
     end
 
     test "renders default page with Android useragent", %{conn: conn} do
@@ -30,7 +31,7 @@ defmodule Web.HelioClientPageControllerTest do
 
   defp create_clients(_) do
     Clients.update_versions([
-      %{app_name: "helio", link: "1", platform_type: "Linux", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
+      %{app_name: "helio", link: "1", platform_type: "Linux", build_type: "installer", branch: "stable", architecture: "all", version: "2.0", file_size: 275808},
       %{app_name: "helio", link: "1", platform_type: "Windows", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
       %{app_name: "helio", link: "1", platform_type: "macOS", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
       %{app_name: "helio", link: "1", platform_type: "iOS", build_type: "TestFlight", branch: "develop", architecture: "all", version: "develop"},
