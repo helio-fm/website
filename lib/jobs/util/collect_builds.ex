@@ -98,7 +98,7 @@ defmodule Jobs.Util.CollectBuilds do
     try do
       File.stat!(file_path, time: :posix)
     rescue
-      _ -> %{ size: 0, mtime: 0 }
+      _ -> %{size: 0, mtime: 0}
     end
   end
 

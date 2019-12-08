@@ -31,7 +31,7 @@ defmodule Web.HelioClientPageControllerTest do
 
   defp create_clients(_) do
     Clients.update_versions([
-      %{app_name: "helio", link: "1", platform_type: "Linux", build_type: "installer", branch: "stable", architecture: "all", version: "2.0", file_size: 275808},
+      %{app_name: "helio", link: "1", platform_type: "Linux", build_type: "installer", branch: "stable", architecture: "all", version: "2.0", file_size: 275_808},
       %{app_name: "helio", link: "1", platform_type: "Windows", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
       %{app_name: "helio", link: "1", platform_type: "macOS", build_type: "installer", branch: "stable", architecture: "all", version: "2.0"},
       %{app_name: "helio", link: "1", platform_type: "iOS", build_type: "TestFlight", branch: "develop", architecture: "all", version: "develop"},
