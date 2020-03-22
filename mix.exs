@@ -68,7 +68,7 @@ defmodule Musehackers.Mixfile do
       {:jason, "~> 1.1"},
 
       # For deployment
-      {:edeliver, "~> 1.0"},
+      {:edeliver, "~> 1.7.0"},
       {:distillery, "~> 2.0", runtime: false},
 
       # For tests
