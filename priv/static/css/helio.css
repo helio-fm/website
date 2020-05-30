@@ -321,27 +321,20 @@ body,html {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-footer:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: -25px;
-  left: 0;
-  right: 0;
-  width: 100%;
-  min-height: 50px;
-  background-color: #3B3E6B;
-  transform: skew(0deg, -1deg);
-  -ms-transform: skew(0deg, -1deg);
-  -webkit-transform: skew(0deg, -1deg);
-}
 footer {
-  margin-top: 70px;
-  color: #fff;
+  margin-top: 0;
+  padding-top: 0;
+  color: #eee;
   position: relative;
 }
 footer #footer-nav a {
   color: #eee;
+  padding: 0 0 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+footer #footer-nav a:hover {
+  padding-bottom: 3px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.25);
 }
 footer #footer-nav a span.div::before {
   color: rgba(255, 255, 255, .25);
@@ -359,10 +352,9 @@ footer #footer-nav a span.l3 {
 }
 footer {
   min-height: 200px;
+  background: #3B3E6B;
 }
 footer #footer-nav {
-  background: #3B3E6B;
-  min-height: 200px;
   padding: 30px;
 }
 footer ul li {
@@ -375,11 +367,42 @@ footer #built-with-love {
   line-height: 1.7rem;
   margin: 15px 0px 0px 0px;
 }
+#helio-docs {
+  text-align: center;
+  background-color: #efedf5;
+  padding: 0;
+  margin: 0;
+}
+#helio-docs h4 {
+  display: inline-block;
+  font-size: 1.45rem;
+  font-weight: 300;
+  line-height: 2.28rem;
+  margin: 0 20px 0 20px;
+  width: 50%;
+}
+#helio-docs a {
+  color: #363568;
+  font-weight: 400;
+  padding: 0 0 4px 0;
+  border-bottom: 1px solid #363568;
+}
+#helio-docs a:hover {
+  padding-bottom: 2px;
+  border-bottom: 2px solid #363568;
+}
 svg.header {
   z-index: -2;
   position: absolute;
   width: 100%;
   height: 575px;
+}
+svg.footer-skew {
+  z-index: -2;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: bottom;
 }
 #helio-header {
   height: 375px;
