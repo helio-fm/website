@@ -322,32 +322,32 @@ body,html {
   -webkit-font-smoothing: antialiased;
 }
 footer {
-  margin-top: 0;
-  padding-top: 0;
+  margin: 0;
+  padding: 0;
   color: #eee;
   position: relative;
 }
-footer #footer-nav a {
+footer a {
   color: #eee;
   padding: 0 0 5px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
-footer #footer-nav a:hover {
+footer a:hover {
   padding-bottom: 3px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.25);
 }
-footer #footer-nav a span.div::before {
+footer a span.div::before {
   color: rgba(255, 255, 255, .25);
   content: "·";
   margin: 3px;
 }
-footer #footer-nav a span.l1 {
+footer a span.l1 {
   color: #eee;
 }
-footer #footer-nav a span.l2 {
+footer a span.l2 {
   color: rgba(255, 255, 255, .75);
 }
-footer #footer-nav a span.l3 {
+footer a span.l3 {
   color: rgba(255, 255, 255, .5);
 }
 footer {
@@ -355,7 +355,7 @@ footer {
   background: #3B3E6B;
 }
 footer #footer-nav {
-  padding: 30px;
+  padding: 25px 30px 0 30px;
 }
 footer ul li {
   line-height: 32px;
@@ -365,7 +365,8 @@ footer #built-with-love {
   font-size: 0.9rem;
   font-weight: 300;
   line-height: 1.7rem;
-  margin: 15px 0px 0px 0px;
+  padding: 0 0 20px 0;
+  background: #323460;
 }
 #helio-docs {
   text-align: center;
@@ -491,9 +492,12 @@ iframe {
   }
 }
 @media screen and (max-width:700px) {
+  footer #built-with-love {
+    padding: 15px 0 20px 0;
+  }  
   footer #footer-nav {
     text-align: center;
-    padding: 30px 10px 30px 10px;
+    padding: 25px 10px 10px 10px;
   }
   svg.header {
     height: 425px;
