@@ -3,7 +3,16 @@ defmodule Jobs.Etl.Translations do
   Simple ETL tool to fetch latest Helio translations and store them in a resource table
   """
 
-  use Tesla
+  defmodule Client do
+    @moduledoc """
+    Wrapper module for Tesla, basically a way to plug in Middleware.FollowRedirects
+    """
+    use Tesla
+    plug Tesla.Middleware.Headers, [{"Accept", "text/csv,application/csv,text/xml,application/xml,application/json"}]
+    plug Tesla.Middleware.Opts, [recv_timeout: 30_000]
+    plug Tesla.Middleware.FollowRedirects, max_redirects: 5
+  end
+
   use GenServer
 
   require Logger
@@ -12,10 +21,6 @@ defmodule Jobs.Etl.Translations do
 
   alias NimbleCSV.RFC4180, as: CSV
   alias NimbleCSV.ParseError
-
-  plug Tesla.Middleware.Headers, [{"Accept", "text/csv,application/csv,text/xml,application/xml,application/json"}]
-  plug Tesla.Middleware.Opts, [recv_timeout: 30_000]
-  plug Tesla.Middleware.FollowRedirects, max_redirects: 10
 
   def source_url do
     doc_key = System.get_env("ETL_DOC_TRANSLATIONS")
@@ -53,7 +58,7 @@ defmodule Jobs.Etl.Translations do
 
   defp extract_transform_load(source_url) do
     # Logger.info "extract_transform_load " <> source_url
-    with {:ok, %Tesla.Env{status: 200, body: body}} <- Tesla.get(source_url),
+    with {:ok, %Tesla.Env{status: 200, body: body}} <- Client.get(source_url),
          {:ok, resource_attrs} <- transform(body),
     do: Clients.create_or_update_resource(resource_attrs)
   end
