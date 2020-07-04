@@ -9,23 +9,23 @@ defmodule Web.HelioClientPageControllerTest do
     test "renders default page with no useragent defined", %{conn: conn} do
       conn = get conn, "/"
       assert html_response(conn, 200) =~ "Built with ❤ in a garage in Izhevsk, Russia"
-      assert html_response(conn, 200) =~ "<span class=\"button-subtitle-text\">for Windows"
+      assert html_response(conn, 200) =~ "<span class=\"button-title-text\">For Windows"
     end
 
     test "renders default page with Linux useragent", %{conn: conn} do
       conn = get useragent(conn, "Mozilla/5.0 (X11, Linux x86_64)"), "/"
-      assert html_response(conn, 200) =~ "<span class=\"button-subtitle-text\">for Linux"
+      assert html_response(conn, 200) =~ "<span class=\"button-title-text\">For Linux"
       assert html_response(conn, 200) =~ "269.3 KB"
     end
 
     test "renders default page with Android useragent", %{conn: conn} do
       conn = get useragent(conn, "Mozilla/5.0 (Linux; Android 4.0.4)"), "/"
-      assert html_response(conn, 200) =~ "<span class=\"button-subtitle-text\">for Android"
+      assert html_response(conn, 200) =~ "<span class=\"button-title-text\">For Android"
     end
 
     test "renders download link for iOS even though only dev build is available", %{conn: conn} do
       conn = get useragent(conn, "Mozilla/5.0 (iPad; CPU OS 9_3_5 like Mac OS X)"), "/"
-      assert html_response(conn, 200) =~ "<span class=\"button-subtitle-text\">for iOS"
+      assert html_response(conn, 200) =~ "<span class=\"button-title-text\">For iOS"
     end
   end
 

@@ -28,7 +28,7 @@
     <link rel="shortlink" href="https:/helio.fm/" />
     <link rel="apple-touch-icon" sizes="180x180" href="<%= static_path(@conn, "/images/apple-touch-icon.png") %>">
     <link rel="mask-icon" href="<%= static_path(@conn, "/images/safari-pinned-tab.svg") %>" color="#da532c">
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/" <> (assigns[:custom_css] || "helio.css")) <> "?v=1.5" %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/" <> (assigns[:custom_css] || "helio.css")) <> "?v=1.6" %>">
     <link rel="icon" type="image/png" href="<%= static_path(@conn, "/images/favicon.png") %>" />
     <title>helio.fm</title>
   </head>

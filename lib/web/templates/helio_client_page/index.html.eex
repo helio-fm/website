@@ -1,12 +1,7 @@
   <section id="helio-header" class="z-depth-1">
     <svg class="header" preserveAspectRatio="none" version="1.1" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <defs>
-        <radialGradient id="a" cx="100" cy="-9" r="120" gradientTransform="matrix(-1 0 0.0 -0.8 200 15)" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#48358c" offset="0" />
-          <stop stop-color="#343a6c" offset="1" />
-        </radialGradient>
-      </defs>
-      <g><path d="m-0 0h200v95s-50 4-100 4c-50 0-100-4-100-4z" fill="url(#a)" /></g>
+      <g><path d="m0 0h200v96s-50 4-100 4c-50 0-100-4-100-4z" fill="#333664" /></g>
+      <g><path d="m0 0h200v65s-50 14-100 14c-50 0-100-14-100-14z" fill="#3B3E6B" /></g>
     </svg>
     <div class="row">
       <div class="col s12 center-align">
@@ -15,18 +10,11 @@
         </div>
       </div>
       <div class="col s12 center-align">
-        <h1 class="white-text main-title">Helio Project</h1>
-        <h4 class="white-text sub-title">libre music composition software</h4>
-        <%= if Enum.count(@suggested_releases) == 1 do %>
-          <span class="download-button">
-            <a href="<%= List.first(@suggested_releases).link %>" title="<%= List.first(@suggested_releases).file_info %>">
-              <span class="button-title-text">Get Helio</span><br>
-              <span class="button-subtitle-text">for <%= List.first(@suggested_releases).platform_type %></span>
-            </a>
-          </span>
-        <% else %>
+        <h1 class="white-text main-title">Helio&nbsp;Project</h1>
+        <h4 class="white-text sub-title">libre&nbsp;music&nbsp;composition&nbsp;software</h4>
+        <%= if Enum.count(@suggested_releases) > 0 do %>
           <span class="download-block">
-            <span class="button-title-text"><%= Macro.camelize(@platform) %> builds:</span><br>
+            <span class="button-title-text">For <%= List.first(@suggested_releases).platform_type %>:</span><br>
             <%= for app <- @suggested_releases do %>
             <a href="<%= app.link %>"<%= if app.file_info != "" do %> title="<%= app.file_info %>"<% end %>>
               <span class="button-subtitle-text"><%= app.build_type %><%= if app.architecture != "all" do %> <%= app.architecture %><% end %></span>

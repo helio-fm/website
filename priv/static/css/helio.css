@@ -15,7 +15,7 @@ a {
   padding-bottom: 5px;
   border-bottom: 3px solid rgba(255, 255, 255, 0.5);
 }
-.download-block,.download-button,.center,.center-align,section h3 {
+.download-block,.center,.center-align,section h3 {
   text-align: center;
 }
 .white-text {
@@ -224,69 +224,34 @@ h6 {
   color: #000;
 }
 .button-title-text {
-  color: #fff;
+  color: #fffb;
   clear: both;
-  font-size: 1.2rem;
-  font-weight: 400;
+  font-size: 1.3rem;
   letter-spacing: .25px;
 }
 .button-subtitle-text {
-  color: #fff;
+  color: #fffc;
   clear: both;
-  font-size: .95rem;
+  font-size: .9rem;
+  /* font-weight: 400; */
 }
-.download-block,.download-button {
+.download-block {
   display: inline-block;
-  padding: 7px 12px 5px 12px;
+  padding: 12px;
+  margin-top: 32px;
   font-weight: 300;
   line-height: 1.5;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  border-top: 3px solid rgba(255, 255, 255, 0.75);
   height: 66px;
   box-sizing: border-box;
   user-select: none;
 }
-.download-button {
-  padding: 14px 0 0 0;
-  margin: 0 5px 25px 5px;
-  line-height: 1.3;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid #F2F4FE;
-  height: 74px;
-  width: 230px;
-  border-radius: 40px;
-  -webkit-transition: .2s ease-out;
-  -moz-transition: .2s ease-out;
-  -o-transition: .2s ease-out;
-  -ms-transition: .2s ease-out;
-  transition: .2s ease-out;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-.download-button:hover {
-  background: rgba(255, 255, 255, 0.12);
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .4), 0 1px 1px 0 rgba(0, 0, 0, .4);
-  -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .4), 0 1px 1px 0 rgba(0, 0, 0, .4);
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .4), 0 1px 1px 0 rgba(0, 0, 0, .4);
-}
-.download-button {
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .2);
-  -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .2);
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .2);
-}
-.download-button:active {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .2);
-}
 .has-shadow {
-  -webkit-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .3), 0 6px 20px 0 rgba(0, 0, 0, .3);
-  -moz-box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .3), 0 6px 20px 0 rgba(0, 0, 0, .3);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .3), 0 6px 20px 0 rgba(0, 0, 0, .3);
+  -webkit-box-shadow: 0 3px 9px 0 rgba(0, 0, 0, .22), 0 5px 15px 0 rgba(0, 0, 0, .22);
+  -moz-box-shadow: 0 3px 9px 0 rgba(0, 0, 0, .22), 0 5px 15px 0 rgba(0, 0, 0, .22);
+  box-shadow: 0 3px 9px 0 rgba(0, 0, 0, .22), 0 5px 15px 0 rgba(0, 0, 0, .22);
 }
 html {
   -ms-text-size-adjust: 100%;
@@ -300,12 +265,7 @@ html {
     font-size: 14px;
   }
 }
-@media only screen and (min-width:700px) {
-  html {
-    font-size: 14.5px;
-  }
-}
-@media only screen and (min-width:1200px) {
+@media only screen and (min-width:801px) {
   html {
     font-size: 15px;
   }
@@ -360,12 +320,16 @@ footer #footer-nav {
 footer ul li {
   line-height: 32px;
 }
+footer p {
+  line-height: 32px;
+  font-weight: 300;
+}
 footer #built-with-love {
-  color: rgba(255, 255, 255, .55);
-  font-size: 0.9rem;
+  color: rgba(255, 255, 255, .6);
+  font-size: 13px;
   font-weight: 300;
   line-height: 1.7rem;
-  padding: 0 0 20px 0;
+  padding: 5px 0 20px 0;
   background: #333664;
 }
 #helio-docs {
@@ -471,14 +435,15 @@ iframe {
 }
 @media screen and (max-width:800px) {
   .logo-container {
-    width: 140px;
-    height: 140px;
+    margin-top: 50px;
+    width: 155px;
+    height: 155px;
   }
   svg.header {
-    height: 425px;
+    height: 450px;
   }
   #helio-header {
-    max-height: 230px;
+    max-height: 270px;
   }
   #helio-header .screencast {
     top: 400px;
@@ -499,21 +464,9 @@ iframe {
     text-align: center;
     padding: 25px 10px 10px 10px;
   }
-  svg.header {
-    height: 425px;
-  }
-  #helio-header {
-    max-height: 280px;
-  }
-  #helio-header .main-title {
-    font-size: 2.65rem;
-  }
-  #helio-header .sub-title {
-    font-size: 1.25rem;
-    margin: 5px 0 15px 0;
-  }
-  #helio-subheader {
-    padding: 3.5em 4vw 60px;
+  #helio-docs h4 {
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
   .row .col.left_text {
     padding: 25px 30px 25px 30px;
@@ -523,6 +476,20 @@ iframe {
   }
   .container .feature_block {
     padding: 40px 0 60px 0;
+  }
+}
+@media screen and (max-width:480px) {
+  .download-block {
+    margin-top: 34px;
+  }
+  #helio-header h4 {
+    font-size: 1.5rem;
+  }
+  .button-title-text {
+    font-size: 1.15rem;
+  }
+  .button-subtitle-text {
+    font-size: .85rem;
   }
 }
 section {
@@ -542,7 +509,7 @@ section h3 {
 }
 .github-corner svg {
   fill: #eee;
-  color: #3b3877;
+  color: #3b3e6b;
   position: absolute;
   top: 0;
   border: 0;
