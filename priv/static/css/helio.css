@@ -370,34 +370,14 @@ svg.footer-skew {
   vertical-align: bottom;
 }
 #helio-header {
-  height: 375px;
+  height: 575px;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAABGdBTUEAALGPC/xhBQAAABtQTFRFAAAA////gICAgICA////MzMzZmZmmZmZzMzMwAf6rgAAAAl0Uk5TAAECBAQFBQUFekhc0wAAAHRJREFUWIXt0kENgDAQRNHBwS4OagIFHDBQBZVAQi0gm5IggOHE4W8yx0nayVPPXp1oz6U2I8qcz2JE0rTG+2x3IcPIeJJ1ocP6cvtQ8DYqxj5PzI1GwVwpfRpYwhKWsIQlLGEJS1jCEpawhCUsYemPlty7AJPoqBsh2163AAAAAElFTkSuQmCC');
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
-  image-rendering: pixelated;
   image-rendering: optimize-contrast;
+  image-rendering: pixelated;
   -ms-interpolation-mode: nearest-neighbor;
-}
-#helio-header .screencast {
-  background-color: #363568!important;
-  position: absolute;
-  width: 568px;
-  height: 324px;
-  left: 50%;
-  top: 540px;
-  border-radius: 8px;
-  -webkit-transform: translateX(-50%);
-  -moz-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  -o-transform: translateX(-50%);
-  transform: translateX(-50%);
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  z-index: 1;
 }
 #helio-header .sub-title {
   padding: 0 0 15px 0;
@@ -443,10 +423,7 @@ iframe {
     height: 450px;
   }
   #helio-header {
-    max-height: 270px;
-  }
-  #helio-header .screencast {
-    top: 400px;
+    max-height: 450px;
   }
   .logo-container img {
     width: 128px;

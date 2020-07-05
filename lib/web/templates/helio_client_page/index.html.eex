@@ -24,11 +24,6 @@
         <% end %>
       </div>
     </div>
-    <%# <div class="screencast hide-on-small-and-down has-shadow">
-      <iframe title="Screencast" id="ytplayer" type="text/html" width="567" height="322" frameborder="0" allowfullscreen="allowfullscreen"
-        src="https://www.youtube.com/embed/ogjW801357c?allowfullscreen=1&rel=0&showinfo=0&autohide=1&origin=https://helio.fm">
-      </iframe>
-    </div> %>
   </section>
   <a href="https://github.com/helio-fm" target="_blank" class="github-corner" aria-label="View source on Github">
     <svg width="75" height="75" viewBox="0 0 250 250" aria-hidden="true">
