@@ -370,7 +370,7 @@ svg.footer-skew {
   vertical-align: bottom;
 }
 #helio-header {
-  height: 575px;
+  height: 572px;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAABGdBTUEAALGPC/xhBQAAABtQTFRFAAAA////gICAgICA////MzMzZmZmmZmZzMzMwAf6rgAAAAl0Uk5TAAECBAQFBQUFekhc0wAAAHRJREFUWIXt0kENgDAQRNHBwS4OagIFHDBQBZVAQi0gm5IggOHE4W8yx0nayVPPXp1oz6U2I8qcz2JE0rTG+2x3IcPIeJJ1ocP6cvtQ8DYqxj5PzI1GwVwpfRpYwhKWsIQlLGEJS1jCEpawhCUsYemPlty7AJPoqBsh2163AAAAAElFTkSuQmCC');
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
@@ -386,7 +386,7 @@ svg.footer-skew {
   margin: 0;
 }
 #helio-features {
-  padding-top: 30px;
+  padding-top: 65px;
 }
 .full-width,section {
   width: 100%;
@@ -406,13 +406,6 @@ iframe {
   width: 256px;
   height: 256px;
 }
-#helio-subheader {
-  padding: 170px 4vw 40px;
-}
-#helio-subheader h4,#helio-subheader h6 {
-  margin: 0;
-  padding: 5px 0;
-}
 @media screen and (max-width:800px) {
   .logo-container {
     margin-top: 50px;
@@ -423,14 +416,14 @@ iframe {
     height: 450px;
   }
   #helio-header {
-    max-height: 450px;
+    max-height: 447px;
+  }
+  #helio-features {
+    padding-top: 35px;
   }
   .logo-container img {
     width: 128px;
     height: 128px;
-  }
-  #helio-subheader {
-    padding: 140px 4vw 40px;
   }
 }
 @media screen and (max-width:700px) {
