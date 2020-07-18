@@ -365,9 +365,9 @@ svg.header {
 svg.footer-skew {
   z-index: -2;
   width: 100%;
-  margin: 0;
   padding: 0;
   vertical-align: bottom;
+  margin: 0 0 -2px 0;
 }
 #helio-header {
   height: 572px;

@@ -94,7 +94,7 @@
     </div>
     <svg class="footer-skew" preserveAspectRatio="none" version="1.1" viewBox="0 0 200 15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g>
-        <rect y="0" x="0" height="20" width="200" style="fill:#efedf5" />
+        <rect y="0" x="0" height="15" width="200" style="fill:#efedf5" />
         <path d="M 0,9 200,12 V 20 H 0 Z" style="fill:#3b3e6b" />
       </g>
     </svg>
@@ -142,7 +142,7 @@
     </div>
     <svg class="footer-skew" preserveAspectRatio="none" version="1.1" viewBox="0 0 200 10" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g>
-        <rect y="0" x="0" height="15" width="200" style="fill:#333664" />
+        <rect y="0" x="0" height="10" width="200" style="fill:#333664" />
         <path d="M 0,0 H 200 V 5 L 0,8 Z" style="fill:#3B3E6B" />
       </g>
     </svg>
