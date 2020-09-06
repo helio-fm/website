@@ -93,10 +93,8 @@ defmodule Db.ClientsTest do
 
     @invalid_attrs [%{app_name: nil, link: nil, platform_type: nil, version: nil}]
 
-    def apps_fixture(attrs \\ %{}) do
-      {:ok, apps} =
-        attrs
-        |> Enum.into(@valid_attrs)
+    def apps_fixture() do
+      {:ok, apps} = @valid_attrs
         |> Clients.update_versions()
 
       apps

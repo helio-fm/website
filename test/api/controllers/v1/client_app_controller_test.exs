@@ -27,10 +27,8 @@ defmodule Api.V1.ClientAppControllerTest do
     is_archived: false
   }]
 
-  defp apps_fixture(attrs \\ %{}) do
-    {:ok, apps} =
-      attrs
-      |> Enum.into(@valid_attrs)
+  defp apps_fixture() do
+    {:ok, apps} = @valid_attrs
       |> Clients.update_versions()
 
     apps
