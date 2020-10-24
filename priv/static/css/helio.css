@@ -329,12 +329,12 @@ footer #built-with-love {
   font-size: 13.5px;
   font-weight: 300;
   line-height: 1.7rem;
-  padding: 5px 0 20px 0;
-  background: #333664;
+  padding: 15px 0 20px 0;
+  background: #303361;
 }
 #helio-docs {
   text-align: center;
-  background-color: #efedf5;
+  background-color: #dfdde5;
   padding: 0;
   margin: 0;
 }
