@@ -238,7 +238,7 @@ h6 {
 .download-block {
   display: inline-block;
   padding: 12px;
-  margin-top: 32px;
+  margin-top: 30px;
   font-weight: 300;
   line-height: 1.5;
   text-align: center;
@@ -334,7 +334,7 @@ footer #built-with-love {
 }
 #helio-docs {
   text-align: center;
-  background-color: #dfdde5;
+  background-color: #e7e6ef;
   padding: 0;
   margin: 0;
 }
@@ -450,7 +450,7 @@ iframe {
 }
 @media screen and (max-width:480px) {
   .download-block {
-    margin-top: 34px;
+    margin-top: 32px;
   }
   #helio-header h4 {
     font-size: 1.5rem;
