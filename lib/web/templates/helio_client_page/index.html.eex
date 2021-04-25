@@ -43,12 +43,12 @@
           </h6>
         </div>
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screencap1.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 1">
+          <img src="<%= static_path(@conn, "/images/screencap1v35.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 1">
         </div>
       </div>
       <div class="row feature_block">
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screencap2.png") %>" class="z-depth-1 full-width has-shadow bbl" alt="Screen 4">
+          <img src="<%= static_path(@conn, "/images/screencap2v35.png") %>" class="z-depth-1 full-width has-shadow bbl" alt="Screen 4">
         </div>
         <div class="col m5 s12 right_text">
           <h4>Clear over clever</h4>
@@ -65,18 +65,7 @@
          </h6>
         </div>
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screencap3.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 3">
-        </div>
-      </div>
-      <div class="row feature_block">
-        <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screencap4.png") %>" class="z-depth-1 full-width has-shadow bbl" alt="Screen 2">
-        </div>
-        <div class="col m5 s12 right_text">
-          <h4><span title="¯\_(シ)_/¯">Incomplete</span></h4>
-          <h6>
-            The project is still as a work in progress, missing many essential features, tutorials and docs, and is <a href="https://github.com/helio-fm/helio-workstation" target="_blank">open for contributions</a>.
-          </h6>
+          <img src="<%= static_path(@conn, "/images/screencap3v35.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 3">
         </div>
       </div>
     </div>
@@ -90,9 +79,9 @@
       </g>
     </svg>
     <div>
-        <h4>
-          <a href="https://docs.helio.fm">Documentation</a>&nbsp;is&nbsp;like&nbsp;sex: when&nbsp;it&nbsp;is&nbsp;good, it&nbsp;is&nbsp;very,&nbsp;very&nbsp;good; and&nbsp;when&nbsp;it&nbsp;is&nbsp;bad, it&nbsp;is&nbsp;better&nbsp;than&nbsp;nothing.
-        </h4>
+      <h4>
+        <a href="https://docs.helio.fm">Documentation</a>&nbsp;is&nbsp;like&nbsp;sex: when&nbsp;it&nbsp;is&nbsp;good, it&nbsp;is&nbsp;very,&nbsp;very&nbsp;good; and&nbsp;when&nbsp;it&nbsp;is&nbsp;bad, it&nbsp;is&nbsp;better&nbsp;than&nbsp;nothing.
+      </h4>
     </div>
     <svg class="footer-skew" preserveAspectRatio="none" version="1.1" viewBox="0 0 200 15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g>
