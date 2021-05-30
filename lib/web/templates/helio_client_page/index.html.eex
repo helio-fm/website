@@ -97,9 +97,9 @@
       <div class="container">
         <div class="row">
           <div class="col s12 m4">
-            <p>FEEDBACK</p>
+            <p>LINKS</p>
               <ul>
-                <li><a href="https://www.facebook.com/rudenko.peter" target="_blank">Contact author</a></li>
+                <li><a href="https://youtube.com/user/peterrudenko" target="_blank">YouTube channel</a></li>
                 <li><a href="<%= static_path(@conn, "/translations") %>" target="_blank">Help with translations</a></li>
                 <li><a href="https://github.com/helio-fm/helio-workstation/pulls" target="_blank">Suggest changes</a></li>
                 <li><a href="https://github.com/helio-fm/helio-workstation/issues/new" target="_blank">Report bugs</a></li>
