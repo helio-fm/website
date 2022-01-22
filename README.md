@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/helio-fm/website.svg?branch=develop)](https://travis-ci.org/helio-fm/website)
+[![Build Status](https://travis-ci.com/helio-fm/website.svg?branch=develop)](https://travis-ci.com/helio-fm/website)
 [![Coverage Status](https://coveralls.io/repos/github/helio-fm/website/badge.svg?branch=develop)](https://coveralls.io/github/helio-fm/website?branch=develop)
 
 The website and the project synchronization API's behind helio.fm.
