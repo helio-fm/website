@@ -15,6 +15,8 @@ env:
   global:
   - MIX_ENV=test
   - ELIXIR_ASSERT_TIMEOUT=2000
+  - GITHUB_CLIENT_ID=test
+  - GITHUB_CLIENT_SECRET=test
 install:
 - mix local.rebar --force
 - mix local.hex --force
