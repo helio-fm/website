@@ -28,6 +28,7 @@ defmodule Jobs.Util.CollectBuilds do
   def init(_) do
     try do
       Logger.info IO.ANSI.magenta <> "Starting Helio builds collector job as " <> to_string(__MODULE__) <> IO.ANSI.reset
+      collect_builds(get_build_files())
       schedule_work()
       {:ok, nil}
     rescue
@@ -46,7 +47,8 @@ defmodule Jobs.Util.CollectBuilds do
     # Cleanup all records where link contains hostname, but download responds with 404:
     invalid_versions = AppVersion |> Repo.all |> Enum.filter(fn x -> link_is_invalid(x.link) end)
     for app_version <- invalid_versions, do: Clients.delete_app_version(app_version)
-    # Detect all new available versions:
+    # Find all available versions and feed it to Clients.update_versions,
+    # which will mark the outdated versions:
     version_attributes = Enum.map(build_files, fn x -> parse_version_attrs(x) end)
 
     try do
@@ -123,6 +125,12 @@ defmodule Jobs.Util.CollectBuilds do
   defp parse_platform_and_type(ext) when ext === "exe",
     do: %{platform_type: "Windows", build_type: "installer"}
 
+  defp parse_platform_and_type(ext) when ext === "dll",
+    do: %{platform_type: "Windows", build_type: "VST3 plugin"}
+
+  defp parse_platform_and_type(ext) when ext === "vst3",
+    do: %{platform_type: "Windows", build_type: "VST3 plugin"}
+
   defp parse_platform_and_type(ext) when ext === "dmg",
     do: %{platform_type: "macOS", build_type: "disk image"}
 
@@ -140,6 +148,9 @@ defmodule Jobs.Util.CollectBuilds do
 
   defp parse_platform_and_type(ext) when ext === "AppImage",
     do: %{platform_type: "Linux", build_type: "AppImage"}
+
+  defp parse_platform_and_type(ext) when ext === "so",
+    do: %{platform_type: "Linux", build_type: "VST3 plugin"}
 
   defp parse_platform_and_type(_), do: %{}
 

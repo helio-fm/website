@@ -72,7 +72,7 @@ defmodule Db.ClientsTest do
       build_type: "portable",
       branch: "stable",
       architecture: "all",
-      version: "2.0",
+      version: "2.9",
       link: "some link",
       is_archived: false,
       file_size: 1,
@@ -85,7 +85,7 @@ defmodule Db.ClientsTest do
       build_type: "portable",
       branch: "stable",
       architecture: "all",
-      version: "2.0",
+      version: "2.10",
       link: "some updated link",
       file_size: 2,
       file_date: DateTime.from_unix!(1)
@@ -119,12 +119,12 @@ defmodule Db.ClientsTest do
       assert app.app_name == "some app_name"
       assert app.link == "some link"
       assert app.platform_type == "platform_type"
-      assert app.version == "2.0"
+      assert app.version == "2.9"
 
       assert {:ok, [%AppVersion{} = app2]} = Clients.update_versions(@updated_attrs)
       assert app2.app_name == app.app_name
       assert app2.platform_type == app.platform_type
-      assert app2.version == "2.0"
+      assert app2.version == "2.10"
       assert app2.link == "some updated link"
     end
 

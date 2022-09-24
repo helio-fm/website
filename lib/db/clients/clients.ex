@@ -141,16 +141,21 @@ defmodule Db.Clients do
   def update_versions(versions) do
     update_query = """
       update app_versions a1
-        set is_archived = true
-        where exists
-        (
-          select 1 from app_versions a2
-            where a1.app_name = a2.app_name
-              and a1.platform_type = a2.platform_type
-              and a1.build_type = a2.build_type
-              and a1.branch = a2.branch
-              and string_to_array(a1.version, '.') < string_to_array(a2.version, '.')
-        );
+        set is_archived =
+          case when
+            a1.version not like 'dev%'
+            and exists
+            (
+              select 1 from app_versions a2
+                where a1.app_name = a2.app_name
+                  and a1.platform_type = a2.platform_type
+                  and a1.build_type = a2.build_type
+                  and a1.branch = a2.branch
+                  and a2.version not like 'dev%'
+                  and string_to_array(a1.version, '.')::int[]
+                    < string_to_array(a2.version, '.')::int[]
+            )
+          then true else false end;
     """
 
     Repo.transaction fn ->

@@ -17,12 +17,15 @@ defmodule Jobs.Util.CollectBuildsTest do
   @test_files_1 [
     "client-dev-32-bit.zip",
     "client-dev.exe",
-    "client-1.7-x64.tar.gz", # replaced by the next one
-    "client-1.7-64-bit.tar.gz", # archived by the next one
+    "client-1.7.6-x64.tar.gz", # archived by the next one
+    "client-01.7.6-64-bit.tar.gz", # archived by the next one
     "client-2.0-64-bit.tar.gz", # archived by the next one
-    "client-2.1-64-bit.tar.gz",
-    "client-02.1.02.AppImage", # archived by the next one
-    "client-02.1.03.AppImage",
+    "client-2.9-64-bit.tar.gz", # archived by the next one
+    "client-3.0-64-bit.tar.gz", # archived by the next one
+    "client-3.10-64-bit.tar.gz",
+    "client-03.1-64-bit.tar.gz", # archived by the previous one
+    "client-04.1.02.AppImage", # archived by the next one
+    "client-04.1.03.AppImage",
     "client-dev-64-bit.deb", # replaced by the next one
     "client-dev-x64.deb",
     "client-3.0.dmg",
@@ -55,14 +58,19 @@ defmodule Jobs.Util.CollectBuildsTest do
     test "collect_builds/1 creates properly parsed app versions" do
       CollectBuilds.collect_builds(@test_files_1)
       versions = AppVersion |> Repo.all
-      assert Enum.count(versions) == 11
+      assert Enum.count(versions) == 15
 
-      assert nil != versions |> Enum.find(fn(x) -> is_archived x, "client-1.7-64-bit.tar.gz" end)
-      assert nil != versions |> Enum.find(fn(x) -> is_archived x, "client-2.0-64-bit.tar.gz" end)
-      assert nil != versions |> Enum.find(fn(x) -> is_active x, "client-2.1-64-bit.tar.gz" end)
+      assert nil != versions |> Enum.find(fn(x) -> is_archived x, "client-1.7.6-x64.tar.gz" end)
+      assert nil != versions |> Enum.find(fn(x) -> is_archived x, "client-01.7.6-64-bit.tar.gz" end)
+      assert nil != versions |> Enum.find(fn(x) -> is_archived x, "client-03.1-64-bit.tar.gz" end)
+      assert nil != versions |> Enum.find(fn(x) -> is_active x, "client-3.10-64-bit.tar.gz" end)
 
-      assert nil != versions |> Enum.find(fn(x) -> is_archived x, "client-02.1.02.AppImage" end)
-      assert nil != versions |> Enum.find(fn(x) -> is_active x, "client-02.1.03.AppImage" end)
+      assert nil == versions |> Enum.find(fn(x) -> is_active x, "client-dev-64-bit.deb" end)
+      assert nil != versions |> Enum.find(fn(x) -> is_active x, "client-dev-x64.deb" end)
+      assert nil != versions |> Enum.find(fn(x) -> is_active x, "client-dev-x32.pkg" end)
+
+      assert nil != versions |> Enum.find(fn(x) -> is_archived x, "client-04.1.02.AppImage" end)
+      assert nil != versions |> Enum.find(fn(x) -> is_active x, "client-04.1.03.AppImage" end)
     end
 
     test "collect_builds/1 cleans up incorrect links" do
