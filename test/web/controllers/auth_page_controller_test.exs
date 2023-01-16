@@ -70,7 +70,7 @@ defmodule Web.AuthPageControllerTest do
       assert redirected_to(conn, 302)
       session_id = get_session(conn, :client_auth)
       assert session_id == nil
-    end    
+    end
 
     test "creates user from Github information with session being set", %{conn: conn, auth_session: auth_session} do
       conn = conn

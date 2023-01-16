@@ -69,7 +69,7 @@ defmodule Musehackers.Mixfile do
 
       # For deployment
       {:edeliver, "~> 1.8.0"},
-      {:distillery, "~> 2.0", runtime: false},
+      {:distillery, override: true, git: "https://github.com/archethic-foundation/distillery", runtime: false},
 
       # For tests
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},

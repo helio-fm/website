@@ -19,12 +19,12 @@ PRODUCTION_HOSTS="helio.fm"
 PRODUCTION_USER="deploy"
 DELIVER_TO="/opt/$APP"
 
-post_extract_release_archive() {
-  status "Removing start_erl.data"
-  __remote "
-    [ -f ~/.profile ] && source ~/.profile
-    set -e
-    cd $DELIVER_TO/$APP/var $SILENCE
-    rm start_erl.data
-  "
-}
+# post_extract_release_archive() {
+#   status "Removing start_erl.data"
+#   __remote "
+#     [ -f ~/.profile ] && source ~/.profile
+#     set -e
+#     cd $DELIVER_TO/$APP/var $SILENCE
+#     rm start_erl.data
+#   "
+# }

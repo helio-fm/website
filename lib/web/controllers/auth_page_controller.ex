@@ -31,6 +31,7 @@ defmodule Web.AuthPageController do
             |> render("index.html", auth_session: client_auth_session, current_user: nil)
       end
     rescue
+      # any -> conn |> send_resp(:not_found, Exception.message(any)) |> halt()
       _any -> conn |> redirect(to: "/") |> halt()
     end
   end
