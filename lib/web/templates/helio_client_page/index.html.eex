@@ -1,6 +1,6 @@
   <section id="helio-header" class="z-depth-1">
     <svg class="header" preserveAspectRatio="none" version="1.1" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <g><path d="m0 0h200v96s-50 4-100 4c-50 0-100-4-100-4z" fill="#e3e0ee" /><g>
+      <g><path d="m0 0h200v96s-50 4-100 4c-50 0-100-4-100-4z" fill="#f8f6fa" /><g>
       <g><path d="m0 0h200v94.7s-50 5-100 5c-50 0-100-5-100-5z" fill="#333664" /></g>
       <g><path d="m0 0h200v65s-50 14-100 14c-50 0-100-14-100-14z" fill="#3b3e6b" /></g>
     </svg>
@@ -39,7 +39,7 @@
         <div class="col m5 s12 left_text">
           <h4>Distraction-free</h4>
           <h6>
-            Helio is an attempt to rethink a music sequencer to create a tool that <span class="feels-fucking-right">feels right</span>. It provides a lightweight UI to help you get into the zone and focus on your ideas.
+            Helio is an attempt to rethink a music sequencer to create a tool that <span class="emphasis">feels right</span>. It provides a lightweight UI to help you get into the zone and focus on your ideas.
           </h6>
         </div>
         <div class="col m7 s12">
@@ -53,7 +53,7 @@
         <div class="col m5 s12 right_text">
           <h4>Clear over clever</h4>
           <h6>
-            Visualize music in a way that doesn't seem so <span title="(yes sheet music, I'm looking at you)">smoke and mirrors</span>. The app may serve as a learning tool you need to grow as a composer.
+            Visualize music in a way that doesn't seem so smoke and mirrors. The app may serve as a learning tool you need to grow as a composer.
           </h6>
         </div>
       </div>
@@ -61,7 +61,7 @@
         <div class="col m5 s12 left_text">
           <h4>Cross-platform tech</h4>
           <h6>
-            Available for all major platforms, desktop and mobile. Hosts VST and AudioUnit, runs on CoreAudio, ASIO, DirectSound, ALSA, JACK and OpenSLES. Exports to MIDI, WAV and FLAC.
+            Hosts VST, VST3, LV2, AudioUnit plugins, and SoundFonts. Runs on CoreAudio, ASIO, DirectSound, ALSA, JACK, and OpenSLES, exports to MIDI, WAV, and FLAC. Available for desktop and mobile platforms.
          </h6>
         </div>
         <div class="col m7 s12">
@@ -99,15 +99,14 @@
           <div class="col s12 m4">
             <p>LINKS</p>
               <ul>
-                <li><a href="https://youtube.com/user/peterrudenko" target="_blank">YouTube channel</a></li>
-                <li><a href="<%= static_path(@conn, "/translations") %>" target="_blank">Help with translations</a></li>
-                <li><a href="https://github.com/helio-fm/helio-workstation/pulls" target="_blank">Suggest changes</a></li>
-                <li><a href="https://github.com/helio-fm/helio-workstation/issues/new" target="_blank">Report bugs</a></li>
-                <li><a href="https://www.patreon.com/peterrudenko" target="_blank">Donate</a></li>
+                <li><a href="https://youtube.com/@peterrudenko" target="_blank">YouTube channel</a></li>
+                <li><a href="<%= static_path(@conn, "/translations") %>" target="_blank">Improve translations</a></li>
+                <li><a href="https://github.com/helio-fm/helio-sequencer/pulls" target="_blank">Suggest changes</a></li>
+                <li><a href="https://github.com/helio-fm/helio-sequencer/issues/new" target="_blank">Report bugs</a></li>
               </ul>
           </div>
           <div class="col s12 m4">
-            <p>MASTER BUILDS</p>
+            <p>STABLE BUILDS</p>
               <ul>
                 <%= for app <- Enum.reverse(@latest_releases), app.branch == "stable" do %>
                 <li>
@@ -142,6 +141,6 @@
     </svg>
     <div id="built-with-love">
       <center>Built with ❤ in a garage in Izhevsk, Russia</center>
-      <center><a href="https://github.com/helio-fm/helio-workstation/blob/master/LICENSE" target="_blank">License agreement</a></center>
+      <center><a href="https://github.com/helio-fm/helio-sequencer/blob/master/LICENSE" target="_blank">License agreement</a></center>
     </div>
   </footer>

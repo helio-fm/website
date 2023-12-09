@@ -94,7 +94,7 @@ ul {
 .container .feature_block {
   margin-left: -.75rem;
   margin-right: -.75rem;
-  padding: 60px 0 80px 0;
+  padding: 50px 0 70px 0;
 }
 .row {
   margin-bottom: 0;
@@ -238,7 +238,7 @@ h6 {
   margin: .65rem 0 .52rem;
   color: #333;
 }
-.feels-fucking-right {
+.emphasis {
   color: #000;
 }
 .button-title-text {
@@ -389,7 +389,6 @@ svg.footer-skew {
 }
 #helio-header {
   height: 572px;
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAABGdBTUEAALGPC/xhBQAAABtQTFRFAAAA////gICAgICA////MzMzZmZmmZmZzMzMwAf6rgAAAAl0Uk5TAAECBAQFBQUFekhc0wAAAHRJREFUWIXt0kENgDAQRNHBwS4OagIFHDBQBZVAQi0gm5IggOHE4W8yx0nayVPPXp1oz6U2I8qcz2JE0rTG+2x3IcPIeJJ1ocP6cvtQ8DYqxj5PzI1GwVwpfRpYwhKWsIQlLGEJS1jCEpawhCUsYemPlty7AJPoqBsh2163AAAAAElFTkSuQmCC');
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
   image-rendering: -webkit-optimize-contrast;
@@ -457,13 +456,13 @@ iframe {
     margin-bottom: 20px;
   }
   .row .col.left_text {
-    padding: 25px 30px 25px 30px;
+    padding: 20px 30px 20px 30px;
   }
   .row .col.right_text {
-    padding: 25px 30px 25px 30px;
+    padding: 20px 30px 20px 30px;
   }
   .container .feature_block {
-    padding: 40px 0 60px 0;
+    padding: 0 0 60px 0;
   }
 }
 @media screen and (max-width:480px) {
