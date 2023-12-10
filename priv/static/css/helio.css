@@ -454,6 +454,7 @@ iframe {
   #helio-docs h4 {
     margin-top: 20px;
     margin-bottom: 20px;
+    width: 70%;
   }
   .row .col.left_text {
     padding: 20px 30px 20px 30px;
