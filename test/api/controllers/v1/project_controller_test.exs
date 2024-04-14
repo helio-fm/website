@@ -152,11 +152,12 @@ defmodule Api.V1.ProjectControllerTest do
 
     test "renders head list when data is valid", %{conn: conn, project: %Project{id: id}, user: user, tree: _} do
       conn = get authenticated(conn, user), api_user_project_path(conn, :summary, id)
-      assert [%{"id" => "5", "message" => _, "parentId" => "3"},
-        %{"id" => "4", "message" => msg, "timestamp" => ts, "parentId" => "3"},
-        %{"id" => "3", "message" => _, "timestamp" => _, "parentId" => "1"},
+      assert [
+        %{"id" => "1", "message" => _, "timestamp" => _, "parentId" => nil},
         %{"id" => "2", "message" => _, "timestamp" => _, "parentId" => "1"},
-        %{"id" => "1", "message" => _, "timestamp" => _, "parentId" => nil}]
+        %{"id" => "3", "message" => _, "timestamp" => _, "parentId" => "1"},
+        %{"id" => "4", "message" => msg, "timestamp" => ts, "parentId" => "3"},
+        %{"id" => "5", "message" => _, "parentId" => "3"}]
           = json_response(conn, 200)["project"]["revisions"]
       assert ts != nil
       assert msg != nil

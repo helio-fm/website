@@ -63,7 +63,7 @@ defmodule Web.AuthPageControllerTest do
 
     test "deletes session on auth failure", %{conn: conn, auth_session: auth_session} do
       conn = conn
-      |> init_test_session(client_auth: auth_session.id)
+      |> Plug.Test.init_test_session(client_auth: auth_session.id)
       |> assign(:ueberauth_failure, %{errors: []})
       |> post(auth_callback_path(conn, :callback, "github"))
 
@@ -74,7 +74,7 @@ defmodule Web.AuthPageControllerTest do
 
     test "creates user from Github information with session being set", %{conn: conn, auth_session: auth_session} do
       conn = conn
-      |> init_test_session(client_auth: auth_session.id)
+      |> Plug.Test.init_test_session(client_auth: auth_session.id)
       |> assign(:ueberauth_auth, @ueberauth_auth)
       |> post(auth_callback_path(conn, :callback, "github"))
 
@@ -86,7 +86,7 @@ defmodule Web.AuthPageControllerTest do
 
     test "deletes session on logout", %{conn: conn, auth_session: auth_session} do
       conn = conn
-      |> init_test_session(client_auth: auth_session.id)
+      |> Plug.Test.init_test_session(client_auth: auth_session.id)
       |> delete(auth_delete_path(conn, :delete))
 
       assert redirected_to(conn, 302)

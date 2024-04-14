@@ -46,7 +46,7 @@ create database <db_name>;
 
 #### Environment varibles
 
-Create `/etc/environment`:
+Create `/etc/environment` (SECRET_KEY_BASE and SECRET_KEY_GUARDIAN should be at least 64 bytes):
 ```
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 LC_ALL=en_US.UTF-8

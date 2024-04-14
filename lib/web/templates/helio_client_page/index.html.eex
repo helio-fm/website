@@ -65,7 +65,7 @@
          </h6>
         </div>
         <div class="col m7 s12">
-          <img src="<%= static_path(@conn, "/images/screencap3v35.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 3">
+          <img src="<%= static_path(@conn, "/images/screencap3v312.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 3">
         </div>
       </div>
     </div>

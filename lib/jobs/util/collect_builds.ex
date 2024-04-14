@@ -155,6 +155,6 @@ defmodule Jobs.Util.CollectBuilds do
   defp parse_platform_and_type(_), do: %{}
 
   defp schedule_work do
-    Process.send_after(self(), :process, 1000 * 60 * 60 * 6) # 6h
+    Process.send_after(self(), :process, 1000 * 60 * 60 * 48) # 48h
   end
 end

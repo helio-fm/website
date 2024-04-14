@@ -34,6 +34,7 @@ defmodule Jobs.Etl.Translations do
   def init(_) do
     try do
       Logger.info IO.ANSI.magenta <> "Starting Helio translations update job as " <> to_string(__MODULE__) <> IO.ANSI.reset
+      extract_transform_load(source_url())
       schedule_work()
       {:ok, nil}
     rescue
