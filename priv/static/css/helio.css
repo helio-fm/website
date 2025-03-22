@@ -94,7 +94,7 @@ ul {
 .container .feature_block {
   margin-left: -.75rem;
   margin-right: -.75rem;
-  padding: 50px 0 70px 0;
+  padding: 50px 0 50px 0;
 }
 .row {
   margin-bottom: 0;
@@ -217,23 +217,23 @@ ul {
     margin-left: 0;
   }
 }
-h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
+h1 a,h2 a {
   font-weight: inherit;
 }
-h1,h2,h3,h4,h5,h6 {
-  font-weight: 300;
-}
 h1 {
-  font-size: 3.56rem;
-  line-height: 3.56rem;
+  font-weight: 300;
+  font-size: 2rem;
+  line-height: 2.6rem;
   margin: 0 0 .5rem;
 }
-h4 {
+h2 {
+  font-weight: 300;
   font-size: 2rem;
   line-height: 2.28rem;
   margin: 0.5rem 0 0.8rem;
 }
-h6 {
+.feature_block p {
+  font-weight: 300;
   font-size: 1.45rem;
   margin: .65rem 0 .52rem;
   color: #333;
@@ -255,8 +255,8 @@ h6 {
 }
 .download-block {
   display: inline-block;
-  padding: 12px;
-  margin-top: 30px;
+  padding-top: 85px;
+  margin: 0;
   font-weight: 300;
   line-height: 1.5;
   text-align: center;
@@ -356,7 +356,7 @@ footer #built-with-love {
   padding: 0;
   margin: 0;
 }
-#helio-docs h4 {
+#helio-docs h2 {
   display: inline-block;
   font-size: 1.45rem;
   font-weight: 300;
@@ -396,14 +396,11 @@ svg.footer-skew {
   image-rendering: pixelated;
   -ms-interpolation-mode: nearest-neighbor;
 }
-#helio-header .sub-title {
-  padding: 0 0 15px 0;
-}
 #helio-header .main-title {
-  margin: 0;
+  margin: 0 auto;
 }
 #helio-features {
-  padding-top: 65px;
+  padding-top: 55px;
 }
 .full-width,section {
   width: 100%;
@@ -430,17 +427,23 @@ iframe {
     height: 155px;
   }
   svg.header {
-    height: 450px;
+    height: 420px;
   }
   #helio-header {
-    max-height: 447px;
+    max-height: 417px;
+  }
+  .download-block {
+    padding-top: 65px;
   }
   #helio-features {
-    padding-top: 35px;
+    padding-top: 30px;
   }
   .logo-container img {
     width: 128px;
     height: 128px;
+  }
+  #helio-header h1 {
+    font-size: 1.85rem;
   }
 }
 @media screen and (max-width:700px) {
@@ -451,7 +454,7 @@ iframe {
     text-align: center;
     padding: 25px 10px 10px 10px;
   }
-  #helio-docs h4 {
+  #helio-docs h2 {
     margin-top: 20px;
     margin-bottom: 20px;
     width: 70%;
@@ -463,14 +466,27 @@ iframe {
     padding: 20px 30px 20px 30px;
   }
   .container .feature_block {
-    padding: 0 0 60px 0;
+    padding: 0 0 40px 0;
   }
 }
-@media screen and (max-width:480px) {
-  .download-block {
-    margin-top: 32px;
+@media screen and (max-width:600px) {
+  svg.header {
+    height: 410px;
   }
-  #helio-header h4 {
+  #helio-header {
+    max-height: 407px;
+  }
+  #helio-header h1 {
+    font-size: 1.45rem;
+    line-height: 2rem;
+  }
+}
+@media screen and (max-width:450px) {
+  .logo-container {
+    margin-top: 40px;
+    height: 140px;
+  }
+  #helio-header h2 {
     font-size: 1.5rem;
   }
   .button-title-text {

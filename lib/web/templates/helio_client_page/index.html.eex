@@ -11,8 +11,7 @@
         </div>
       </div>
       <div class="col s12 center-align">
-        <h1 class="white-text main-title">Helio&nbsp;Project</h1>
-        <h4 class="white-text sub-title">libre&nbsp;music&nbsp;composition&nbsp;software</h4>
+        <h1 class="white-text main-title">Helio&nbsp;is an&nbsp;open-source music&nbsp;sequencer&nbsp;software<br/>for&nbsp;desktop&nbsp;and&nbsp;mobile&nbsp;platforms</h1>
         <%= if Enum.count(@suggested_releases) > 0 do %>
           <span class="download-block">
             <span class="button-title-text">For <%= List.first(@suggested_releases).platform_type %>:</span><br>
@@ -37,10 +36,10 @@
     <div class="container">
       <div class="row feature_block">
         <div class="col m5 s12 left_text">
-          <h4>Distraction-free</h4>
-          <h6>
+          <h2>Distraction-free</h2>
+          <p>
             Helio is an attempt to rethink a music sequencer to create a tool that <span class="emphasis">feels right</span>. It provides a lightweight UI to help you get into the zone and focus on your ideas.
-          </h6>
+          </p>
         </div>
         <div class="col m7 s12">
           <img src="<%= static_path(@conn, "/images/screencap1v35.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 1">
@@ -51,18 +50,18 @@
           <img src="<%= static_path(@conn, "/images/screencap2v35.png") %>" class="z-depth-1 full-width has-shadow bbl" alt="Screen 4">
         </div>
         <div class="col m5 s12 right_text">
-          <h4>Clear over clever</h4>
-          <h6>
+          <h2>Clear over clever</h2>
+          <p>
             Visualize music in a way that doesn't seem so smoke and mirrors. The app may serve as a learning tool you need to grow as a composer.
-          </h6>
+          </p>
         </div>
       </div>
       <div class="row feature_block">
         <div class="col m5 s12 left_text">
-          <h4>Cross-platform tech</h4>
-          <h6>
+          <h2>Cross-platform tech</h2>
+          <p>
             Hosts VST, VST3, LV2, AudioUnit plugins, and SoundFonts. Runs on CoreAudio, ASIO, DirectSound, ALSA, JACK, and OpenSLES, exports to MIDI, WAV, and FLAC. Available for desktop and mobile platforms.
-         </h6>
+         </p>
         </div>
         <div class="col m7 s12">
           <img src="<%= static_path(@conn, "/images/screencap3v312.png") %>" class="z-depth-1 full-width has-shadow bbk" alt="Screen 3">
@@ -79,9 +78,9 @@
       </g>
     </svg>
     <div>
-      <h4>
+      <h2>
         Follow&nbsp;the&nbsp;<a href="https://docs.helio.fm">documentation</a> to&nbsp;get&nbsp;started; learn&nbsp;about hotkeys, refactoring&nbsp;options, microtonal&nbsp;temperaments, and&nbsp;more.
-      </h4>
+      </h2>
     </div>
     <svg class="footer-skew" preserveAspectRatio="none" version="1.1" viewBox="0 0 200 15" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g>
