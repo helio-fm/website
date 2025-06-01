@@ -14,8 +14,8 @@ defmodule Jobs.Util.CollectBuilds do
 
   plug Tesla.Middleware.FollowRedirects, max_redirects: 2
 
-  @builds_path Application.get_env(:musehackers, :builds_path)
-  @builds_base_url Application.get_env(:musehackers, :builds_base_url)
+  @builds_path Application.compile_env(:musehackers, :builds_path)
+  @builds_base_url Application.compile_env(:musehackers, :builds_base_url)
 
   defp get_build_files() do
     @builds_path |> Path.join("**") |> Path.wildcard() |> Enum.map(&Path.basename/1)

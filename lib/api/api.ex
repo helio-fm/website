@@ -28,10 +28,10 @@ defmodule Api do
   def view do
     quote do
       use Phoenix.View, root: "lib/api/views", namespace: Api
+      use Gettext, backend: Api.Gettext
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
       import Api.Router.Helpers
       import Api.ErrorHelpers
-      import Api.Gettext
     end
   end
 

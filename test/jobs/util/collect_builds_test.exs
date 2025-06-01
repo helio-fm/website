@@ -12,7 +12,7 @@ defmodule Jobs.Util.CollectBuildsTest do
     :ok
   end
 
-  @builds_base_url Application.get_env(:musehackers, :builds_base_url)
+  @builds_base_url Application.compile_env(:musehackers, :builds_base_url)
 
   @test_files_1 [
     "client-dev-32-bit.zip",

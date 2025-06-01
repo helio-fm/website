@@ -6,17 +6,14 @@ defmodule Musehackers.Application do
   """
 
   def start(_type, _args) do
-    import Supervisor.Spec
-
-    # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
-      supervisor(Db.Repo, []),
+      {Db.Repo, []},
       # Start the endpoints when the application starts
-      supervisor(Api.Endpoint, []),
-      supervisor(Web.Endpoint, []),
+      {Api.Endpoint, []},
+      {Web.Endpoint, []},
       # Start the supervisor for scheduled ETL jobs
-      supervisor(Jobs.Supervisor, []),
+      {Jobs.Supervisor, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

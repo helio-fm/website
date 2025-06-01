@@ -3,7 +3,7 @@ defmodule Api.Auth.UserFromAuth do
   Retrieve the user information from an auth request
   """
 
-  @images_store_path Application.get_env(:musehackers, :images_path)
+  @images_store_path Application.compile_env(:musehackers, :images_path)
 
   require Logger
 

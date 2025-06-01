@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
@@ -13,7 +13,7 @@ config :musehackers, Api.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :warning
 
 # Configure your database
 config :musehackers, Db.Repo,
@@ -31,6 +31,10 @@ config :musehackers, Api.Auth.Token,
 
 # Use mock adapter for all clients
 config :tesla, adapter: Tesla.Mock
+
+config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+  client_id: "test",
+  client_secret: "test"
 
 # Locations
 config :musehackers, images_path: "./test"

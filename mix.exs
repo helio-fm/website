@@ -50,7 +50,7 @@ defmodule Musehackers.Mixfile do
       {:phoenix_view, "~> 2.0"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, "~> 0.14"},
-      {:gettext, "~> 0.11"},
+      {:gettext, "~> 0.26"},
       {:cowboy, "~> 2.12"},
       {:plug_cowboy, "~> 2.0"},
       {:slugify, "~> 1.1"},
@@ -68,7 +68,7 @@ defmodule Musehackers.Mixfile do
       {:jason, "~> 1.4"},
 
       # For deployment
-      {:edeliver, "~> 1.8.0"},
+      {:edeliver, "~> 1.9"},
       {:distillery, override: true, git: "https://github.com/archethic-foundation/distillery", runtime: false},
 
       # For tests

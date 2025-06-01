@@ -20,9 +20,9 @@ defmodule Web do
   def controller do
     quote do
       use Phoenix.Controller, namespace: Web
+      use Gettext, backend: Web.Gettext
       import Plug.Conn
       import Web.Router.Helpers
-      import Web.Gettext
     end
   end
 
@@ -31,6 +31,8 @@ defmodule Web do
       use Phoenix.View, root: "lib/web/templates",
                         namespace: Web
 
+      use Gettext, backend: Web.Gettext
+
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
 
@@ -38,7 +40,6 @@ defmodule Web do
       use Phoenix.HTML
 
       import Web.Router.Helpers
-      import Web.Gettext
     end
   end
 

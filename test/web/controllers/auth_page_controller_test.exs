@@ -1,8 +1,6 @@
 defmodule Web.AuthPageControllerTest do
   use Web.ConnCase
 
-  import Plug.Test
-
   alias Db.Repo
   alias Db.Clients
   alias Db.Clients.AuthSession

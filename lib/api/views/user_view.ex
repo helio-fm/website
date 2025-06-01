@@ -1,8 +1,8 @@
 defmodule Api.UserView do
   @moduledoc false
 
-  @users_base_url Application.get_env(:musehackers, :users_base_url)
-  @images_base_url Application.get_env(:musehackers, :images_base_url)
+  @users_base_url Application.compile_env(:musehackers, :users_base_url)
+  @images_base_url Application.compile_env(:musehackers, :images_base_url)
 
   use Api, :view
   alias Api.UserView
