@@ -1,6 +1,6 @@
   <section id="helio-header" class="z-depth-1">
     <svg class="header" preserveAspectRatio="none" version="1.1" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <g><path d="m0 0h200v96s-50 4-100 4c-50 0-100-4-100-4z" fill="#f8f6fa" /><g>
+      <g><path d="m0 0h200v96s-50 4-100 4c-50 0-100-4-100-4z" fill="#f8f6fa" /></g>
       <g><path d="m0 0h200v94.7s-50 5-100 5c-50 0-100-5-100-5z" fill="#333664" /></g>
       <g><path d="m0 0h200v65s-50 14-100 14c-50 0-100-14-100-14z" fill="#3b3e6b" /></g>
     </svg>
